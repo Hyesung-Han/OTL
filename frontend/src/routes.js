@@ -1,6 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom';
-import MainLayout from './layouts/main';
-import LogoOnlyLayout from './layouts/LogoOnlyLayout';
+import MainLayout from './layouts';
 import NotFound from './pages/Page404';
 import Main from './pages/Main';
 import Items from './pages/Items';
@@ -22,7 +21,7 @@ export default function Router() {
     },
     {
       path: '/',
-      element: <LogoOnlyLayout />,
+      element: <MainLayout />,
       children: [
         { path: '404', element: <NotFound /> },
         { path: '/', element: <Navigate to="/main" /> },
