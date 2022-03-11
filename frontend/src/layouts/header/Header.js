@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import Logo from '../../components/Logo';
 
 // 헤더 화면 (상단 메뉴바)
-const DashboardNavbar = () => {
+const Header = () => {
   const APPBAR_MOBILE = 64;
   const APPBAR_DESKTOP = 92;
 
@@ -50,4 +50,4 @@ const DashboardNavbar = () => {
   );
 };
 
-export default DashboardNavbar;
+export default Header;
