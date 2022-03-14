@@ -1,14 +1,13 @@
-import { Navigate, useRoutes } from "react-router-dom";
-import MainLayout from "./layouts/main";
-import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
-import NotFound from "./pages/Page404";
-import Main from "./pages/Main";
+import { Navigate, useRoutes } from 'react-router-dom';
+import MainLayout from './layouts';
+import NotFound from './pages/Page404';
+import Main from './pages/Main';
 import ConnectWallet from "./pages/ConnectWallet";
-import Items from "./pages/Items";
-import ItemRegistration from "./pages/ItemRegistration";
-import SaleRegistration from "./pages/SaleRegistration";
-import WhosArt from "./pages/WhosArt";
-import ItemPurchase from "./pages/ItemPurchase";
+import Items from './pages/Items';
+import ItemRegistration from './pages/ItemRegistration';
+import SaleRegistration from './pages/SaleRegistration';
+import WhosArt from './pages/WhosArt';
+import ItemPurchase from './pages/ItemPurchase';
 
 // 화면 라우팅 테이블
 export default function Router() {
@@ -35,8 +34,8 @@ export default function Router() {
       ],
     },
     {
-      path: "/",
-      element: <LogoOnlyLayout />,
+      path: '/',
+      element: <MainLayout />,
       children: [
         { path: "404", element: <NotFound /> },
         { path: "/", element: <Navigate to="/main" /> },

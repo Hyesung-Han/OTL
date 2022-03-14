@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import DashboardNavbar from './DashboardNavbar';
+import DashboardNavbar from './header/DashboardNavbar';
+import Footer from './footer/Footer';
 
 const MainLayout = () => {
   const APP_BAR_MOBILE = 64;
@@ -9,7 +10,8 @@ const MainLayout = () => {
   const RootStyle = styled('div')({
     display: 'flex',
     minHeight: '100%',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    flexDirection: 'column',
   });
 
   const MainStyle = styled('div')(({ theme }) => ({
@@ -31,6 +33,7 @@ const MainLayout = () => {
       <MainStyle>
         <Outlet />
       </MainStyle>
+      <Footer/>
     </RootStyle>
   );
 };
