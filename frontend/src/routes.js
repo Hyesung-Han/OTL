@@ -2,6 +2,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import MainLayout from './layouts';
 import NotFound from './pages/Page404';
 import Main from './pages/Main';
+import ConnectWallet from "./pages/ConnectWallet";
 import Items from './pages/Items';
 import ItemRegistration from './pages/ItemRegistration';
 import SaleRegistration from './pages/SaleRegistration';
@@ -12,49 +13,62 @@ import ItemPurchase from './pages/ItemPurchase';
 export default function Router() {
   return useRoutes([
     {
-      path: '/main',
+      path: "/main",
       element: <MainLayout />,
       children: [
         { element: <Navigate to="/main" replace /> },
-        { path: '', element: <Main /> }
-      ]
+        { path: "", element: <Main /> },
+      ],
+    },
+    /**
+     * LDJ | 2022.03.14 | ADD
+     * HACK
+     * 페이지 확인을 위한 임시 경로 설정
+     */
+    {
+      path: "/connectwallet",
+      element: <MainLayout />,
+      children: [
+        { element: <Navigate to="/connectwallet" replace /> },
+        { path: "", element: <ConnectWallet /> },
+      ],
     },
     {
       path: '/',
       element: <MainLayout />,
       children: [
-        { path: '404', element: <NotFound /> },
-        { path: '/', element: <Navigate to="/main" /> },
-        { path: '*', element: <Navigate to="/404" /> }
-      ]
+        { path: "404", element: <NotFound /> },
+        { path: "/", element: <Navigate to="/main" /> },
+        { path: "*", element: <Navigate to="/404" /> },
+      ],
     },
     {
-      path: '/items',
+      path: "/items",
       element: <MainLayout />,
       children: [
         { element: <Navigate to="/items" replace /> },
-        { path: '', element: <Items /> },
-        { path: 'buy/:tokenId', element: <ItemPurchase /> }
-      ]
+        { path: "", element: <Items /> },
+        { path: "buy/:tokenId", element: <ItemPurchase /> },
+      ],
     },
     {
-      path: '/register',
+      path: "/register",
       element: <MainLayout />,
       children: [
         { element: <Navigate to="/register" replace /> },
-        { path: '', element: <ItemRegistration /> },
-        { path: 'sale/:tokenId', element: <SaleRegistration /> }
-      ]
+        { path: "", element: <ItemRegistration /> },
+        { path: "sale/:tokenId", element: <SaleRegistration /> },
+      ],
     },
     {
-      path: '/whosart',
+      path: "/whosart",
       element: <MainLayout />,
       children: [
         { element: <Navigate to="/whosart" replace /> },
-        { path: '', element: <WhosArt /> },
-        { path: ':address', element: <WhosArt /> }
-      ]
+        { path: "", element: <WhosArt /> },
+        { path: ":address", element: <WhosArt /> },
+      ],
     },
-    { path: '*', element: <Navigate to="/404" replace /> }
+    { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }
