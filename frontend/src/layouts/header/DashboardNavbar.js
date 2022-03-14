@@ -1,5 +1,5 @@
 import { alpha, styled, makeStyles } from "@mui/material/styles";
-import { Box, Stack, Button, AppBar, Toolbar, Grid } from "@mui/material";
+import { Box, Stack, Button, AppBar, Toolbar, Divider } from "@mui/material";
 import {
   Tooltip,
   Avatar,
@@ -278,6 +278,7 @@ const DashboardNavbar = () => {
                     Profile
                   </Typography>
                 </MenuItem>
+                <Divider/>
                 <MenuItem onClick={onClickLogOut}>
                   <ListItemIcon>
                     <Logout fontSize="small" />
