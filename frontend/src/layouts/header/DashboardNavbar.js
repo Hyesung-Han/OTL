@@ -7,6 +7,7 @@ import {
   MenuItem,
   Typography,
   IconButton,
+  ListItemIcon
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 // import Logo from '../../components/Logo';
@@ -22,6 +23,7 @@ import { nominalTypeHack } from "prop-types";
 
 //Icons
 import HomeIcon from "@mui/icons-material/Home";
+import Logout from "@mui/icons-material/Logout";
 
 // 헤더 화면 (상단 메뉴바)
 const DashboardNavbar = () => {
@@ -97,7 +99,7 @@ const DashboardNavbar = () => {
       setToken({
         token: "",
         user_id: "id",
-        user_nickName: "nickName",
+        user_nickName: "sohyeon",
         status: "",
         user_code: "",
         code_name: "",
@@ -173,6 +175,26 @@ const DashboardNavbar = () => {
     minWidth: 1400,
   };
 
+  /**
+   * HSH | 2022.03.14 | v1.0
+   * @name UserNickNameStyle
+   * @des nickName css
+   */
+  const UserNickNameStyle = styled(Typography)(() => ({
+    color: "#111111",
+    fontSize: 17,
+    padding: "0 5px",
+  }));
+
+  /**
+   * HSH | 2022.03.14 | v1.0
+   * @name UserNickNameStyle
+   * @des nickName css
+   */
+  const UserBoxStyle = {
+    width: "50px",
+  };
+
   return (
     <div style={rootStyle}>
       <div style={toolbarStyle}>
@@ -216,43 +238,54 @@ const DashboardNavbar = () => {
             CREATE
           </ButtonStyle>
           {!user.user_id && (
-            <ButtonStyle
-              onClick={onClickLogin}
-              size="large"
-              sx={{ fontSize: 17 }}
-            >
-              LOGIN
-            </ButtonStyle>
+            <div style={UserBoxStyle}>
+              <ButtonStyle
+                onClick={onClickLogin}
+                size="large"
+                sx={{ fontSize: 17 }}
+              >
+                LOGIN
+              </ButtonStyle>
+            </div>
           )}
           {user.user_id && (
-            <Box>
+            <div style={UserBoxStyle}>
               <Tooltip title="Open User Menu">
                 <IconButton onClick={handleClick} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp">H</Avatar>
+                  <UserNickNameStyle>{user.user_nickName}</UserNickNameStyle>
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{ mt: "45px" }}
+                sx={{ mt: "50px" }}
                 anchorEl={anchorEl}
                 anchorOrigin={{
                   vertical: "bottom",
-                  horizontal: "right",
+                  horizontal: "left",
                 }}
                 transformOrigin={{
                   vertical: "bottom",
-                  horizontal: "right",
+                  horizontal: "left",
                 }}
                 open={open}
                 onClose={handleClose}
               >
                 <MenuItem to="#" component={RouterLink}>
-                  <Typography textAlign="center" onClick={handleClose}>myhome</Typography>
+                <ListItemIcon>
+                    <HomeIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Typography textAlign="center" onClick={handleClose}>
+                    Profile
+                  </Typography>
                 </MenuItem>
                 <MenuItem onClick={onClickLogOut}>
+                  <ListItemIcon>
+                    <Logout fontSize="small" />
+                  </ListItemIcon>
                   <Typography textAlign="center">Log Out</Typography>
                 </MenuItem>
               </Menu>
-            </Box>
+            </div>
           )}
         </Stack>
       </div>
