@@ -9,7 +9,7 @@ import COMMON_HEADER from '../common/HeaderType';
 import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
-import ItemsList from '../layouts/items/ItemsList';
+import ItemsList from '../components/items/ItemsList';
 
 /**
  * [구매하기] 화면
@@ -54,6 +54,12 @@ const Items = () => {
       title: "fake title"
     };
     resultList.push(resultItem);
+    resultList.push(resultItem);
+    resultList.push(resultItem);
+    resultList.push(resultItem);
+    resultList.push(resultItem);
+    resultList.push(resultItem);
+
     setItem(resultList);
     setLoading(false);
     setIsCollection(true);
