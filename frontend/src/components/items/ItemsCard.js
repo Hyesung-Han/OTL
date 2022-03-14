@@ -13,25 +13,38 @@ const ImgStyle = styled('img')({
   position: 'absolute'
 });
 
+const CardStyle = styled(Card)({
+  borderRadius : 8
+});
+
 ItemsCard.propTypes = {
   product: PropTypes.object
 };
 
 // 구매하기 카드 형태
+/**
+ * CSW | 2022.03.14 | ADD
+ * @name ItemsCard
+ * @des ItemCard 컴포넌트
+ */
 export default function ItemsCard({ product }) {
   // 이미지, 제목, 가격, 토큰 ID, 심볼
   const { image, title, price, tokenId } = product;
   const symbol = 'SSF';
 
   return (
-    <Card>
+    /**
+     * TODO
+     * 지금은 title에 마우스이벤트+링크로 이동가능하게 해뒀는데,
+     * 카드 전체범위로 바꾸기
+     */
+    <CardStyle>
       <Box sx={{ pt: '100%', position: 'relative' }}>
         <ImgStyle src={image} />
       </Box>
-
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link
-          to={`/items/buy/${tokenId}`}
+          to={`/items/detail/${tokenId}`}
           color="inherit"
           underline="hover"
           component={RouterLink}
@@ -45,6 +58,6 @@ export default function ItemsCard({ product }) {
           {convertToAccountingFormat(price)} {symbol}
         </Typography>
       </Stack>
-    </Card>
+    </CardStyle>
   );
 }
