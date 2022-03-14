@@ -1,9 +1,18 @@
-import { alpha, styled } from "@mui/material/styles";
+import { alpha, styled, makeStyles } from "@mui/material/styles";
 import { Box, Stack, Button, AppBar, Toolbar, Grid } from "@mui/material";
+import {
+  Tooltip,
+  Avatar,
+  Menu,
+  MenuItem,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 // import Logo from '../../components/Logo';
 
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 // 로그인 기능 구현 후 삭제 예정
 import { useDispatch } from "react-redux";
@@ -13,7 +22,6 @@ import { nominalTypeHack } from "prop-types";
 
 //Icons
 import HomeIcon from "@mui/icons-material/Home";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 // 헤더 화면 (상단 메뉴바)
 const DashboardNavbar = () => {
@@ -21,6 +29,10 @@ const DashboardNavbar = () => {
   const APPBAR_DESKTOP = 92;
   const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -93,9 +105,63 @@ const DashboardNavbar = () => {
     );
   };
 
+  /**
+   * HSH | 2022.03.14 | v1.0
+   * @name onClickUserMenu
+   * @des user meun 클릭시 실행 이벤트
+   */
+  const onClickUserMenu = (event) => {
+    console.log(event.currentTarget);
+    // setIsOpenUserMenu(!isOpenUserMenu);
+  };
+
+  /**
+   * HSH | 2022.03.14 | v1.0
+   * @name handleClick
+   * @des 메뉴바 open
+   */
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  /**
+   * HSH | 2022.03.14 | v1.0
+   * @name handleClose
+   * @des 메뉴바 close
+   */
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  /**
+   * HSH | 2022.03.14 | v1.0
+   * @name rootStyle
+   * @des root css
+   */
+  const rootStyle = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  };
+
+  /**
+   * HSH | 2022.03.14 | v1.0
+   * @name toolbarStyle
+   * @des toolbar css
+   */
+  const toolbarStyle = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+
+    // minHeight: APPBAR_MOBILE,
+    maxWidth: 1400,
+    minWidth: 1400,
+  };
+
   return (
-    <RootStyle>
-      <ToolbarStyle>
+    <div style={rootStyle}>
+      <div style={toolbarStyle}>
         <Box
           sx={{
             px: 2.5,
@@ -145,23 +211,37 @@ const DashboardNavbar = () => {
             </ButtonStyle>
           )}
           {user.user_id && (
-            <Grid display="flex" direction="row" justifyItems="center" alignItems= "center">
-              <ButtonStyle
-                to="/whosart"
-                size="large"
-                sx={{ fontSize: 17 }}
-                component={RouterLink}
+            <Box>
+              <Tooltip title="Open User Menu">
+                <IconButton onClick={handleClick} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp">H</Avatar>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                open={open}
+                onClose={handleClose}
               >
-                {user.user_nickName}
-              </ButtonStyle>
-              <KeyboardArrowDownIcon
-                sx={{ fontSize: 30, color: "#111111", margin: "0 10px" }}
-              />
-            </Grid>
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={onClickUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
           )}
         </Stack>
-      </ToolbarStyle>
-    </RootStyle>
+      </div>
+    </div>
   );
 };
 
