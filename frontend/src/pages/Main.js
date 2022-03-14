@@ -10,6 +10,7 @@ import Page from '../components/Page';
 import itemsCard from '../components/items/ItemsCard';
 
 
+
 const Main = () => {
   // Web3
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
