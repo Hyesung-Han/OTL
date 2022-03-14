@@ -107,12 +107,26 @@ const DashboardNavbar = () => {
 
   /**
    * HSH | 2022.03.14 | v1.0
-   * @name onClickUserMenu
-   * @des user meun 클릭시 실행 이벤트
+   * @name onClickLogOut
+   * @des logOut 이벤트
    */
-  const onClickUserMenu = (event) => {
-    console.log(event.currentTarget);
-    // setIsOpenUserMenu(!isOpenUserMenu);
+  const onClickLogOut = () => {
+    /**
+     * HACK
+     * 임시 로그아웃 기능
+     */
+    dispatch(
+      setToken({
+        token: "",
+        user_id: "",
+        user_nickName: "",
+        status: "",
+        user_code: "",
+        code_name: "",
+      })
+    );
+
+    setAnchorEl(null);
   };
 
   /**
@@ -129,7 +143,7 @@ const DashboardNavbar = () => {
    * @name handleClose
    * @des 메뉴바 close
    */
-  const handleClose = () => {
+  const handleClose = (event) => {
     setAnchorEl(null);
   };
 
@@ -231,11 +245,12 @@ const DashboardNavbar = () => {
                 open={open}
                 onClose={handleClose}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={onClickUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem to="#" component={RouterLink}>
+                  <Typography textAlign="center" onClick={handleClose}>myhome</Typography>
+                </MenuItem>
+                <MenuItem onClick={onClickLogOut}>
+                  <Typography textAlign="center">Log Out</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           )}
