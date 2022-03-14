@@ -1,27 +1,73 @@
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Stack, Button, AppBar, Toolbar } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import Logo from '../../components/Logo';
+// import Logo from '../../components/Logo';
+
+import { useSelector } from "react-redux";
+
+// 로그인 기능 구현 후 삭제 예정
+import { useDispatch } from "react-redux";
+import { setToken } from "../../redux/reducers/AuthReducer";
+import { useEffect } from 'react';
 
 // 헤더 화면 (상단 메뉴바)
 const DashboardNavbar = () => {
   const APPBAR_MOBILE = 64;
   const APPBAR_DESKTOP = 92;
+  const user = useSelector((state) => state.Auth.user);
+  const dispatch = useDispatch();
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
     backdropFilter: 'blur(6px)',
     WebkitBackdropFilter: 'blur(6px)',
-    backgroundColor: alpha(theme.palette.background.default, 0.72)
+    backgroundColor: alpha(theme.palette.background.default, 0.72),
   }));
 
   const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
     minHeight: APPBAR_MOBILE,
     [theme.breakpoints.up('lg')]: {
       minHeight: APPBAR_DESKTOP,
-      padding: theme.spacing(0, 5)
+      padding: theme.spacing(0, 20)
     }
   }));
+
+  /**
+  * HSH | 2022.03.14 | v1.0
+  * @name ButtonStyle
+  * @des 헤더에서 사용하는 버튼 CSS 정의
+  */
+  const ButtonStyle=styled(Button)(()=>({
+    color: '#111111',
+
+    '&:hover':{
+      background:'none',
+    }
+  }));
+
+  /**
+  * HSH | 2022.03.14 | v1.0
+  * @name onClickLogin
+  * @des 로그인 클릭시 실행 버튼
+  */
+  const onClickLogin=()=>{
+    console.log("onClick Login");
+  
+  /**
+	* HACK
+	* 임시 로그인 기능. 로그인 기능 구현 후 삭제 예정
+	*/
+    dispatch(setToken({
+      token: '',
+      user_id: 'id',
+      user_nickName: 'nickName',
+      status: '',
+      user_code: '',
+      code_name: '',
+    },));
+  }
+
+
 
   return (
     <RootStyle>
@@ -35,15 +81,20 @@ const DashboardNavbar = () => {
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 6.5 }} sx={{ mr: 10 }}>
-          <Button to="/items" size="large" sx={{ fontSize: 17 }} component={RouterLink}>
-            구매하기
-          </Button>
-          <Button to="/register" size="large" sx={{ fontSize: 17 }} component={RouterLink}>
-            등록하기
-          </Button>
-          <Button to="/whosart" size="large" sx={{ fontSize: 17 }} component={RouterLink}>
-            후즈컬렉션
-          </Button>
+          <ButtonStyle to="/items" size="large" sx={{ fontSize: 17 }} component={RouterLink}>
+            LIST
+          </ButtonStyle>
+          <ButtonStyle to="/register" size="large" sx={{ fontSize: 17 }} component={RouterLink}>
+            CREATE
+          </ButtonStyle>
+          {!user.user_id && 
+          <ButtonStyle onClick={onClickLogin} size="large" sx={{ fontSize: 17 }}>
+            LOGIN
+          </ButtonStyle>}
+          {user.user_id && 
+          <ButtonStyle to="/whosart" size="large" sx={{ fontSize: 17 }} component={RouterLink}>
+            {user.user_nickName}
+          </ButtonStyle>}
         </Stack>
       </ToolbarStyle>
     </RootStyle>
