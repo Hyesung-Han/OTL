@@ -24,7 +24,7 @@ ItemsCard.propTypes = {
 // 구매하기 카드 형태
 /**
  * CSW | 2022.03.14 | ADD
- * @name ItemList
+ * @name ItemsCard
  * @des ItemCard 컴포넌트
  */
 export default function ItemsCard({ product }) {
