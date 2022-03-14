@@ -7,11 +7,16 @@ ItemsCard.propTypes = {
 };
 
 // 구매하기 카드 리스트 형태
+/**
+ * CSW | 2022.03.14 | ADD
+ * @name ItemList
+ * @des ItemList 컴포넌트
+ */
 export default function ItemsList({ products, ...other }) {
   return (
     <Grid container spacing={6} {...other}>
       {products.map((product) => (
-        <Grid sx={{ mb: 5 }} key={product.hash} item xs={12} sm={6} md={3}>
+        <Grid sx={{ mb: 3 }} key={product.hash} item xs={12} sm={6} md={3}>
           <ItemsCard product={product} />
         </Grid>
       ))}
