@@ -12,7 +12,7 @@ info:
 host: "petstore.swagger.io"
 basePath: "/v2"
 tags:
-  - name: "items"
+  - name: "user"
     description: "Operations about user"
     externalDocs:
       description: "Find out more about our store"
@@ -24,7 +24,7 @@ paths:
   /:
     post:
       tags:
-        - "items"
+        - "user"
       summary: "Upload myfarm image"
       description: "Upload myfarm image"
       operationId: "myfarm upload image"
@@ -44,6 +44,26 @@ paths:
           type: file
           description: The file to upload.
           required: true
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/login:
+    post:
+      tags:
+        - "user"
+      summary: "insert user"
+      description: "insert user data"
+      operationId: "insert user"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
+          required: true
+          type: "string"
       responses:
         default:
           description: "successful operation"
