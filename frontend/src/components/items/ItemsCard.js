@@ -33,11 +33,15 @@ export default function ItemsCard({ product }) {
   const symbol = 'SSF';
 
   return (
+    /**
+     * TODO
+     * 지금은 title에 마우스이벤트+링크로 이동가능하게 해뒀는데,
+     * 카드 전체범위로 바꾸기
+     */
     <CardStyle>
       <Box sx={{ pt: '100%', position: 'relative' }}>
         <ImgStyle src={image} />
       </Box>
-
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link
           to={`/items/detail/${tokenId}`}
