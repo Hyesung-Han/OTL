@@ -1,0 +1,53 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+  - name: "items"
+    description: "Operations about user"
+    externalDocs:
+      description: "Find out more about our store"
+      url: "http://swagger.io"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /:
+    post:
+      tags:
+        - "items"
+      summary: "Upload myfarm image"
+      description: "Upload myfarm image"
+      operationId: "myfarm upload image"
+      consumes:
+        - multipart/form-data
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "farm_no"
+          in: "formData"
+          description: "farm_no"
+          required: true
+          type: "string"
+        - in: formData
+          name: farm
+          type: file
+          description: The file to upload.
+          required: true
+      responses:
+        default:
+          description: "successful operation"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
