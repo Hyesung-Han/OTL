@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../redux/reducers/AuthReducer";
 import { useEffect } from 'react';
+import { nominalTypeHack } from 'prop-types';
 
 // 헤더 화면 (상단 메뉴바)
 const DashboardNavbar = () => {
@@ -22,13 +23,32 @@ const DashboardNavbar = () => {
     backdropFilter: 'blur(6px)',
     WebkitBackdropFilter: 'blur(6px)',
     backgroundColor: alpha(theme.palette.background.default, 0.72),
+    
+    display: 'flex',
+    flexDirection:'row',
+    justifyContent: 'center',
   }));
 
   const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
     minHeight: APPBAR_MOBILE,
-    [theme.breakpoints.up('lg')]: {
-      minHeight: APPBAR_DESKTOP,
-      padding: theme.spacing(0, 20)
+    maxWidth: 1400,
+    minWidth: 1400,
+  }));
+
+  /**
+  * HSH | 2022.03.14 | v1.0
+  * @name LogoStyle
+  * @des 헤더에서 사용하는 LOGO CSS 정의
+  */
+  const LogoStyle=styled(Box)(()=>({
+    color: '#111111',
+
+    font: '1.8em "Fira Sans", sans-serif',
+    fontWeight: 600,
+    textDecoration: 'none',
+
+    '&:hover':{
+      cursor:'pointer',
     }
   }));
 
@@ -67,15 +87,11 @@ const DashboardNavbar = () => {
     },));
   }
 
-
-
   return (
     <RootStyle>
       <ToolbarStyle>
         <Box sx={{ px: 2.5, py: 3 }}>
-          <RouterLink to="/">
-            <Logo />
-          </RouterLink>
+            <LogoStyle to="/main" component={RouterLink}>OTL</LogoStyle>
         </Box>
 
         <Box sx={{ flexGrow: 1 }} />
