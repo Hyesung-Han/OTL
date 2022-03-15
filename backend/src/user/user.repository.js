@@ -36,6 +36,22 @@ class UserRepository {
 				throw e;
 			});
 	}
+
+	async checkNick(user_nickname) {
+		const sql = `
+			SELECT user_address
+			FROM user_t
+			WHERE user_nickname=?;
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [user_nickname])
+			.then(data => data[0].length)
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = UserRepository;

@@ -25,9 +25,21 @@ class UserService {
         statusCode: 200,
         responseBody: {
           result: "success",
-		  data: user[0],
+		      data: user[0],
         },
       };
+  }
+
+  async checkNick(user_nickname) {
+    const chk = await userRepository.checkNick(user_nickname);
+    const usable = (chk == 0 ? true:false);
+    return {
+      statusCode: 200,
+      responseBody: {
+        result: "success",
+        data: usable,
+      }
+    }
   }
 }
 

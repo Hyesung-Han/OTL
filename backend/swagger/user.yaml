@@ -68,6 +68,26 @@ paths:
         default:
           description: "successful operation"
 
+  /user/checkNick:
+    get:
+      tags:
+        - "user"
+      summary: "check nickname"
+      description: "check nickname"
+      operationId: "check nickname"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_nickname"
+          in: "query"
+          description: "user_nickname"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
