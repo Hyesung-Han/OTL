@@ -27,15 +27,27 @@ contract SaleFactory is Ownable {
      * @dev 반드시 구현해야하는 함수입니다. 
      */
     function createSale(
-        uint256 itemId,
-        uint256 minPrice,
-        uint256 purchasePrice,
-        uint256 startTime,
-        uint256 endTime,
-        address currencyAddress,
-        address nftAddress
+        uint256 itemId, // DB에 저장된 ItemId ?? tokenId?
+        uint256 minPrice, // 최소 bid
+        uint256 purchasePrice, // 즉시구매가
+        uint256 startTime, // 판매 시작일
+        uint256 endTime, // 판매 종료일
+        address currencyAddress, //  주소 ssf 0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333
+        address nftAddress // nft contract 주소
     ) public returns (address) {
         // TODO
+
+        require(owner() == msg.sender, "Caller is not NFT token owner.");
+        require(minPrice > 0, "Price is zero or lower.");
+        require(purchasePrice > 0, "Price is zero or lower.");
+
+        address saleContract = address(new Sale(admin, owner(), itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress));
+        
+        sales.push(saleContract);
+
+        emit NewSale(saleContract, owner(), (sales.length-1));
+
+        return saleContract;
     }
 
     function allSales() public view returns (address[] memory) {
@@ -80,7 +92,7 @@ contract Sale {
         uint256 endTime,
         address _currencyAddress,
         address _nftAddress
-    ) {
+    )  {
         require(_minPrice > 0);
         tokenId = _tokenId;
         minPrice = _minPrice;
