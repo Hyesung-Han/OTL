@@ -21,33 +21,6 @@ schemes:
   - "https"
   - "http"
 paths:
-  /:
-    post:
-      tags:
-        - "user"
-      summary: "Upload myfarm image"
-      description: "Upload myfarm image"
-      operationId: "myfarm upload image"
-      consumes:
-        - multipart/form-data
-      produces:
-        - "application/xml"
-        - "application/json"
-      parameters:
-        - name: "farm_no"
-          in: "formData"
-          description: "farm_no"
-          required: true
-          type: "string"
-        - in: formData
-          name: farm
-          type: file
-          description: The file to upload.
-          required: true
-      responses:
-        default:
-          description: "successful operation"
-
   /user/login:
     post:
       tags:
@@ -82,6 +55,53 @@ paths:
         - name: "user_nickname"
           in: "query"
           description: "user_nickname"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/profile:
+    post:
+      tags:
+        - "user"
+      summary: "Upload user image"
+      description: "Upload user profile image"
+      operationId: "Upload user image"
+      consumes:
+        - multipart/form-data
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: formData
+          name: profile
+          type: file
+          description: The file to upload.
+          required: false
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
+          required: true
+          type: "string"
+        - name: "user_nickname"
+          in: "formData"
+          description: "user_nickname"
+          required: true
+          type: "string"
+        - name: "user_email"
+          in: "formData"
+          description: "user_email"
+          required: true
+          type: "string"
+        - name: "user_link"
+          in: "formData"
+          description: "user_link"
+          required: false
+          type: "string"
+        - name: "user_bio"
+          in: "formData"
+          description: "user_bio"
           required: false
           type: "string"
       responses:

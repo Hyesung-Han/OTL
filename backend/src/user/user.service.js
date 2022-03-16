@@ -41,6 +41,16 @@ class UserService {
       }
     }
   }
+
+  async insertProfile(user) {
+    const result = await userRepository.insertProfile(user);
+    return {
+      statusCode: 201,
+      responseBody: {
+        result: "success",
+      },
+    };
+  }
 }
 
 module.exports = UserService;

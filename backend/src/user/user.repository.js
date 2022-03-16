@@ -52,6 +52,22 @@ class UserRepository {
 				throw e;
 			});
 	}
+
+	async insertProfile(user) {
+		const sql = `
+			UPDATE user_t
+			SET user_nickname=?, user_email=?, user_bio=?, user_link=?, user_image_url=?
+			WHERE user_address=?;
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [user.user_nickname, user.user_email, user.user_bio, user.user_link, user.user_image_url, user.user_address])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = UserRepository;
