@@ -20,6 +20,7 @@ import { onResponse } from "../common/ErrorMessage";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
+import { style } from "@mui/system";
 
 const Main = () => {
   // Web3
@@ -119,7 +120,10 @@ const Main = () => {
    * @des info 내용 컴포넌트로 만듦
    */
   const infoList = info.map((item, index) => (
-    <Grid sx={{ padding: "20px", display: "flex", flexDirection: "row"  }}>
+    <Grid
+      key={item.title}
+      sx={{ padding: "20px", display: "flex", flexDirection: "row" }}
+    >
       <Grid sx={{ paddingRight: "10px" }}>{item.icon}</Grid>
       <Grid sx={{ display: "flex", flexDirection: "column" }}>
         <Typography fontSize="20px" color="#ffffff">
@@ -131,6 +135,17 @@ const Main = () => {
       </Grid>
     </Grid>
   ));
+
+  /**
+   * HSH | 2022.03.16 | v1.0
+   * @name FooterLinkStyle
+   * @des Main Footer grid
+   */
+  const FooterLinkStyle = styled(Link)(() => ({
+    color: "#999999",
+    fontSize: "20px",
+    padding: "10px 0px",
+  }));
 
   return (
     <RootStyle>
@@ -155,13 +170,63 @@ const Main = () => {
             alignItems: "center",
           }}
         >
-          <Grid sx={{padding:"0px 30px"}}>
+          <Grid sx={{ padding: "0px 30px" }}>
             <h1>Logo</h1>
           </Grid>
-          <Grid sx={{padding:"0px 30px"}}>
-            <h1>Useful Links</h1>
+          <Grid sx={{ padding: "0px 30px" }}>
+            <Grid
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "left",
+              }}
+            >
+              <Typography sx={{ fontSize: "30px", color: "white" }}>
+                Useful Link
+              </Typography>
+              <Grid sx={{width:"70px", height:"5px", backgroundColor:"#ff6a00", margin:"0 10px"}}></Grid>
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  padding: "20px 10px",
+                }}
+              >
+                <Grid
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "200px",
+                  }}
+                >
+                  <FooterLinkStyle href="#" underline="hover">
+                    log in
+                  </FooterLinkStyle>
+                  <FooterLinkStyle href="#" underline="hover">
+                    my home
+                  </FooterLinkStyle>
+                  <FooterLinkStyle href="#" underline="hover">
+                    item list
+                  </FooterLinkStyle>
+                </Grid>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "200px",
+                  }}
+                >
+                  <FooterLinkStyle href="#" underline="hover">
+                    create item
+                  </FooterLinkStyle>
+                  <FooterLinkStyle href="#" underline="hover">
+                    sell item
+                  </FooterLinkStyle>
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid sx={{padding:"0px 30px"}}>
+          <Grid sx={{ padding: "0px 30px" }}>
             <Grid
               sx={{
                 display: "flex",
