@@ -20,6 +20,9 @@ import { onResponse } from "../common/ErrorMessage";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
+import GitHubIcon from '@mui/icons-material/GitHub';
+import notion from '../image/notion.png'
+
 import { style } from "@mui/system";
 
 const Main = () => {
@@ -105,12 +108,12 @@ const Main = () => {
     {
       icon: <CallIcon sx={{ fontSize: "45px" }} color="secondary" />,
       title: "Call us",
-      description: "010-2030-6995",
+      description: "02-3429-5100",
     },
     {
       icon: <EmailIcon sx={{ fontSize: "45px" }} color="secondary" />,
       title: "Mail us",
-      description: "xoem00@gmail.com",
+      description: "jeanstest6@gmail.com",
     },
   ];
 
@@ -147,6 +150,24 @@ const Main = () => {
     padding: "10px 0px",
   }));
 
+  /**
+   * HSH | 2022.03.16 | v1.0
+   * @name IconRoundStyle
+   * @des Icon을 덮는 원 테두리
+   */
+  const IconRoundStyle=styled(Link)(()=>({
+    border: '1px solid white',
+    borderRadius: '50%',
+
+    width:"50px",
+    height:"50px",
+    display: "flex", 
+    justifyContent: "center",
+    alignItems: "center",
+
+    margin:"0px 20px",
+  }))
+
   return (
     <RootStyle>
       <MainTopStyle>
@@ -171,7 +192,25 @@ const Main = () => {
           }}
         >
           <Grid sx={{ padding: "0px 30px" }}>
-            <h1>Logo</h1>
+            <Grid sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "left",
+              width:"400px",
+            }} >
+              <Typography sx={{color:"#ffffff", fontSize:"60px"}}>OTL</Typography>
+              <Typography sx={{color:"#aaa", width:"300px"}}> Our mission is to enable people to find their own items and show their individuality. </Typography>
+
+              <Grid sx={{display:"flex", flexDirection:"row", justifyContent:"left", padding:"30px 0"}}>
+                <IconRoundStyle href="https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22A405" >
+                  <GitHubIcon sx={{fontSize:"30px", color:"#ffffff"}}/>
+                </IconRoundStyle>
+                <IconRoundStyle href="https://www.notion.so/TL-8fc2391a556b447d9ca4a70cf1fd194a">
+                  <Box component="img" src={notion} sx={{ width: "30px", height: "30px"}} />
+                </IconRoundStyle>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid sx={{ padding: "0px 30px" }}>
             <Grid
