@@ -155,13 +155,13 @@ const Main = () => {
             alignItems: "center",
           }}
         >
-          <Grid>
+          <Grid sx={{padding:"0px 30px"}}>
             <h1>Logo</h1>
           </Grid>
-          <Grid>
+          <Grid sx={{padding:"0px 30px"}}>
             <h1>Useful Links</h1>
           </Grid>
-          <Grid>
+          <Grid sx={{padding:"0px 30px"}}>
             <Grid
               sx={{
                 display: "flex",
