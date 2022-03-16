@@ -16,6 +16,11 @@ import COMMON_HEADER from "../common/HeaderType";
 import COMMON_CONTRACT from "../common/SaleInfoGetter";
 import { onResponse } from "../common/ErrorMessage";
 
+//Icons
+import FmdGoodIcon from "@mui/icons-material/FmdGood";
+import CallIcon from "@mui/icons-material/Call";
+import EmailIcon from "@mui/icons-material/Email";
+
 const Main = () => {
   // Web3
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
@@ -73,9 +78,9 @@ const Main = () => {
   const MainFooterStyle = styled(Grid)(() => ({
     display: "flex",
     flexDirection: "row",
-    justifyContent:"center",
+    justifyContent: "center",
 
-    padding:"30px 0px",
+    padding: "30px 0px",
 
     backgroundColor: "#444444",
     height: "400px",
@@ -85,26 +90,47 @@ const Main = () => {
     setWindowHeight(window.innerHeight);
   }, []);
 
-  const animatedItem = [
+  /**
+   * HSH | 2022.03.16 | v1.0
+   * @name info
+   * @des Footer에 들어가는 findus, call us, mail us 정보
+   */
+  const info = [
     {
-      icon: img1,
-      title: 'Find us',
-      description:
-        '212 ,Teheran-ro Gangnam-gu Seoul',
+      icon: <FmdGoodIcon sx={{ fontSize: "45px" }} color="secondary" />,
+      title: "Find us",
+      description: "212 ,Teheran-ro Gangnam-gu Seoul",
     },
     {
-      icon: img2,
-      title: 'Call us',
-      description:
-        '010-2030-6995',
+      icon: <CallIcon sx={{ fontSize: "45px" }} color="secondary" />,
+      title: "Call us",
+      description: "010-2030-6995",
     },
     {
-      icon: img3,
-      title: 'Mail us',
-      description:
-        'xoem00@gmail.com',
+      icon: <EmailIcon sx={{ fontSize: "45px" }} color="secondary" />,
+      title: "Mail us",
+      description: "xoem00@gmail.com",
     },
   ];
+
+  /**
+   * HSH | 2022.03.16 | v1.0
+   * @name infoList
+   * @des info 내용 컴포넌트로 만듦
+   */
+  const infoList = info.map((item, index) => (
+    <Grid sx={{ padding: "20px", display: "flex", flexDirection: "row"  }}>
+      <Grid sx={{ paddingRight: "10px" }}>{item.icon}</Grid>
+      <Grid sx={{ display: "flex", flexDirection: "column" }}>
+        <Typography fontSize="20px" color="#ffffff">
+          {item.title}
+        </Typography>
+        <Typography fontSize="16px" color="#888888">
+          {item.description}
+        </Typography>
+      </Grid>
+    </Grid>
+  ));
 
   return (
     <RootStyle>
@@ -121,7 +147,14 @@ const Main = () => {
         </Grid>
       </CategoryStyle>
       <MainFooterStyle>
-        <Grid sx={{display: "flex", flexDirection: "row", justifyContent:"center"}}>
+        <Grid
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Grid>
             <h1>Logo</h1>
           </Grid>
@@ -129,7 +162,15 @@ const Main = () => {
             <h1>Useful Links</h1>
           </Grid>
           <Grid>
-            <h1>contect</h1>
+            <Grid
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "left",
+              }}
+            >
+              {infoList}
+            </Grid>
           </Grid>
         </Grid>
       </MainFooterStyle>
