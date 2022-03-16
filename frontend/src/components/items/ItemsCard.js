@@ -28,7 +28,7 @@ ItemsCard.propTypes = {
 
 // 구매하기 카드 형태
 /**
- * CSW | 2022.03.14 | ADD
+ * CSW | 2022.03.16 | FIX
  * @name ItemsCard
  * @des ItemCard 컴포넌트
  */

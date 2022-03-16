@@ -8,10 +8,11 @@ ItemsCard.propTypes = {
 
 // 구매하기 카드 리스트 형태
 /**
- * CSW | 2022.03.14 | ADD
+ * CSW | 2022.03.16 | FIX
  * @name ItemList
  * @des ItemList 컴포넌트
  */
+
 export default function ItemsList({ products, ...other }) {
   return (
 
