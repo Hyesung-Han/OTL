@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import {shadows} from '@mui/system'
 import { convertToAccountingFormat } from '../../utils/NumberFormatter';
 
 // 이미지 스타일
@@ -14,8 +15,12 @@ const ImgStyle = styled('img')({
 });
 
 const CardStyle = styled(Card)({
-  borderRadius : 8
+  borderRadius : 8,
+  "&:hover":{
+    boxShadow: '2px 5px 5px 2px rgba(225, 223, 214, 1)'
+  }
 });
+
 
 ItemsCard.propTypes = {
   product: PropTypes.object
@@ -33,31 +38,26 @@ export default function ItemsCard({ product }) {
   const symbol = 'SSF';
 
   return (
-    /**
-     * TODO
-     * 지금은 title에 마우스이벤트+링크로 이동가능하게 해뒀는데,
-     * 카드 전체범위로 바꾸기
-     */
     <CardStyle>
-      <Box sx={{ pt: '100%', position: 'relative' }}>
-        <ImgStyle src={image} />
-      </Box>
-      <Stack spacing={2} sx={{ p: 3 }}>
-        <Link
+      <Link
           to={`/items/detail/${tokenId}`}
           color="inherit"
-          underline="hover"
+          underline='hover'
           component={RouterLink}
         >
-          <Typography variant="subtitle1" noWrap>
-            {title}
+        <Box sx={{ pt: '100%', position: 'relative'}}>
+          <ImgStyle src={image} />
+        </Box>
+        <Stack spacing={2} sx={{ p: 3 }}>
+            <Typography variant="subtitle1" noWrap>
+              {title}
+            </Typography>
+          <Typography variant="subtitle1" textAlign="right" sx={{ fontSize: 25 }}>
+            {convertToAccountingFormat(price)} {symbol}
           </Typography>
-        </Link>
+        </Stack>
 
-        <Typography variant="subtitle1" textAlign="right" sx={{ fontSize: 25 }}>
-          {convertToAccountingFormat(price)} {symbol}
-        </Typography>
-      </Stack>
+      </Link>
     </CardStyle>
   );
 }
