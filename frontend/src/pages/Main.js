@@ -20,8 +20,8 @@ import { onResponse } from "../common/ErrorMessage";
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
-import GitHubIcon from '@mui/icons-material/GitHub';
-import notion from '../image/notion.png'
+import GitHubIcon from "@mui/icons-material/GitHub";
+import notion from "../image/notion.png";
 
 import { style } from "@mui/system";
 
@@ -29,7 +29,7 @@ const Main = () => {
   // Web3
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
-  const [windowHeight, setWindowHeight] = useState("900");
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
   /**
    * HSH | 2022.03.16 | v1.0
@@ -70,7 +70,6 @@ const Main = () => {
     justifyContent: "center",
     alignItems: "center",
 
-    width: 1000,
     padding: "30px 0px",
   }));
 
@@ -90,9 +89,7 @@ const Main = () => {
     height: "400px",
   }));
 
-  useEffect(() => {
-    setWindowHeight(window.innerHeight);
-  }, []);
+  useEffect(() => {}, []);
 
   /**
    * HSH | 2022.03.16 | v1.0
@@ -155,18 +152,47 @@ const Main = () => {
    * @name IconRoundStyle
    * @des Icon을 덮는 원 테두리
    */
-  const IconRoundStyle=styled(Link)(()=>({
-    border: '1px solid white',
-    borderRadius: '50%',
+  const IconRoundStyle = styled(Link)(() => ({
+    border: "1px solid white",
+    borderRadius: "50%",
 
-    width:"50px",
-    height:"50px",
-    display: "flex", 
+    width: "50px",
+    height: "50px",
+    display: "flex",
     justifyContent: "center",
     alignItems: "center",
 
-    margin:"0px 20px",
-  }))
+    margin: "0px 20px",
+  }));
+
+  const categoryItem = [
+    {
+      name: "a",
+    },
+    {
+      name: "b",
+    },
+    {
+      name: "c",
+    },
+    {
+      name: "d",
+    },
+    {
+      name: "e",
+    },
+    {
+      name: "f",
+    },
+  ];
+
+  const categoryItemList = categoryItem.map((item, index) => (
+    <Grid item key={index} lg={3} sx={{ margin: "10px",border: "1px solid #bbb", borderRadius: "10px", width:"220px", height:"200px" }}>
+      <Grid>
+        {index}
+      </Grid>
+    </Grid>
+  ));
 
   return (
     <RootStyle>
@@ -177,9 +203,10 @@ const Main = () => {
       <Divider />
       <CategoryStyle>
         <Grid
-          sx={{ display: "flex", flexDirection: "row", alignItems: "left" }}
+          sx={{ display: "flex", flexDirection: "column", alignItems: "center"}}
         >
           <Typography variant="h4">Browse by category</Typography>
+          <Grid container justifyContent={"center"} sx={{ margin:"30px 0"}} >{categoryItemList}</Grid>
         </Grid>
       </CategoryStyle>
       <MainFooterStyle>
@@ -192,22 +219,41 @@ const Main = () => {
           }}
         >
           <Grid sx={{ padding: "0px 30px" }}>
-            <Grid sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              alignItems: "left",
-              width:"400px",
-            }} >
-              <Typography sx={{color:"#ffffff", fontSize:"60px"}}>OTL</Typography>
-              <Typography sx={{color:"#aaa", width:"300px"}}> Our mission is to enable people to find their own items and show their individuality. </Typography>
+            <Grid
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "left",
+                width: "400px",
+              }}
+            >
+              <Typography sx={{ color: "#ffffff", fontSize: "60px" }}>
+                OTL
+              </Typography>
+              <Typography sx={{ color: "#aaa", width: "300px" }}>
+                {" "}
+                Our mission is to enable people to find their own items and show
+                their individuality.{" "}
+              </Typography>
 
-              <Grid sx={{display:"flex", flexDirection:"row", justifyContent:"left", padding:"30px 0"}}>
-                <IconRoundStyle href="https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22A405" >
-                  <GitHubIcon sx={{fontSize:"30px", color:"#ffffff"}}/>
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "left",
+                  padding: "30px 0",
+                }}
+              >
+                <IconRoundStyle href="https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22A405">
+                  <GitHubIcon sx={{ fontSize: "30px", color: "#ffffff" }} />
                 </IconRoundStyle>
                 <IconRoundStyle href="https://www.notion.so/TL-8fc2391a556b447d9ca4a70cf1fd194a">
-                  <Box component="img" src={notion} sx={{ width: "30px", height: "30px"}} />
+                  <Box
+                    component="img"
+                    src={notion}
+                    sx={{ width: "30px", height: "30px" }}
+                  />
                 </IconRoundStyle>
               </Grid>
             </Grid>
@@ -223,7 +269,14 @@ const Main = () => {
               <Typography sx={{ fontSize: "30px", color: "white" }}>
                 Useful Link
               </Typography>
-              <Grid sx={{width:"70px", height:"5px", backgroundColor:"#ff6a00", margin:"0 10px"}}></Grid>
+              <Grid
+                sx={{
+                  width: "70px",
+                  height: "5px",
+                  backgroundColor: "#ff6a00",
+                  margin: "0 10px",
+                }}
+              ></Grid>
               <Grid
                 sx={{
                   display: "flex",
