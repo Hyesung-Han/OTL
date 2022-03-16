@@ -7,7 +7,9 @@ import {
   MenuItem,
   Typography,
   IconButton,
-  ListItemIcon
+  ListItemIcon,
+  InputBase,
+  Paper,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 // import Logo from '../../components/Logo';
@@ -24,9 +26,10 @@ import { nominalTypeHack } from "prop-types";
 //Icons
 import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
+import SearchIcon from "@mui/icons-material/Search";
 
 // 헤더 화면 (상단 메뉴바)
-const DashboardNavbar = () => {
+const SearchNavbar = () => {
   const APPBAR_MOBILE = 64;
   const APPBAR_DESKTOP = 92;
   const user = useSelector((state) => state.Auth.user);
@@ -213,7 +216,34 @@ const DashboardNavbar = () => {
           </LogoStyle>
         </Box>
 
-        <Box sx={{ flexGrow: 1 }} />
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+
+          }}
+        >
+          <Paper
+            component="form"
+            sx={{
+              p: "2px 4px",
+              display: "flex",
+              alignItems: "center",
+              width: 600,
+
+              border: '2px solid #f1f1f1',
+              padding: '0 10px'
+            }}
+          >
+            <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search Item" />
+            <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+        </Box>
 
         <Stack
           direction="row"
@@ -271,14 +301,14 @@ const DashboardNavbar = () => {
                 onClose={handleClose}
               >
                 <MenuItem to="#" component={RouterLink}>
-                <ListItemIcon>
+                  <ListItemIcon>
                     <HomeIcon fontSize="small" />
                   </ListItemIcon>
                   <Typography textAlign="center" onClick={handleClose}>
                     Profile
                   </Typography>
                 </MenuItem>
-                <Divider/>
+                <Divider />
                 <MenuItem onClick={onClickLogOut}>
                   <ListItemIcon>
                     <Logout fontSize="small" />
@@ -294,4 +324,4 @@ const DashboardNavbar = () => {
   );
 };
 
-export default DashboardNavbar;
+export default SearchNavbar;
