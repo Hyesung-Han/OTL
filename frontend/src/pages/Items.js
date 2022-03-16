@@ -83,7 +83,9 @@ const Items = () => {
           {isCollection === true ? (
             
             <Container maxWidth="xl">
-              <Category sx={{ mt: 1 }} />
+              <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
+                <Category sx={{ mt: 1 }} />
+              </Box>
               <ItemsList sx={{ mt: 1 }} products={products} />
             </Container>
           ) : (
