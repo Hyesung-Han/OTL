@@ -270,9 +270,10 @@ const SearchNavbar = () => {
           {!user.user_id && (
             <div style={UserBoxStyle}>
               <ButtonStyle
-                onClick={onClickLogin}
+                to="/connectwallet"
                 size="large"
                 sx={{ fontSize: 17 }}
+                component={RouterLink}
               >
                 LOGIN
               </ButtonStyle>
