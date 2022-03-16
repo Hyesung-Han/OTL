@@ -165,6 +165,10 @@ const Main = () => {
     margin: "0px 20px",
   }));
 
+  /**
+	* HACK
+	* 카테고리 연동해서 받아오기 전 까지는 더미데이터 만들어서 사용
+	*/
   const categoryItem = [
     {
       name: "a",
@@ -186,10 +190,19 @@ const Main = () => {
     },
   ];
 
+  /**
+   * HSH | 2022.03.16 | v1.0
+   * @name categoryItemList
+   * @des 카테고리 바로가기 카드
+   */
   const categoryItemList = categoryItem.map((item, index) => (
     <Grid item key={index} lg={3} sx={{ margin: "10px",border: "1px solid #bbb", borderRadius: "10px", width:"220px", height:"200px" }}>
       <Grid>
-        {index}
+        {/** 
+        * Todo
+        * Card Img, title 넣고 비율 맞추기
+        */}
+        {item.name}
       </Grid>
     </Grid>
   ));
