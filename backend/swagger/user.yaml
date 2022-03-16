@@ -128,6 +128,25 @@ paths:
         default:
           description: "successful operation"
 
+    get:
+      tags:
+        - "user"
+      summary: "get user profile"
+      description: "get user profile"
+      operationId: "get user profile"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_address"
+          in: "query"
+          description: "user_address"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
   /user/profileImg:
     patch:
       tags:

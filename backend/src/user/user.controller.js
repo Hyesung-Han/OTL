@@ -65,6 +65,27 @@ router.get("/checkNick", async function (req, res){
 /**
  * LJA | 2022.03.16 | v1.0
  * @name profile
+ * @api {get} /user/profile?user_address=address
+ * @des 해당 주소의 프로필 정보를 반환해준다
+ */
+router.get("/profile", async function (req, res){
+	const {user_address} = req.query;
+	try {
+		const { statusCode, responseBody } = await userService.getUser(user_address);
+	
+		res.statusCode = statusCode;
+		res.send(responseBody);
+
+	} catch(e) {
+		console.error("getUser", e);
+		res.status(403).send({result:"fail", error:e});
+	}
+
+});
+
+/**
+ * LJA | 2022.03.16 | v1.0
+ * @name profile
  * @api {post} /user/profile
  * @des
  * 프로필 생성 시 필요한 데이터를 입력받아 DB에 저장.
