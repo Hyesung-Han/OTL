@@ -25,9 +25,9 @@ paths:
     post:
       tags:
         - "user"
-      summary: "insert user"
-      description: "insert user data"
-      operationId: "insert user"
+      summary: "insert user address"
+      description: "insert user address"
+      operationId: "insert user address"
       produces:
         - "application/xml"
         - "application/json"
@@ -65,9 +65,9 @@ paths:
     post:
       tags:
         - "user"
-      summary: "Upload user image"
-      description: "Upload user profile image"
-      operationId: "Upload user image"
+      summary: "insert user profile"
+      description: "insert user profile"
+      operationId: "insert user profile"
       consumes:
         - multipart/form-data
       produces:
@@ -107,6 +107,75 @@ paths:
       responses:
         default:
           description: "successful operation"
+
+    patch:
+      tags:
+        - "user"
+      summary: "update user profile"
+      description: "update user profile"
+      operationId: "update user profile"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "update user profile"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/profileImg:
+    patch:
+      tags:
+        - "user"
+      summary: "insert or change user image"
+      description: "insert or change user image"
+      operationId: "insert or change user image"
+      consumes:
+        - multipart/form-data
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: formData
+          name: profile
+          type: file
+          description: The file to upload.
+          required: true
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
+          required: true
+          type: "string"
+        - name: "user_image_url"
+          in: "formData"
+          description: "user_image_url"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      user_address:
+        type: "string"
+      user_nickname:
+        type: "string"
+      user_email:
+        type: "string"
+      user_link:
+        type: "string"
+      user_bio:
+        type: "string"
+    xml:
+      name: "User"
 
 externalDocs:
   description: "Find out more about Swagger"

@@ -51,6 +51,26 @@ class UserService {
       },
     };
   }
+
+  async updateProfile(user) {
+    const result = await userRepository.updateProfile(user);
+    return {
+      statusCode: 201,
+      responseBody: {
+        result: "success",
+      },
+    };
+  }
+
+  async updateProfileImage(user_address, user_image_url) {
+    const result = await userRepository.updateProfileImage(user_address, user_image_url);
+    return {
+      statusCode: 201,
+      responseBody: {
+        result: "success",
+      },
+    };
+  }
 }
 
 module.exports = UserService;
