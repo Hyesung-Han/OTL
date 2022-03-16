@@ -179,6 +179,26 @@ paths:
         default:
           description: "successful operation"
 
+  /user/list:
+    get:
+      tags:
+        - "user"
+      summary: "get user list by nickname"
+      description: "get user list by nickname"
+      operationId: "get user list by nickname"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_nickname"
+          in: "query"
+          description: "user_nickname"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
 definitions:
   User:
     type: "object"

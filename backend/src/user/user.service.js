@@ -71,6 +71,17 @@ class UserService {
       },
     };
   }
+
+  async getUserList(user_nickname) {
+    const user = await userRepository.getUserList(user_nickname);
+      return {
+        statusCode: 200,
+        responseBody: {
+          result: "success",
+		      data: user,
+        },
+      };
+  }
 }
 
 module.exports = UserService;

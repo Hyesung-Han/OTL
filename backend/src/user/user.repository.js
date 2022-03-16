@@ -100,6 +100,22 @@ class UserRepository {
 				throw e;
 			});
 	}
+
+	async getUserList(user_nickname) {
+		const sql = `
+			SELECT user_address, user_nickname, user_image_url
+			FROM user_t
+			WHERE user_nickname LIKE ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, '%'+user_nickname+'%')
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = UserRepository;

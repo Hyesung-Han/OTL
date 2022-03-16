@@ -190,4 +190,24 @@ router.patch("/profileImg", upload.single('profile'), async function (req, res) 
 	}
 });
 
+/**
+ * LJA | 2022.03.16 | v1.0
+ * @name list
+ * @api {get} /user/list?user_nickname=nickname
+ * @des 검색하려는 닉네임이 포함된 모든 유저들을 반환해준다
+ */
+ router.get("/list", async function (req, res){
+	const {user_nickname} = req.query;
+	try {
+		const { statusCode, responseBody } = await userService.getUserList(user_nickname);
+	
+		res.statusCode = statusCode;
+		res.send(responseBody);
+
+	} catch(e) {
+		console.error("getUser", e);
+		res.status(403).send({result:"fail", error:e});
+	}
+
+});
 module.exports = router;
