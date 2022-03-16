@@ -35,7 +35,7 @@ ItemsCard.propTypes = {
 export default function ItemsCard({ product }) {
   // 이미지, 제목, 가격, 토큰 ID, 심볼
   const { image, title, price, tokenId } = product;
-  const symbol = 'SSF';
+  const symbol = 'ETH';
 
   return (
     <CardStyle>
@@ -52,7 +52,7 @@ export default function ItemsCard({ product }) {
             <Typography variant="subtitle1" noWrap>
               {title}
             </Typography>
-          <Typography variant="subtitle1" textAlign="right" sx={{ fontSize: 25 }}>
+          <Typography variant="subtitle1" textAlign="right" sx={{ fontSize: 15 }}>
             {convertToAccountingFormat(price)} {symbol}
           </Typography>
         </Stack>

@@ -53,11 +53,7 @@ const Items = () => {
       price: "fake price",
       title: "fake title"
     };
-    resultList.push(resultItem);
-    resultList.push(resultItem);
-    resultList.push(resultItem);
-    resultList.push(resultItem);
-    resultList.push(resultItem);
+
     resultList.push(resultItem);
 
     setItem(resultList);

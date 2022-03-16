@@ -14,13 +14,10 @@ ItemsCard.propTypes = {
  */
 export default function ItemsList({ products, ...other }) {
   return (
-    /**
-     * TODO
-     * 한 줄에 카드가 7개 나오게 조정
-     */
+
     <Grid container spacing={6} {...other}>
       {products.map((product) => (
-        <Grid sx={{ mb: 3 }} key={product.hash} item xs={12} sm={6} md={3}>
+        <Grid sx={{ mb: 3 }} key={product.hash} item xs={12} sm={6} md={2.4}>
           <ItemsCard product={product} />
         </Grid>
       ))}
