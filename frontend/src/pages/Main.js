@@ -11,6 +11,8 @@ const Main = () => {
   // Web3
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
+  const [windowHeight,setWindowHeight]=useState('900');
+
   /**
    * HSH | 2022.03.16 | v1.0
    * @name RootStyle
@@ -31,11 +33,12 @@ const Main = () => {
    */
    const MainTopStyle = styled(Grid)(({ theme }) => ({
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems:"center",
 
-    height:"400px",
+    height:windowHeight-100,
+    paddingBottom:100,
   }));
 
   /**
@@ -64,11 +67,15 @@ const Main = () => {
   }));
 
   useEffect(() => {
+    setWindowHeight(window.innerHeight);
   }, []);
 
   return (
     <RootStyle>
       <MainTopStyle>
+        <Typography variant="h1">
+          OTL
+        </Typography>
         <Typography>
           One can Take Limited
         </Typography>

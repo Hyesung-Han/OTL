@@ -173,9 +173,8 @@ const SearchNavbar = () => {
     flexDirection: "row",
     justifyContent: "space-between",
 
-    // minHeight: APPBAR_MOBILE,
-    maxWidth: 1400,
-    minWidth: 1400,
+    width:1400,
+    height:100,
   };
 
   /**
