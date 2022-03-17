@@ -4,7 +4,7 @@
 const express = require("express");
 const router = express.Router();
 const UserService = require("./user.service");
-const { upload, deleteS3Object } = require("../../config/s3-config");
+const { upload } = require("../../config/s3-config");
 const userService = new UserService();
 
 /**
@@ -165,15 +165,10 @@ router.patch("/profileImg", upload.single('profile'), async function (req, res) 
 		return;
 	}
 
-	const currentImage = req.body.user_image_url;
 	// 기존 이미지가 존재하는 경우 기존 이미지 삭제(undefined가 아니고 비어있지 않음)
+	const currentImage = req.body.user_image_url;
 	if(!!currentImage && currentImage != '' && currentImage != null) {
-		try {
-			const filename = currentImage.split('/').pop();
-			deleteS3Object('profile/'+filename);
-		} catch(e) {
-			console.error("delete profile image",e);
-		}
+		await userService.deleteProfileImage(currentImage);
 	}
 
 	const user_address = req.body.user_address;

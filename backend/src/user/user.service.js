@@ -82,6 +82,15 @@ class UserService {
         },
       };
   }
+
+  async deleteProfileImage(currentImage) {
+      try {
+        const filename = currentImage.split('/').pop();
+        deleteS3Object('profile/'+filename);
+      } catch(e) {
+        console.error("delete profile image",e);
+      }
+  }
 }
 
 module.exports = UserService;
