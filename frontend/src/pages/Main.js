@@ -15,6 +15,7 @@ import COMMON_ABI from "../common/ABI";
 import COMMON_HEADER from "../common/HeaderType";
 import COMMON_CONTRACT from "../common/SaleInfoGetter";
 import { onResponse } from "../common/ErrorMessage";
+import { Link as RouterLink } from "react-router-dom";
 
 //Icons
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
@@ -171,24 +172,48 @@ const Main = () => {
 	*/
   const categoryItem = [
     {
-      name: "a",
+      img:"#ffcdd2",
+      name: "chair",
+      link:"#",
     },
     {
-      name: "b",
+      img:"#f47fb1",
+      name: "table",
+      link:"#",
     },
     {
-      name: "c",
+      img:"#99cccc",
+      name: "wallpaper",
+      link:"#",
     },
     {
-      name: "d",
+      img:"#3366cc",
+      name: "floor",
+      link:"#",
     },
     {
-      name: "e",
+      img:"#66cc00",
+      name: "wall hanging",
+      link:"#",
     },
     {
-      name: "f",
+      img:"#ff1744",
+      name: "prop",
+      link:"#",
     },
   ];
+
+  const CategoryCard=styled(Grid)(()=>({
+      margin: "20px",
+      borderRadius: "10px",
+      width:"220px",
+      height:"200px",
+
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"end",
+      alignItems:"center",
+  }));
 
   /**
    * HSH | 2022.03.16 | v1.0
@@ -196,15 +221,11 @@ const Main = () => {
    * @des 카테고리 바로가기 카드
    */
   const categoryItemList = categoryItem.map((item, index) => (
-    <Grid item key={index} lg={3} sx={{ margin: "10px",border: "1px solid #bbb", borderRadius: "10px", width:"220px", height:"200px" }}>
-      <Grid>
-        {/** 
-        * Todo
-        * Card Img, title 넣고 비율 맞추기
-        */}
-        {item.name}
+    <CategoryCard item key={index} to={item.link} lg={3} sx={{ backgroundColor:item.img, textDecoration: "none" }} component={RouterLink}>
+      <Grid display="flex" justifyContent="center" alignItems="center" sx={{height:"50px", width:"100%", backgroundColor:"#ffffff", opacity:"0.8" }}>
+        <Box sx={{color: "#303030", font: '1.2em', fontWeight: 600}}>{item.name}</Box>
       </Grid>
-    </Grid>
+    </CategoryCard>
   ));
 
   return (
