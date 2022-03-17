@@ -7,15 +7,17 @@ import {
   Link,
   Divider,
   Typography,
+  Slide,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Web3 from "web3";
 import COMMON_ABI from "../common/ABI";
 import COMMON_HEADER from "../common/HeaderType";
 import COMMON_CONTRACT from "../common/SaleInfoGetter";
 import { onResponse } from "../common/ErrorMessage";
 import { Link as RouterLink } from "react-router-dom";
+import { css, keyframes } from '@emotion/react'
 
 //Icons
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
@@ -24,7 +26,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import notion from "../image/notion.png";
 
-import { style } from "@mui/system";
+import emoStyled from '@emotion/styled'
 
 const Main = () => {
   // Web3
@@ -53,7 +55,7 @@ const Main = () => {
   const MainTopStyle = styled(Grid)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
 
     height: windowHeight - 100,
@@ -203,6 +205,11 @@ const Main = () => {
     },
   ];
 
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name CategoryCard
+   * @des 카테고리 카드 컴포넌트
+   */
   const CategoryCard=styled(Grid)(()=>({
       margin: "20px",
       borderRadius: "10px",
@@ -228,11 +235,69 @@ const Main = () => {
     </CategoryCard>
   ));
 
+  /**
+   * HSH | 2022.03.16 | v1.0
+   * @name TopListStyled
+   * @des 메인 Top에 있는 아이템 리스트 애니메이션
+   */
+  const TopListStyled=styled(Grid)(()=>({
+    width:"130%",
+    height:"100px",
+
+    backgroundColor:"#123456",
+  }));
+
+  const floating = keyframes`
+    0 {
+        transform: translateY(50px);    
+    }
+    100% {
+        opacity:1;
+        transform: translateY(-50px);
+    }
+  `
+  const TextStyle = emoStyled.p`
+    font-size: 50px;
+    font-weight: bold;
+    color: ${(props)=>props.color};
+
+    opacity: 0;
+    animation: ${floating} ${(props) => props.time}s forwards;
+  `
+  
+  const TopTitle=["One can Take Limited item"];
+  const TypograpyStr=(prop)=>{
+    const str=prop.str;    
+
+    let color;
+    const arr=[];
+    for(let i=0;i<str.length;i++)
+    {
+      color="#000000";
+      if(str[i]>='A'&&str[i]<='Z')  color="#ff3300";
+
+      if(str[i]==' ')
+      {
+        arr.push(<TextStyle color={color} time={i/10}>&nbsp;</TextStyle>);
+      } 
+      else 
+      {
+        arr.push(<TextStyle color={color} time={i/10}>{str[i]}</TextStyle>)
+      }
+    }
+    return arr;
+  }
+
+  const TopTypograpy = TopTitle.map((item, index) => (
+    <TypograpyStr key={index} accentIndex={index} str={item}/>
+  ));
+
   return (
     <RootStyle>
       <MainTopStyle>
-        <Typography variant="h1">OTL</Typography>
-        <Typography>One can Take Limited</Typography>
+        <Grid display="flex" flexDirection="row" alignItems="center" >
+          {TopTypograpy}
+        </Grid>
       </MainTopStyle>
       <Divider />
       <CategoryStyle>
