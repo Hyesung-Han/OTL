@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const itemsRouter = require('./src/items/items.controller');
 const salesRouter = require('./src/sales/sales.controller');
+const userRouter = require('./src/user/user.controller');
 
 const { swaggerUi, specs } = require("./swagger");
 const app = express();
@@ -20,21 +21,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 router.use('/items', itemsRouter);
 router.use('/sales', salesRouter);
+router.use('/user', userRouter);
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use("/api", router);
 // catch 404 and forward to error handler
 app.use(function(req, res) {
-	res.status(404);
-	res.send(createError(404));
+  res.status(404);
+  res.send(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res) {
-	res.locals.message = err.message;
+  res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-	res.status(err.status || 500);
+  res.status(err.status || 500);
 });
 
 module.exports = app;

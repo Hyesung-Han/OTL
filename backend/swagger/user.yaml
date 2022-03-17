@@ -12,7 +12,7 @@ info:
 host: "petstore.swagger.io"
 basePath: "/v2"
 tags:
-  - name: "items"
+  - name: "user"
     description: "Operations about user"
     externalDocs:
       description: "Find out more about our store"
@@ -21,32 +21,200 @@ schemes:
   - "https"
   - "http"
 paths:
-  /:
+  /user/login:
     post:
       tags:
-        - "items"
-      summary: "Upload myfarm image"
-      description: "Upload myfarm image"
-      operationId: "myfarm upload image"
+        - "user"
+      summary: "insert user address"
+      description: "insert user address"
+      operationId: "insert user address"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/checkNick:
+    get:
+      tags:
+        - "user"
+      summary: "check nickname"
+      description: "check nickname"
+      operationId: "check nickname"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_nickname"
+          in: "query"
+          description: "user_nickname"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/profile:
+    post:
+      tags:
+        - "user"
+      summary: "insert user profile"
+      description: "insert user profile"
+      operationId: "insert user profile"
       consumes:
         - multipart/form-data
       produces:
         - "application/xml"
         - "application/json"
       parameters:
-        - name: "farm_no"
-          in: "formData"
-          description: "farm_no"
-          required: true
-          type: "string"
         - in: formData
-          name: farm
+          name: profile
           type: file
           description: The file to upload.
+          required: false
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
           required: true
+          type: "string"
+        - name: "user_nickname"
+          in: "formData"
+          description: "user_nickname"
+          required: true
+          type: "string"
+        - name: "user_email"
+          in: "formData"
+          description: "user_email"
+          required: true
+          type: "string"
+        - name: "user_link"
+          in: "formData"
+          description: "user_link"
+          required: false
+          type: "string"
+        - name: "user_bio"
+          in: "formData"
+          description: "user_bio"
+          required: false
+          type: "string"
       responses:
         default:
           description: "successful operation"
+
+    patch:
+      tags:
+        - "user"
+      summary: "update user profile"
+      description: "update user profile"
+      operationId: "update user profile"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "update user profile"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+
+    get:
+      tags:
+        - "user"
+      summary: "get user profile"
+      description: "get user profile"
+      operationId: "get user profile"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_address"
+          in: "query"
+          description: "user_address"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/profileImg:
+    patch:
+      tags:
+        - "user"
+      summary: "insert or change user image"
+      description: "insert or change user image"
+      operationId: "insert or change user image"
+      consumes:
+        - multipart/form-data
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: formData
+          name: profile
+          type: file
+          description: The file to upload.
+          required: true
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
+          required: true
+          type: "string"
+        - name: "user_image_url"
+          in: "formData"
+          description: "user_image_url"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/list:
+    get:
+      tags:
+        - "user"
+      summary: "get user list by nickname"
+      description: "get user list by nickname"
+      operationId: "get user list by nickname"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_nickname"
+          in: "query"
+          description: "user_nickname"
+          required: false
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+definitions:
+  User:
+    type: "object"
+    properties:
+      user_address:
+        type: "string"
+      user_nickname:
+        type: "string"
+      user_email:
+        type: "string"
+      user_link:
+        type: "string"
+      user_bio:
+        type: "string"
+    xml:
+      name: "User"
 
 externalDocs:
   description: "Find out more about Swagger"
