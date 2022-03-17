@@ -8,6 +8,7 @@ import ItemRegistration from './pages/ItemRegistration';
 import SaleRegistration from './pages/SaleRegistration';
 import WhosArt from './pages/WhosArt';
 import ItemPurchase from './pages/ItemPurchase';
+import SearchResult from './pages/SearchResult';
 
 // 화면 라우팅 테이블
 export default function Router() {
