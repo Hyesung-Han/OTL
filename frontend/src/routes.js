@@ -76,10 +76,10 @@ export default function Router() {
     //  * 페이지 확인을 위한 임시 경로 설정
     //  */
      {
-      path: "/result",
+      path: "/search",
       element: <MainLayout />,
       children: [
-        { element: <Navigate to="/result" replace /> },
+        { element: <Navigate to="/search" replace /> },
         { path: "", element: <SearchResult /> },
       ],
     },
