@@ -10,6 +10,7 @@ import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
 import ItemsList from '../components/items/ItemsList';
+import Category from '../components/Category/Category';
 
 /**
  * [구매하기] 화면
@@ -42,7 +43,10 @@ const Items = () => {
    * 3. token id로 NFT 컨트랙트로부터 직접 tokenURI를 조회하여 화면에 표시합니다. 
    */
   const getItem = async () => {
-    // TODO 
+    /**
+     * TODO
+     * axios get으로 DB 데이터 조회
+     */
     setLoading(true);
     
     const resultList = [];
@@ -53,11 +57,7 @@ const Items = () => {
       price: "fake price",
       title: "fake title"
     };
-    resultList.push(resultItem);
-    resultList.push(resultItem);
-    resultList.push(resultItem);
-    resultList.push(resultItem);
-    resultList.push(resultItem);
+
     resultList.push(resultItem);
 
     setItem(resultList);
@@ -81,7 +81,11 @@ const Items = () => {
       {loading === false ? (
         <>
           {isCollection === true ? (
+            
             <Container maxWidth="xl">
+              <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
+                <Category sx={{ mt: 1 }} />
+              </Box>
               <ItemsList sx={{ mt: 1 }} products={products} />
             </Container>
           ) : (
