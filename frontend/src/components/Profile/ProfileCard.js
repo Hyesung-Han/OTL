@@ -24,7 +24,7 @@ ProfileCard.propTypes = {
 };
 
 /**
- * CSW | 2022.03.17 | FIX
+ * CSW | 2022.03.17 | UPDATE
  * @name ProfileCard
  * @des ProfileCard 컴포넌트
  */
