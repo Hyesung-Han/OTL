@@ -4,12 +4,14 @@ pragma solidity ^0.8.4;
 import "./access/Ownable.sol";
 import "./token/ERC20/ERC20.sol";
 import "./token/ERC721/ERC721.sol";
+import "./SsafyNFT.sol";
 
 /**
  * PJT Ⅲ - Req.1-SC1 SaleFactory 구현
  * 상태 변수나 함수의 시그니처, 이벤트는 구현에 따라 변경할 수 있습니다.
  */
 contract SaleFactory is Ownable {
+    SsafyNFT public mintSsafyNftAddress;
     address public admin;
     address[] public sales;
 
@@ -24,7 +26,8 @@ contract SaleFactory is Ownable {
     }
 
     /**
-     * @dev 반드시 구현해야하는 함수입니다. 
+     * OYT | 2022.03.17 | v1.0
+     * @dev sale contract를 생성하고 saleFactory에 CA를 저장
      */
     function createSale(
         uint256 itemId, // DB에 저장된 ItemId ?? tokenId?
@@ -35,16 +38,22 @@ contract SaleFactory is Ownable {
         address currencyAddress, //  주소 ssf 0x6C927304104cdaa5a8b3691E0ADE8a3ded41a333
         address nftAddress // nft contract 주소
     ) public returns (address) {
+        mintSsafyNftAddress = SsafyNFT(nftAddress);
         // TODO
+        address tokenOwner = mintSsafyNftAddress.ownerOf(itemId);
 
-        require(owner() == msg.sender, "Caller is not NFT token owner.");
+        // contract 생성전 조건 검사
+        require(tokenOwner == msg.sender, "Caller is not NFT token owner.");
         require(minPrice > 0, "Price is zero or lower.");
         require(purchasePrice > 0, "Price is zero or lower.");
 
-        address saleContract = address(new Sale(admin, owner(), itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress));
+        // sale contract 생성
+        address saleContract = address(new Sale(admin, tokenOwner, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress));
+
+        // setApprovalForAll(saleContract, true); // web3에서 호출해야함
         
         sales.push(saleContract);
-
+        
         emit NewSale(saleContract, owner(), (sales.length-1));
 
         return saleContract;
