@@ -7,7 +7,7 @@ import COMMON_HEADER from '../common/HeaderType';
 import COMMON_CONTRACT from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
-import itemsCard from '../components/items/ItemsCard';
+import itemsCard from '../components/Items/ItemsCard';
 
 
 
