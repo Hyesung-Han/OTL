@@ -70,19 +70,19 @@ export default function Router() {
         { path: ":address", element: <WhosArt /> },
       ],
     },
-    /**
-     * CSW | 2022.03.17 | ADD
-     * HACK
-     * 페이지 확인을 위한 임시 경로 설정
-     */
-    //  {
-    //   path: "/result",
-    //   element: <MainLayout />,
-    //   children: [
-    //     { element: <Navigate to="/result" replace /> },
-    //     { path: "", element: <SearchResult /> },
-    //   ],
-    // },
+    // /**
+    //  * CSW | 2022.03.17 | ADD
+    //  * HACK
+    //  * 페이지 확인을 위한 임시 경로 설정
+    //  */
+     {
+      path: "/result",
+      element: <MainLayout />,
+      children: [
+        { element: <Navigate to="/result" replace /> },
+        { path: "", element: <SearchResult /> },
+      ],
+    },
     { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }

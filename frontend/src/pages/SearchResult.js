@@ -11,6 +11,7 @@ import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
 import ItemsList from '../components/Items/ItemsList';
 import ProfileList from '../components/Profile/ProfileList';
+import HorizonLine from '../utils/HorizonLine'
 
 /**
  * [검색결과] 화면
@@ -61,7 +62,7 @@ const SearchResult = () => {
 
     resultList.push(resultProfile);
 
-    setItem(resultList);
+    setProfile(resultList);
     setLoading(false);
     setIsCollection(true);
   };
@@ -113,7 +114,11 @@ const SearchResult = () => {
           {isCollection === true ? (
             
             <Container maxWidth="xl">
+
+                <HorizonLine text="Artist" />
                 <ProfileList sx={{ mt: 1 }} products={productsprofile} />
+
+                <HorizonLine text="Items" />
                 <ItemsList sx={{ mt: 1 }} products={productsitem} />
             </Container>
           ) : (
