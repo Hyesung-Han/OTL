@@ -88,30 +88,6 @@ const SearchNavbar = () => {
 
   /**
    * HSH | 2022.03.14 | v1.0
-   * @name onClickLogin
-   * @des 로그인 클릭시 실행 버튼
-   */
-  const onClickLogin = () => {
-    console.log("onClick Login");
-
-    /**
-     * HACK
-     * 임시 로그인 기능. 로그인 기능 구현 후 삭제 예정
-     */
-    dispatch(
-      setToken({
-        token: "",
-        user_id: "id",
-        user_nickName: "sohyeon",
-        status: "",
-        user_code: "",
-        code_name: "",
-      })
-    );
-  };
-
-  /**
-   * HSH | 2022.03.14 | v1.0
    * @name onClickLogOut
    * @des logOut 이벤트
    */
@@ -198,8 +174,8 @@ const SearchNavbar = () => {
   };
 
   return (
-    <div style={rootStyle}>
-      <div style={toolbarStyle}>
+      <RootStyle>
+        <ToolbarStyle>
         <Box
           sx={{
             px: 2.5,
@@ -287,11 +263,11 @@ const SearchNavbar = () => {
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{ mt: "50px" }}
-                anchorEl={anchorEl}
+                sx={{mt: "50px", ml: "550px" }}
+                // anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
+                  vertical: "top",
+                  horizontal: "center",
                 }}
                 transformOrigin={{
                   vertical: "bottom",
@@ -319,8 +295,8 @@ const SearchNavbar = () => {
             </div>
           )}
         </Stack>
-      </div>
-    </div>
+    </ToolbarStyle>
+    </RootStyle>
   );
 };
 
