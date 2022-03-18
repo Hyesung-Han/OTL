@@ -10,16 +10,19 @@ import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
 import ItemsList from '../components/Items/ItemsList';
-import Category from '../components/Category/Category';
+import ProfileList from '../components/Profile/ProfileList';
+import HorizonLine from '../utils/HorizonLine'
 
 /**
- * [구매하기] 화면
+ * [검색결과] 화면
  */
-const Items = () => {
+const SearchResult = () => {
   // [변수] 아이템, 컬렉션 유무, 로딩
   const [item, setItem] = useState([]);
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState([]);
+
 
   // Web3
   const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
@@ -29,6 +32,7 @@ const Items = () => {
    * 화면 첫 렌더링시 판매중인 작품을 조회하는 함수를 호출합니다.
    */
   useEffect(() => {
+    getProfile();
     getItem();
   }, []);
 
@@ -42,6 +46,27 @@ const Items = () => {
    * 3. sale 컨트랙트 주소로 즉시 구매가를 컨트랙트로부터 직접 조회합니다.
    * 3. token id로 NFT 컨트랙트로부터 직접 tokenURI를 조회하여 화면에 표시합니다. 
    */
+   const getProfile = async () => {
+    /**
+     * TODO
+     * axios get으로 DB 데이터 조회
+     */
+    setLoading(true);
+    
+    const resultList = [];
+    const resultProfile = {
+      id: 1,
+      image: "https://edu.ssafy.com/asset/images/logo.png",
+      nickname: "fake nickname"
+    };
+
+    resultList.push(resultProfile);
+
+    setProfile(resultList);
+    setLoading(false);
+    setIsCollection(true);
+  };
+
   const getItem = async () => {
     /**
      * TODO
@@ -66,13 +91,19 @@ const Items = () => {
   };
 
   // 카드 화면 생성을 위한 데이터 전달
-  const products = [...Array(item.length)].map((_, index) => {
+  const productsitem = [...Array(item.length)].map((_, index) => {
     return {
       image: item[index].image,
       title: item[index].title,
       tokenId: item[index].id,
       price: item[index].price,
       hash: item[index].hash
+    };
+  });
+  const productsprofile = [...Array(profile.length)].map((_, index) => {
+    return {
+      image: profile[index].image,
+      nickname: profile[index].nickname
     };
   });
 
@@ -83,10 +114,12 @@ const Items = () => {
           {isCollection === true ? (
             
             <Container maxWidth="xl">
-              <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
-                <Category sx={{ mt: 1 }} />
-              </Box>
-              <ItemsList sx={{ mt: 1 }} products={products} />
+
+                <HorizonLine text="Artist" />
+                <ProfileList sx={{ mt: 1 }} products={productsprofile} />
+
+                <HorizonLine text="Items" />
+                <ItemsList sx={{ mt: 1 }} products={productsitem} />
             </Container>
           ) : (
             <Container>
@@ -141,4 +174,4 @@ const Items = () => {
   );
 };
 
-export default Items;
+export default SearchResult;

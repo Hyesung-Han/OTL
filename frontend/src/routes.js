@@ -8,6 +8,7 @@ import ItemRegistration from './pages/ItemRegistration';
 import SaleRegistration from './pages/SaleRegistration';
 import WhosArt from './pages/WhosArt';
 import ItemPurchase from './pages/ItemPurchase';
+import SearchResult from './pages/SearchResult';
 
 // 화면 라우팅 테이블
 export default function Router() {
@@ -67,6 +68,19 @@ export default function Router() {
         { element: <Navigate to="/whosart" replace /> },
         { path: "", element: <WhosArt /> },
         { path: ":address", element: <WhosArt /> },
+      ],
+    },
+    // /**
+    //  * CSW | 2022.03.17 | ADD
+    //  * HACK
+    //  * 페이지 확인을 위한 임시 경로 설정
+    //  */
+     {
+      path: "/search",
+      element: <MainLayout />,
+      children: [
+        { element: <Navigate to="/search" replace /> },
+        { path: "", element: <SearchResult /> },
       ],
     },
     { path: "*", element: <Navigate to="/404" replace /> },
