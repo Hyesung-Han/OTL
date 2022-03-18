@@ -9,8 +9,8 @@ import COMMON_HEADER from '../common/HeaderType';
 import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
-import ItemsList from '../components/Items/ItemsList';
-import Category from '../components/Category/Category';
+import ItemsList from '../components/items/ItemsList';
+import Category from '../components/category/Category';
 
 /**
  * [구매하기] 화면

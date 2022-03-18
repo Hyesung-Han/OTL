@@ -9,8 +9,8 @@ import COMMON_HEADER from '../common/HeaderType';
 import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
-import ItemsList from '../components/Items/ItemsList';
-import ProfileList from '../components/Profile/ProfileList';
+import ItemsList from '../components/items/ItemsList';
+import ProfileList from '../components/profile/ProfileList';
 import HorizonLine from '../utils/HorizonLine'
 
 /**
