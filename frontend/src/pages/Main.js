@@ -7,14 +7,17 @@ import {
   Link,
   Divider,
   Typography,
+  Slide,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Web3 from "web3";
 import COMMON_ABI from "../common/ABI";
 import COMMON_HEADER from "../common/HeaderType";
 import COMMON_CONTRACT from "../common/SaleInfoGetter";
 import { onResponse } from "../common/ErrorMessage";
+import { Link as RouterLink } from "react-router-dom";
+import { css, keyframes } from '@emotion/react'
 
 //Icons
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
@@ -23,7 +26,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import notion from "../image/notion.png";
 
-import { style } from "@mui/system";
+import emoStyled from '@emotion/styled'
 
 const Main = () => {
   // Web3
@@ -52,7 +55,7 @@ const Main = () => {
   const MainTopStyle = styled(Grid)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
 
     height: windowHeight - 100,
@@ -70,7 +73,7 @@ const Main = () => {
     justifyContent: "center",
     alignItems: "center",
 
-    padding: "30px 0px",
+    padding: "50px 0px",
   }));
 
   /**
@@ -171,24 +174,53 @@ const Main = () => {
 	*/
   const categoryItem = [
     {
-      name: "a",
+      img:"#ffcdd2",
+      name: "chair",
+      link:"#",
     },
     {
-      name: "b",
+      img:"#f47fb1",
+      name: "table",
+      link:"#",
     },
     {
-      name: "c",
+      img:"#99cccc",
+      name: "wallpaper",
+      link:"#",
     },
     {
-      name: "d",
+      img:"#3366cc",
+      name: "floor",
+      link:"#",
     },
     {
-      name: "e",
+      img:"#66cc00",
+      name: "wall hanging",
+      link:"#",
     },
     {
-      name: "f",
+      img:"#ff1744",
+      name: "prop",
+      link:"#",
     },
   ];
+
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name CategoryCard
+   * @des 카테고리 카드 컴포넌트
+   */
+  const CategoryCard=styled(Grid)(()=>({
+      margin: "20px",
+      borderRadius: "10px",
+      width:"220px",
+      height:"200px",
+
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"end",
+      alignItems:"center",
+  }));
 
   /**
    * HSH | 2022.03.16 | v1.0
@@ -196,23 +228,125 @@ const Main = () => {
    * @des 카테고리 바로가기 카드
    */
   const categoryItemList = categoryItem.map((item, index) => (
-    <Grid item key={index} lg={3} sx={{ margin: "10px",border: "1px solid #bbb", borderRadius: "10px", width:"220px", height:"200px" }}>
-      <Grid>
-        {/** 
-        * Todo
-        * Card Img, title 넣고 비율 맞추기
-        */}
-        {item.name}
+    <CategoryCard item key={index} to={item.link} lg={3} sx={{ backgroundColor:item.img, textDecoration: "none" }} component={RouterLink}>
+      <Grid display="flex" justifyContent="center" alignItems="center" sx={{height:"50px", width:"100%", backgroundColor:"#ffffff", opacity:"0.8" }}>
+        <Box sx={{color: "#303030", font: '1.2em', fontWeight: 600}}>{item.name}</Box>
       </Grid>
-    </Grid>
+    </CategoryCard>
   ));
+
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name floating
+   * @des 메인 Top에 있는 Typography 애니메이션
+   */
+  const floating = keyframes`
+    0 {
+        transform: translateY(50px);    
+    }
+    100% {
+        opacity:1;
+        transform: translateY(-50px);
+    }
+  `
+
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name TextStyle
+   * @des 메인 Top에 있는 Typography CSS
+   */
+  const TextStyle = emoStyled.p`
+    font-size: 50px;
+    font-weight: bold;
+    color: ${(props)=>props.color};
+
+    opacity: 0;
+    animation: ${floating} ${(props) => props.time}s forwards;
+  `
+  
+  const TopTitle=["One can Take Limited item"];
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name TypograpyStr
+   * @des 메인 Top에 있는 Typography를 알파벳 하나하나 스타일 설정
+   */
+  const TypograpyStr=(prop)=>{
+    const str=prop.str;    
+
+    let color;
+    const arr=[];
+    for(let i=0;i<str.length;i++)
+    {
+      color="#000000";
+      if(str[i]>='A'&&str[i]<='Z')  color="#ff3300";
+
+      if(str[i]==' ')
+      {
+        arr.push(<TextStyle color={color} time={i/10}>&nbsp;</TextStyle>);
+      } 
+      else 
+      {
+        arr.push(<TextStyle color={color} time={i/10}>{str[i]}</TextStyle>)
+      }
+    }
+    return arr;
+  }
+
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name TopTypograpy
+   * @des 메인 Top에 있는 Typography
+   */
+  const TopTypograpy = TopTitle.map((item, index) => (
+    <TypograpyStr key={index} accentIndex={index} str={item}/>
+  ));
+
+  /**
+   * HSH | 2022.03.18 | v1.0
+   * @name HowToUseStyle
+   * @des 사용 방법 컴포넌트
+   */
+   const HowToUseStyle=styled(Grid)(()=>({
+      padding:"50px",
+      width:"100%",
+
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"center",
+      alignItems:"center",
+    }));
+
+  /**
+   * HSH | 2022.03.18 | v1.0
+   * @name HowToUseCard
+   * @des 사용 방법 컴포넌트
+   */
+  const HowToUseCard=styled(Grid)(()=>({
+    border: "1px solid #afafaf",
+    borderRadius: "10px",
+
+    width:"300px",
+    height:"300px",
+
+    margin:"30px",
+  }));
 
   return (
     <RootStyle>
       <MainTopStyle>
-        <Typography variant="h1">OTL</Typography>
-        <Typography>One can Take Limited</Typography>
+        <Grid display="flex" flexDirection="row" alignItems="center" >
+          {TopTypograpy}
+        </Grid>
       </MainTopStyle>
+      <Divider />
+      <HowToUseStyle>
+        <Typography variant="h4">How to use</Typography>
+        <Grid display="flex" flexDirection="row" alignItems="center">
+          <HowToUseCard/>
+          <HowToUseCard/>
+          <HowToUseCard/>
+        </Grid>
+      </HowToUseStyle>
       <Divider />
       <CategoryStyle>
         <Grid
