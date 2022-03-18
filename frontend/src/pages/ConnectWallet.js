@@ -7,11 +7,16 @@ import axios from "axios";
 import Web3 from "web3";
 import Page from "../components/Page";
 
+// web3-react [220317]
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "../lib/Connectors";
+// End
+
 /**
  * LDJ | 2022.03.14 | v1.0
  * @name ConnectWallet
- * @api {web3? 연동?}
- * @des MetaMask 지갑 주소를 기반으로 연동[로그인] (연동 기능 구현은 아직...)
+ * @api {}
+ * @des web3를 통해 로그인 버튼을 누르면 Metamask 연동/비연동 (아직 완벽 X, 추후 개발하며 더 상세하게 작성)
  */
 
 const ConnectWallet = () => {
@@ -20,11 +25,27 @@ const ConnectWallet = () => {
     new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)
   );
 
+  const { chainId, account, active, activate, deactivate } = useWeb3React();
+
+  const handleConnect = () => {
+    if (active) {
+      deactivate();
+      console.log(active);
+      return;
+    }
+    activate(injected, (error) => {
+      if ("/No Ethereum provider was found on window.ethereum/".test(err)) {
+        window.open("https://metamask.io/download.html");
+      }
+    });
+    console.log(active);
+  };
+
   return (
     <Page
       title="OTL"
       maxWidth="100%"
-      minHeight="100%"
+      minHeight="60vh"
       alignItems="center"
       display="flex"
     >
@@ -55,6 +76,7 @@ const ConnectWallet = () => {
                 justifyContent: "space-between",
               }}
               component={RouterLink}
+              onClick={handleConnect}
             >
               <Typography>
                 <img
