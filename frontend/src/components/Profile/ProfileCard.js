@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Card, Link, Typography, Stack } from '@mui/material';
+import { Box, Container, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 
 
   
-const CardStyle = styled(Card)({
-    borderRadius: 150,
+const AvatarStyle = styled(Avatar)({
     "&:hover":{
     boxShadow: '2px 5px 5px 2px rgba(225, 223, 214, 1)'
     }
@@ -25,23 +24,28 @@ ProfileCard.propTypes = {
  */
 export default function ProfileCard({ product }) {
   const { image, nickname } = product;
-
+/**
+ * TODO
+ * 1.사진이랑 텍스트 정렬
+ * 2.사진 다른거 넣어서 잘 들어가는지 확인
+ */
   return (
-    <CardStyle>
+    <Container>
       <Link
           to={`/#`}
           color="inherit"
           underline='hover'
           component={RouterLink}
+          sx={{alignItems:'center'}}
         >
-        <Avatar alt={nickname} src={image} sx={{ width: 150, height: 150, margin: 'auto', mt: 5 }}/>
-        <Stack spacing={2} sx={{ p: 3 }}>
+        <AvatarStyle alt={nickname} src={image} sx={{ width: 150, height: 150, mt: 5, mb:2 }}/>
+        <Stack spacing={2} >
             <Typography variant="subtitle1" textAlign="center" noWrap>
               {nickname}
             </Typography>
         </Stack>
 
       </Link>
-    </CardStyle>
+    </Container>
   );
 }
