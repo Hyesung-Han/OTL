@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import {shadows} from '@mui/system'
 import { convertToAccountingFormat } from '../../utils/NumberFormatter';
 
 // 이미지 스타일
