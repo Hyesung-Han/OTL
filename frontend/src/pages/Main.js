@@ -73,7 +73,7 @@ const Main = () => {
     justifyContent: "center",
     alignItems: "center",
 
-    padding: "30px 0px",
+    padding: "50px 0px",
   }));
 
   /**
@@ -236,17 +236,10 @@ const Main = () => {
   ));
 
   /**
-   * HSH | 2022.03.16 | v1.0
-   * @name TopListStyled
-   * @des 메인 Top에 있는 아이템 리스트 애니메이션
+   * HSH | 2022.03.17 | v1.0
+   * @name floating
+   * @des 메인 Top에 있는 Typography 애니메이션
    */
-  const TopListStyled=styled(Grid)(()=>({
-    width:"130%",
-    height:"100px",
-
-    backgroundColor:"#123456",
-  }));
-
   const floating = keyframes`
     0 {
         transform: translateY(50px);    
@@ -256,6 +249,12 @@ const Main = () => {
         transform: translateY(-50px);
     }
   `
+
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name TextStyle
+   * @des 메인 Top에 있는 Typography CSS
+   */
   const TextStyle = emoStyled.p`
     font-size: 50px;
     font-weight: bold;
@@ -266,6 +265,11 @@ const Main = () => {
   `
   
   const TopTitle=["One can Take Limited item"];
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name TypograpyStr
+   * @des 메인 Top에 있는 Typography를 알파벳 하나하나 스타일 설정
+   */
   const TypograpyStr=(prop)=>{
     const str=prop.str;    
 
@@ -288,9 +292,44 @@ const Main = () => {
     return arr;
   }
 
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name TopTypograpy
+   * @des 메인 Top에 있는 Typography
+   */
   const TopTypograpy = TopTitle.map((item, index) => (
     <TypograpyStr key={index} accentIndex={index} str={item}/>
   ));
+
+  /**
+   * HSH | 2022.03.18 | v1.0
+   * @name HowToUseStyle
+   * @des 사용 방법 컴포넌트
+   */
+   const HowToUseStyle=styled(Grid)(()=>({
+      padding:"50px",
+      width:"100%",
+
+      display:"flex",
+      flexDirection:"column",
+      justifyContent:"center",
+      alignItems:"center",
+    }));
+
+  /**
+   * HSH | 2022.03.18 | v1.0
+   * @name HowToUseCard
+   * @des 사용 방법 컴포넌트
+   */
+  const HowToUseCard=styled(Grid)(()=>({
+    border: "1px solid #afafaf",
+    borderRadius: "10px",
+
+    width:"300px",
+    height:"300px",
+
+    margin:"30px",
+  }));
 
   return (
     <RootStyle>
@@ -299,6 +338,15 @@ const Main = () => {
           {TopTypograpy}
         </Grid>
       </MainTopStyle>
+      <Divider />
+      <HowToUseStyle>
+        <Typography variant="h4">How to use</Typography>
+        <Grid display="flex" flexDirection="row" alignItems="center">
+          <HowToUseCard/>
+          <HowToUseCard/>
+          <HowToUseCard/>
+        </Grid>
+      </HowToUseStyle>
       <Divider />
       <CategoryStyle>
         <Grid
