@@ -8,20 +8,43 @@ const itemRepository = new ItemsRepository();
 
 class ItemsService {
 
-	/**
- 	 * PJT Ⅱ - 과제 1: Req.1-B1 작품 등록 (파일 업로드 포함)
-	 * 1. 이미지의 중복 여부를 판별합니다.
-	 * 2. 중복된 이미지가 없다면 정보를 DB에 추가합니다.
-	 * 3. 저장된 작품의 id를 responseBody에 추가하여 반환합니다.
-	 * 
-     */
-	async createItems(req) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				itemId: 0
+	async checkImage(file) {
+		let result;
+		try {
+			await getS3List().then(data => {
+				result = data.filter(items => items.ETag === file.etag);
+			});
+			if(result.length > 1) {
+				await deleteS3Object(file.key);
+				return true;
 			}
+		} catch(e) {
+			throw e;
+		}
+	}
+
+	async insertItem(item) {
+		try {
+			const data = await itemRepository.insertItem(item);
+			if(data.length != 0) {
+				return {
+					statusCode: 201,
+					responseBody: {
+						result: 'success',
+						data: {item_id:data.insertId},
+					}
+				}
+			} else {
+				return {
+					statusCode: 403,
+					responseBody: {
+						result: 'fail',
+						error: error,
+					}
+				}
+			}
+		} catch(e) {
+			throw e;
 		}
 	}
 

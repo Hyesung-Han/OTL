@@ -58,8 +58,19 @@ class ItemsRepository {
 		return null;
 	}
 
-	async createItems(data) {
-		return null;
+	async insertItem(item) {
+		const sql = `
+			INSERT INTO items_t(owner_address, author_name, item_title, item_description, category_code)
+			VALUES(?, ?, ?, ?, ?);
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [item.ownerAddress, item.author_name, item.item_title, item.item_description, item.category_code])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 }
 

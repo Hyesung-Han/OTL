@@ -8,17 +8,45 @@ const { upload } = require("../../config/s3-config");
 const itemService = new ItemsService();
 
 /**
- * PJT Ⅱ - 과제 1: Req.1-B1 작품 등록 (파일 업로드 포함)
+ * LJA | 2022.03.20 | v1.0
+ * @name items
+ * @api {post} /items
+ * @des
+ * 작품을 등록한다
+ * 작품 이미지가 중복된 경우 이미지업로드X, DB에 등록X
+ * 작품 이미지가 중복되지 않은 경우 이미지 업로드 및 작품 정보 DB에 저장
  */
-router.post('/', upload.single('image'), async function (req, res) {
-	const { statusCode, responseBody } = await itemService.createItems(req);
-
-	if (statusCode === 201) {
-		responseBody['imageUrl'] = `${process.env.AWS_CDN_PATH}/${req.file.key}`;
+router.post('/', upload.single('items'), async function (req, res) {
+	try {
+		if(await itemService.checkImage(req.file)) {
+			res.status(200).send({result:"fail", msg:"이미 등록되어 있는 작품입니다."});
+			return;
+		}
+	} catch(e) {
+		console.error("checkImage",e);
+		res.status(403).send({result:"fail", error:e});
 	}
+	const item = {
+		owner_address: req.body.owner_address,
+		author_name: req.body.author_name,
+		item_title: req.body.item_title,
+		item_description: req.body.item_description,
+		category_code: req.body.category_code,
+	};
 
-	res.statusCode = statusCode;
-	res.send(responseBody);
+	try{
+		const { statusCode, responseBody } = await itemService.insertItem(item);
+
+		if (statusCode === 201) {
+			responseBody.data['item_image'] = `${process.env.AWS_CDN_PATH}/${req.file.key}`;
+		}
+		res.statusCode = statusCode;
+		res.send(responseBody);
+
+	} catch(e) {
+		console.error("insertItem",e);
+		res.status(403).send({result:"fail", error:e});
+	}
 });
 
 /**

@@ -40,6 +40,8 @@
 	 S3.listObjects(
 	   {
 		 Bucket: process.env["AWS_S3_BUCKET_NAME"],
+		 Delimiter: '/',
+		 Prefix: 'items/',
 	   },
 	   (err, data) => {
 		 if (err) {

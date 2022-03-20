@@ -1,0 +1,73 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+  - name: "items"
+    description: "Operations about items"
+    externalDocs:
+      description: "Find out more about our store"
+      url: "http://swagger.io"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /items:
+    post:
+      tags:
+        - "items"
+      summary: "upload item"
+      description: "upload item"
+      operationId: "upload item"
+      consumes:
+        - multipart/form-data
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: formData
+          name: items
+          type: file
+          description: The file to upload.
+          required: true
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
+          required: true
+          type: "string"
+        - name: "author_name"
+          in: "formData"
+          description: "author_name"
+          required: true
+          type: "string"
+        - name: "item_title"
+          in: "formData"
+          description: "item_title"
+          required: true
+          type: "string"
+        - name: "item_description"
+          in: "formData"
+          description: "item_description"
+          required: true
+          type: "string"
+        - name: "category_code"
+          in: "formData"
+          description: "category_code"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
