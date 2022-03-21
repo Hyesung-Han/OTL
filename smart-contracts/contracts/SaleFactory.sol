@@ -122,10 +122,11 @@ contract Sale {
         // TODO
     }
 
-    function purchase() public onlyAfterStart{
+    function purchase() public onlyAfterStart endcheck{
 
         //이더리움 왔다갔다하는건데 payable 안써도 되는건가?
         // TODO 
+
         // 판매자가 아닌 경우 호출 가능
         buyer = msg.sender;
         require(seller != buyer, "Seller can not buy this NFT");
@@ -143,11 +144,12 @@ contract Sale {
         erc20Contract.transferFrom(buyer, seller, purchasePrice);
 
         //3. NFT 소유권을 구매자에게 이전한다.
-        erc721Constract.transferFrom(address(this), buyer, tokenId);
+        erc721Constract.safeTransferFrom(address(this), buyer, tokenId);
 
         //4. 컨트랙트의 거래 상태와 구매자 정보를 업데이트 한다.
-        ended = true;
+        _end();
         emit SaleEnded(buyer, purchasePrice);
+
 
     }
 
@@ -215,6 +217,11 @@ contract Sale {
             block.timestamp >= saleStartTime,
             "Sale: This sale is not started."
         );
+        _;
+    }
+
+    modifier endcheck(){
+        require(!ended, "This NFT selling is already closed");
         _;
     }
 }
