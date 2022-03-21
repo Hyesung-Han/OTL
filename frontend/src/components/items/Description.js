@@ -4,11 +4,12 @@
  import AccordionSummary from '@mui/material/AccordionSummary';
  import Typography from '@mui/material/Typography';
  import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+ import { styled } from '@mui/material/styles';
 
 
 
 /**
- * CSW | 2022.03.21 | ADD
+ * CSW | 2022.03.21 | UPDATE
  * @name Description
  * @des itemDetail Description 컴포넌트
  */
@@ -21,7 +22,7 @@
    };
  
    return (
-     <div>
+     <div style={{border:'1px solid rgba(0, 0, 0, 0.3)', width: 300}}>
        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
          <AccordionSummary
            expandIcon={<ExpandMoreIcon />}
