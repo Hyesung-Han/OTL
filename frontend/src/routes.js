@@ -9,6 +9,7 @@ import SaleRegistration from './pages/SaleRegistration';
 import WhosArt from './pages/WhosArt';
 import ItemPurchase from './pages/ItemPurchase';
 import SearchResult from './pages/SearchResult';
+import ItemDetail from './pages/ItemDetail';
 
 // 화면 라우팅 테이블
 export default function Router() {
@@ -73,7 +74,7 @@ export default function Router() {
     // /**
     //  * CSW | 2022.03.17 | ADD
     //  * HACK
-    //  * 페이지 확인을 위한 임시 경로 설정
+    //  * 검색결과 페이지 확인을 위한 임시 경로 설정
     //  */
      {
       path: "/search",
@@ -81,6 +82,19 @@ export default function Router() {
       children: [
         { element: <Navigate to="/search" replace /> },
         { path: "", element: <SearchResult /> },
+      ],
+    },
+    // /**
+    //  * CSW | 2022.03.21 | ADD
+    //  * HACK
+    //  * ItemDetail페이지 확인을 위한 임시 경로 설정
+    //  */
+    {
+      path: "/itemdetail",
+      element: <MainLayout />,
+      children: [
+        { element: <Navigate to="/itemdetail" replace /> },
+        { path: "", element: <ItemDetail /> },
       ],
     },
     { path: "*", element: <Navigate to="/404" replace /> },
