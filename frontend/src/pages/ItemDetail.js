@@ -7,7 +7,7 @@ import axios from "axios";
 import Web3 from "web3";
 import Page from "../components/Page";
 import Description from "../components/items/Description"
-
+import ItemHistory from "../components/items/ItemHistory"
 
 const ItemDetail = () => {
   
@@ -23,6 +23,7 @@ const ItemDetail = () => {
     >
       <Container>
         <Description></Description>
+        <ItemHistory></ItemHistory>
       </Container>
     </Page>
   );
