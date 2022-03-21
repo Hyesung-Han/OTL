@@ -18,17 +18,13 @@ ProfileCard.propTypes = {
 };
 
 /**
- * CSW | 2022.03.17 | UPDATE
+ * CSW | 2022.03.21 | UPDATE
  * @name ProfileCard
  * @des ProfileCard 컴포넌트
  */
 export default function ProfileCard({ product }) {
   const { image, nickname } = product;
-/**
- * TODO
- * 1.사진이랑 텍스트 정렬
- * 2.사진 다른거 넣어서 잘 들어가는지 확인
- */
+
   return (
     <Container>
       <Link
