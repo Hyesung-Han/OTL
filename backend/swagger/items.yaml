@@ -67,6 +67,24 @@ paths:
       responses:
         default:
           description: "successful operation"
+    get:
+      tags:
+        - "items"
+      summary: "my item list"
+      description: "my item list"
+      operationId: "my item list"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_address"
+          in: "query"
+          description: "user_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
   /items/{itemId}:
     patch:
       tags:

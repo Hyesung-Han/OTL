@@ -6,23 +6,26 @@ const connection = require('../../config/connection').promise();
 
 class ItemsRepository {
 
-	async getItems() {
+	async getItems(user_address) {
 		const sql = `
-			SELECT 		author_name,
+			SELECT 		item_id,
+						token_id,
+						author_name,
+						item_title,
 						item_description,
 						item_hash,
-						item_title,
-						on_sale_yn,
 						owner_address,
-						token_id,
-						created_at as items_create_at
-			FROM    	items
-			WHERE 		on_sale_yn = TRUE
+						on_sale_yn,
+						on_use_yn,
+						category_code,
+						created_at
+			FROM    	items_t
+			WHERE		owner_address = ?
 			ORDER BY    created_at DESC
 		`;
 		console.debug(sql);
 
-		return await connection.query(sql)
+		return await connection.query(sql, [user_address])
 			.then(data => data[0])
 			.catch((e) => {
 				console.error(e);

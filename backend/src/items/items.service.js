@@ -62,21 +62,13 @@ class ItemsService {
 		}
 	}
 
-	/**
-	 * PJT Ⅱ 과제 2: 
-	 * Req.2-B1 작품 목록 조회 
-	 * Req.2-B2 주소가 보유한 작품 목록 조회
-	 *
-	 * PJT Ⅲ 과제 4: (판매 중인 작품만 반환하도록 수정합니다.)
-	 * Req.4-B1 작품 목록 조회
-	 * Req.4-B2 주소가 보유한 작품 목록 조회
-	 */
-	async getItems(address) {
+	async getItems(user_address) {
+		const data = await itemRepository.getItems(user_address);
 		return {
 			statusCode: 200,
 			responseBody: {
 				result: 'success',
-				data: []
+				data: data,
 			}
 		};
 	}

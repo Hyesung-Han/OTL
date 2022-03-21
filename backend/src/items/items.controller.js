@@ -73,7 +73,7 @@ router.patch('/:itemId', async function (req, res) {
  * LJA | 2022.03.21 | v1.0
  * @name items
  * @api {get} /items/category
- * @des
+ * @des 모든 카테고리를 리턴해준다
  */
 router.get("/category", async function (req, res) {
 	try{
@@ -88,16 +88,13 @@ router.get("/category", async function (req, res) {
 });
 
 /**
- * PJT Ⅱ 과제 2: 
- * Req.2-B1 작품 목록 조회 
- * Req.2-B2 주소가 보유한 작품 목록 조회
- *
- * PJT Ⅲ 과제 4: (판매 중인 작품만 반환하도록 수정합니다.)
- * Req.4-B1 작품 목록 조회
- * Req.4-B2 주소가 보유한 작품 목록 조회
+ * LJA | 2022.03.21 | v1.0
+ * @name items
+ * @api {get} /items?user_address=address
+ * @des
  */
 router.get('/', async function (req, res) {
-	const { statusCode, responseBody } = await itemService.getItems(req.query['address']);
+	const { statusCode, responseBody } = await itemService.getItems(req.query['user_address']);
 
 	res.statusCode = statusCode;
 	res.send(responseBody);
