@@ -70,6 +70,24 @@ router.patch('/:itemId', async function (req, res) {
 });
 
 /**
+ * LJA | 2022.03.21 | v1.0
+ * @name items
+ * @api {get} /items/category
+ * @des
+ */
+router.get("/category", async function (req, res) {
+	try{
+		const { statusCode, responseBody } = await itemService.getCategory();
+
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("getCategory",e);
+		res.status(403).send({result:"fail", error:e});
+	}
+});
+
+/**
  * PJT Ⅱ 과제 2: 
  * Req.2-B1 작품 목록 조회 
  * Req.2-B2 주소가 보유한 작품 목록 조회

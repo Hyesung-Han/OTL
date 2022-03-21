@@ -96,6 +96,20 @@ paths:
       responses:
         default:
           description: "successful operation"
+          
+  /items/category:
+    get:
+      tags:
+        - "items"
+      summary: "get category"
+      description: "get all category"
+      operationId: "get category"
+      produces:
+        - "application/xml"
+        - "application/json"
+      responses:
+        default:
+          description: "successful operation"
 
 externalDocs:
   description: "Find out more about Swagger"

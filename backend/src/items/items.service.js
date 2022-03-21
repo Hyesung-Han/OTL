@@ -48,9 +48,6 @@ class ItemsService {
 		}
 	}
 
-	/**
-	 * PJT Ⅱ - 과제 1: Req.1-B2 작품 정보 업데이트
-	 */
 	async updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address) {
 		try {
 			const data = await itemRepository.updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address);
@@ -124,6 +121,16 @@ class ItemsService {
 		}
 	}
 
+	async getCategory() {
+		const data = await itemRepository.getCategory();
+		return {
+			statusCode: 200,
+			responseBody: {
+				result: 'success',
+				data: data,
+			}
+		}
+	}
 }
 
 module.exports = ItemsService;

@@ -84,6 +84,21 @@ class ItemsRepository {
 				throw e;
 			});
 	}
+
+	async getCategory() {
+		const sql = `
+			SELECT category_code, category_name
+			FROM category_t;
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = ItemsRepository;
