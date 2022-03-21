@@ -88,16 +88,23 @@ router.get("/category", async function (req, res) {
 });
 
 /**
- * LJA | 2022.03.21 | v1.0
+ * LJA | 2022.03.21 | v1.1
  * @name items
- * @api {get} /items?user_address=address
+ * @api {get} /items?user_address=address&page=page
  * @des
+ * 사용자의 전체 아이템목록 가져오기
+ * page입력시 100개 단위로 출력
  */
 router.get('/', async function (req, res) {
-	const { statusCode, responseBody } = await itemService.getItems(req.query['user_address']);
+	try {
+		const { statusCode, responseBody } = await itemService.getItems(req.query['user_address'], req.query['page']);
 
-	res.statusCode = statusCode;
-	res.send(responseBody);
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("getItems",e);
+		res.status(403).send({result:"fail", error:e});
+	}
 });
 
 /*

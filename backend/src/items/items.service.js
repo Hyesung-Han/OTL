@@ -62,15 +62,19 @@ class ItemsService {
 		}
 	}
 
-	async getItems(user_address) {
-		const data = await itemRepository.getItems(user_address);
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				data: data,
-			}
-		};
+	async getItems(user_address, page) {
+		try {
+			const data = await itemRepository.getItems(user_address, (page-1)*100);
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data,
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
 	}
 
 	/*

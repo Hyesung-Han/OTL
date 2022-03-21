@@ -6,8 +6,8 @@ const connection = require('../../config/connection').promise();
 
 class ItemsRepository {
 
-	async getItems(user_address) {
-		const sql = `
+	async getItems(user_address, page) {
+		let sql = `
 			SELECT 		item_id,
 						token_id,
 						author_name,
@@ -23,9 +23,12 @@ class ItemsRepository {
 			WHERE		owner_address = ?
 			ORDER BY    created_at DESC
 		`;
+		if(page) {
+			sql+= `LIMIT		?, 100`;
+		}
 		console.debug(sql);
 
-		return await connection.query(sql, [user_address])
+		return await connection.query(sql, [user_address, page])
 			.then(data => data[0])
 			.catch((e) => {
 				console.error(e);

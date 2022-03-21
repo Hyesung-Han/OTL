@@ -82,6 +82,11 @@ paths:
           description: "user_address"
           required: true
           type: "string"
+        - name: "page"
+          in: "query"
+          description: "page"
+          required: false
+          type: "integer"
       responses:
         default:
           description: "successful operation"
