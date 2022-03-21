@@ -68,6 +68,7 @@ contract SaleFactory is Ownable {
  *  PJT Ⅲ - Req.1-SC2) Sale 구현
  */
 contract Sale {
+
     // 생성자에 의해 정해지는 값
     address public seller;
     address public buyer;
@@ -110,7 +111,7 @@ contract Sale {
         admin = _admin;
         saleStartTime = startTime;
         saleEndTime = endTime;
-        currencyAddress = _currencyAddress;
+        currencyAddress = _currencyAddress; //어떤 화폐인지
         nftAddress = _nftAddress;
         ended = false;
         erc20Contract = IERC20(_currencyAddress);
@@ -121,8 +122,33 @@ contract Sale {
         // TODO
     }
 
-    function purchase() public {
+    function purchase() public onlyAfterStart{
+
+        //이더리움 왔다갔다하는건데 payable 안써도 되는건가?
         // TODO 
+        // 판매자가 아닌 경우 호출 가능
+        buyer = msg.sender;
+        require(seller != buyer, "Seller can not buy this NFT");
+
+        // 해당 Sale의 판매 시점이 유효한 경우 구매 가능
+        require(block.timestamp < saleEndTime, "NFT Selling is closed");
+        
+        // 구매 희망자가 Sale 컨트랙트에게 구매 희망자의 ERC-20 토큰을 
+        // 송금할 수 있는 권한을 허용한 경우(ERC-20 approve)
+        require(erc20Contract.approve(buyer, purchasePrice), "Not Approved");
+
+        //1번 bid
+
+        //2. 구매자의 ERC-20 토큰을 즉시 구매가만큼 판매자에게 송금한다.
+        erc20Contract.transferFrom(buyer, seller, purchasePrice);
+
+        //3. NFT 소유권을 구매자에게 이전한다.
+        erc721Constract.transferFrom(address(this), buyer, tokenId);
+
+        //4. 컨트랙트의 거래 상태와 구매자 정보를 업데이트 한다.
+        ended = true;
+        emit SaleEnded(buyer, purchasePrice);
+
     }
 
     function confirmItem() public {
