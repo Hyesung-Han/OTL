@@ -77,6 +77,21 @@ class ItemsService {
 		}
 	}
 
+	async getItemByTokenId(tokenId) {
+		try {
+			const data = await itemRepository.getItemByTokenId(tokenId);
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data[0],
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
+	}
+
 	/*
 	 * PJT Ⅲ 과제 3: 
 	 * Req.4-B3 최근 등록 작품 조회
@@ -90,21 +105,6 @@ class ItemsService {
 			}
 		}
 	}
-
-	/**
-	 * PJT Ⅱ 과제 2: 
-	 * Req.2-B3 작품 상세 조회 
-	 */
-	async getItemByTokenId(tokenId) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				data: []
-			}
-		};
-	}
-
 
 	async updateItemOwnerAddress(tokenId, ownerAddress) {
 		if (await itemRepository.updateItemOwnerAddress(tokenId, ownerAddress)) {

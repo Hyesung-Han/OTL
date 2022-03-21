@@ -48,8 +48,30 @@ class ItemsRepository {
 		return null;
 	}
 
-	async getItemByTokenId(tokenId) {
-		return null;
+	async getItemByTokenId(token_id) {
+		let sql = `
+			SELECT 		item_id,
+						token_id,
+						author_name,
+						item_title,
+						item_description,
+						item_hash,
+						owner_address,
+						on_sale_yn,
+						on_use_yn,
+						category_code,
+						created_at
+			FROM    	items_t
+			WHERE		token_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [token_id])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
 	async updateItemOwnerAddress(tokenId, ownerAddress) {

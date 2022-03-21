@@ -56,11 +56,11 @@ router.post('/', upload.single('items'), async function (req, res) {
  * @des
  * NFT로 등록된 아이템의 정보를 업데이트 해준다.
  */
-router.patch('/:itemId', async function (req, res) {
-	const itemId = req.params['itemId']
+router.patch('/:item_id', async function (req, res) {
+	const item_id = req.params['item_id']
 	const data = req.body;
 	try{
-		const { statusCode, responseBody } = await itemService.updateItemTokenIdAndOwnerAddress(itemId, data['token_id'], data['owner_address']);
+		const { statusCode, responseBody } = await itemService.updateItemTokenIdAndOwnerAddress(item_id, data['token_id'], data['owner_address']);
 		res.statusCode = statusCode;
 		res.send(responseBody);
 	} catch(e) {
@@ -107,23 +107,30 @@ router.get('/', async function (req, res) {
 	}
 });
 
+/**
+ * LJA | 2022.03.21 | v1.0
+ * @name items
+ * @api {get} /items/"token_id"
+ * @des 작품 상세보기
+ */
+router.get('/:token_id', async function (req, res) {
+	try{
+		const { statusCode, responseBody } = await itemService.getItemByTokenId(req.params['token_id'])
+
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("getItemByTokenId",e);
+		res.status(403).send({result:"fail", error:e});
+	}
+});
+
 /*
  * PJT Ⅲ 과제 3: 
  * Req.4-B3 최근 등록 작품 조회
  */
 router.get('/recent', async function (req, res) {
 	const { statusCode, responseBody } = await itemService.getRecentItems(res);
-
-	res.statusCode = statusCode;
-	res.send(responseBody);
-});
-
-/**
- * PJT Ⅱ 과제 2: 
- * Req.2-B3 작품 상세 조회 
- */
-router.get('/:tokenId', async function (req, res) {
-	const { statusCode, responseBody } = await itemService.getItemByTokenId(req.params['tokenId'])
 
 	res.statusCode = statusCode;
 	res.send(responseBody);

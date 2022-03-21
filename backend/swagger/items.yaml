@@ -90,7 +90,7 @@ paths:
       responses:
         default:
           description: "successful operation"
-  /items/{itemId}:
+  /items/{item_id}:
     patch:
       tags:
         - "items"
@@ -101,7 +101,7 @@ paths:
         - "application/xml"
         - "application/json"
       parameters:
-        - name: "itemId"
+        - name: "item_id"
           in: "path"
           description: "item_id"
           required: true
@@ -114,6 +114,25 @@ paths:
         - name: "owner_address"
           in: "formData"
           description: "owner_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+  /items/{token_id}:
+    get:
+      tags:
+        - "items"
+      summary: "item detail"
+      description: "item detail"
+      operationId: "item detail"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token_id"
+          in: "path"
+          description: "token_id"
           required: true
           type: "string"
       responses:
