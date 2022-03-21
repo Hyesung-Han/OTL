@@ -67,6 +67,35 @@ paths:
       responses:
         default:
           description: "successful operation"
+  /items/{itemId}:
+    patch:
+      tags:
+        - "items"
+      summary: "update NFT"
+      description: "update NFT"
+      operationId: "update NFT"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "itemId"
+          in: "path"
+          description: "item_id"
+          required: true
+          type: "string"
+        - name: "token_id"
+          in: "formData"
+          description: "token_id"
+          required: true
+          type: "integer"
+        - name: "owner_address"
+          in: "formData"
+          description: "owner_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
 
 externalDocs:
   description: "Find out more about Swagger"

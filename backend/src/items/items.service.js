@@ -51,12 +51,17 @@ class ItemsService {
 	/**
 	 * PJT Ⅱ - 과제 1: Req.1-B2 작품 정보 업데이트
 	 */
-	async updateItemTokenIdAndOwnerAddress(itemId, tokenId, ownerAddress) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success'
+	async updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address) {
+		try {
+			const data = await itemRepository.updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address);
+			return {
+				statusCode: 201,
+				responseBody: {
+					result: 'success',
+				}
 			}
+		} catch(e) {
+			throw e;
 		}
 	}
 

@@ -50,8 +50,20 @@ class ItemsRepository {
 		return null;
 	}
 
-	async updateItemTokenIdAndOwnerAddress(itemId, tokenId, ownerAddress) {
-		return null;
+	async updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address) {
+		const sql = `
+			update items_t
+			set token_id=?, owner_address=?
+			where item_id=?;
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [token_id, owner_address, item_id])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
 	async validateItemDuplicated(hashCode) {

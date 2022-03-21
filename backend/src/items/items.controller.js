@@ -27,7 +27,7 @@ router.post('/', upload.single('items'), async function (req, res) {
 		res.status(403).send({result:"fail", error:e});
 	}
 	const item = {
-		owner_address: req.body.owner_address,
+		owner_address: req.body.user_address,
 		author_name: req.body.author_name,
 		item_title: req.body.item_title,
 		item_description: req.body.item_description,
@@ -50,16 +50,23 @@ router.post('/', upload.single('items'), async function (req, res) {
 });
 
 /**
- * PJT Ⅱ - 과제 1: Req.1-B2 작품 정보 업데이트
+ * LJA | 2022.03.21 | v1.0
+ * @name items
+ * @api {patch} /items/:itemId
+ * @des
+ * NFT로 등록된 아이템의 정보를 업데이트 해준다.
  */
 router.patch('/:itemId', async function (req, res) {
 	const itemId = req.params['itemId']
-	const data = req.body
-	
-	const { statusCode, responseBody } = await itemService.updateItemTokenIdAndOwnerAddress(itemId, data['token_id'], data['owner_address']);
-
-	res.statusCode = statusCode;
-	res.send(responseBody);
+	const data = req.body;
+	try{
+		const { statusCode, responseBody } = await itemService.updateItemTokenIdAndOwnerAddress(itemId, data['token_id'], data['owner_address']);
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("updateItemTokenIdAndOwnerAddress",e);
+		res.status(403).send({result:"fail", error:e});
+	}
 });
 
 /**
