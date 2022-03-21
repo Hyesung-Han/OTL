@@ -38,7 +38,7 @@ export default function ProfileCard({ product }) {
           component={RouterLink}
           sx={{alignItems:'center'}}
         >
-        <AvatarStyle alt={nickname} src={image} sx={{ width: 150, height: 150, mt: 5, mb:2 }}/>
+        <AvatarStyle alt={nickname} src={image} sx={{ width: 150, height: 150, my:3, mx:3 }}/>
         <Stack spacing={2} >
             <Typography variant="subtitle1" textAlign="center" noWrap>
               {nickname}

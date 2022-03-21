@@ -11,7 +11,7 @@ import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
 import ItemsList from '../components/items/ItemsList';
 import ProfileList from '../components/profile/ProfileList';
-import HorizonLine from '../utils/HorizonLine'
+import HorizonLine from '../components/HorizonLine'
 
 /**
  * [검색결과] 화면
@@ -56,7 +56,7 @@ const SearchResult = () => {
     const resultList = [];
     const resultProfile = {
       id: 1,
-      image: "https://edu.ssafy.com/asset/images/logo.png",
+      image: "",
       nickname: "fake nickname"
     };
 
