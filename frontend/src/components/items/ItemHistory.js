@@ -10,10 +10,11 @@ import TableRow from '@mui/material/TableRow';
 
 
 /**
- * CSW | 2022.03.21 | ADD
+ * CSW | 2022.03.21 | UPDATE
  * @name ItemHistory
  * @des itemDetail ItemHistory 컴포넌트
  * HACK 위치잡기위해서 임시로 넣어둔 표
+ * TODO 표 정보 연결
  */
 
 
@@ -95,7 +96,7 @@ export default function ColumnGroupingTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.Event}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
