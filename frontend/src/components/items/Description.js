@@ -22,7 +22,7 @@
    };
  
    return (
-     <div style={{border:'1px solid rgba(0, 0, 0, 0.1)', borderRadius:10, width: "100%"}}>
+     <div style={{ borderRadius:10, width: "85%", height:"100%"}}>
        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
          <AccordionSummary
            expandIcon={<ExpandMoreIcon />}

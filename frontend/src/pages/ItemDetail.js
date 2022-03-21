@@ -60,7 +60,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAhkAAAIdCAYAAACQi2+dAAAAAXNSR0IArs
             <Grid item xs={2}>
 
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{alignItems :"center", display :"flex", justifyContent:"center", paddingLeft:0, paddingBottom:24}}>
                  <Description></Description>
             </Grid>
             <Grid item xs={7}>
