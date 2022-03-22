@@ -2,14 +2,17 @@ import { Box, Button, Container, Link, Stack, Typography, Grid, Card } from "@mu
 import Tooltip from "@mui/material/Tooltip";
 import CardContent from '@mui/material/CardContent';
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import axios from "axios";
+import Axios from "axios";
 import Web3 from "web3";
 import Page from "../components/Page";
 import Description from "../components/items/Description"
 import ItemHistory from "../components/items/ItemHistory"
 import HorizonLine from "../components/HorizonLine";
+import {CommonContext} from "../context/CommonContext"
+import { useParams } from 'react-router-dom';
+
 
 const ImgStyle = styled('img')({
     top: 0,
@@ -19,15 +22,46 @@ const ImgStyle = styled('img')({
   });
 
 /**
- * CSW | 2022.03.21 | ADD
+ * CSW | 2022.03.22 | UPDATE
  * @name ItemDetail
  * @des ItemDetail P
  * TODO
- * 1. 이미지 Url, description, author, category, 컨트랙트 정보 받아오기
- * 2. 컨트랙트에서 price, 판매날짜 받아오기
+ * 2. 컨트랙트에서 price, 판매날짜, 주소 받아오기
  */
 const ItemDetail = () => {
     const symbol ="ETH";
+    const { serverUrlBase } = useContext(CommonContext);
+    const {token_id} = useParams();
+
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [author, setAuthor] = useState('');
+    const [category, setCategory] = useState('');
+    const [nickname, setNickname] = useState('');
+
+
+    const getItemDetail= async()=>{
+        try {
+            const res = await Axios.get(serverUrlBase + `/items/`+ token_id);
+            const data = res.data.data;
+            
+            setTitle(data.item_title);
+            setDescription(data.item_description);
+            setAuthor(data.author_name);
+            setCategory(data.category_code);
+            setNickname(data.author_name);
+
+            console.log(data);
+            
+        } catch (e) {
+            console.log('getItemDetail error' +  e);
+        }
+    }
+
+    useEffect(()=>{
+        getItemDetail();
+    }, []);
+
 
   return (
     <Page
@@ -47,8 +81,8 @@ const ItemDetail = () => {
                 </div>
             </Grid>
             <Grid item xs={7}>
-                <Typography variant="h3"> Title </Typography>
-                <Typography variant="subtitle2" color="text.secondary"> created by nickname </Typography>
+                <Typography variant="h3"> {title} </Typography>
+                <Typography variant="subtitle2" color="text.secondary"> created by {nickname} </Typography>
                 <Card sx={{ width:"70%", mt:3 }}>
                     <CardContent>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
@@ -79,7 +113,7 @@ const ItemDetail = () => {
 
             </Grid>
             <Grid item xs={3} style={{alignItems :"center", display :"flex", justifyContent:"center", paddingLeft:0, paddingBottom:24}}>
-                 <Description></Description>
+                 <Description description={description} author={author} category = {category}></Description>
             </Grid>
             <Grid item xs={7}>
                 <ItemHistory></ItemHistory>

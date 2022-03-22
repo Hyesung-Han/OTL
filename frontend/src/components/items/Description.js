@@ -12,9 +12,10 @@
  * @des itemDetail Description 컴포넌트
  */
 
- export default function ControlledAccordions() {
+ export default function ControlledAccordions(props) {
    const [expanded, setExpanded] = React.useState(false);
- 
+
+
    const handleChange = (panel) => (event, isExpanded) => {
      setExpanded(isExpanded ? panel : false);
    };
@@ -33,8 +34,7 @@
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
-             Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-             Aliquam eget maximus est, id dignissim quam.
+              {props.description}
            </Typography>
          </AccordionDetails>
        </Accordion>
@@ -49,9 +49,7 @@
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
-             Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus,
-             varius pulvinar diam eros in elit. Pellentesque convallis laoreet
-             laoreet.
+             {props.author}
            </Typography>
          </AccordionDetails>
        </Accordion>
@@ -67,8 +65,7 @@
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
-             Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-             amet egestas eros, vitae egestas augue. Duis vel est augue.
+             {props.category}
            </Typography>
          </AccordionDetails>
        </Accordion>
