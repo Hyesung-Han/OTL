@@ -135,6 +135,28 @@ class ItemsService {
 			throw e;
 		}
 	}
+
+	async getItemListCnt(category_code, item_title, page) {
+		try {
+			let data;
+			if(category_code) {
+				data = await itemRepository.getItemsByCategoryCnt(category_code,  (page-1)*100);
+			} else if(item_title) {
+				data = await itemRepository.getItemsByItemTitleCnt(item_title,  (page-1)*100);
+			} else {
+				data = await itemRepository.getItemsCnt( (page-1)*100);
+			}
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data[0],
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
+	}
 }
 
 module.exports = ItemsService;

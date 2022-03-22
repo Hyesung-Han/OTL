@@ -129,6 +129,28 @@ router.get('/list', async function (req, res) {
 });
 
 /**
+ * LJA | 2022.03.22 | v1.0
+ * @name items
+ * @api {get} /items/listCnt?category_code=code&item_title=title&page=page
+ * @des
+ * 전체 작품 수, 카테고리별 작품 수, 제목별 작품 수
+ * 페이징 처리를 위한 작품 수 리턴
+ */
+router.get('/listCnt', async function (req, res) {
+	console.log("/list 호출");
+	try {
+		const { statusCode, responseBody } = await itemService.getItemListCnt(req.query['category_code'], req.query['item_title'], req.query['page']);
+	
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("getItemListCnt",e);
+		res.status(403).send({result:"fail", error:e});
+	}
+});
+
+
+/**
  * LJA | 2022.03.21 | v1.0
  * @name items
  * @api {get} /items/:token_id

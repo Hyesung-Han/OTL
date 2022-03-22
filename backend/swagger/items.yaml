@@ -170,6 +170,36 @@ paths:
       responses:
         default:
           description: "successful operation"
+
+  /items/listCnt:
+    get:
+      tags:
+        - "items"
+      summary: "count item list"
+      description: "count item list"
+      operationId: "count item list"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "category_code"
+          in: "query"
+          description: "category_code"
+          required: false
+          type: "string"
+        - name: "item_title"
+          in: "query"
+          description: "item_title"
+          required: false
+          type: "string"
+        - name: "page"
+          in: "query"
+          description: "page"
+          required: false
+          type: "integer"
+      responses:
+        default:
+          description: "successful operation"
           
   /items/category:
     get:

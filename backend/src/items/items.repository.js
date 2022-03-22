@@ -199,6 +199,68 @@ class ItemsRepository {
 				throw e;
 			});
 	}
+
+	async getItemsCnt(page) {
+		let sql = `
+			SELECT 		COUNT(item_id) AS count
+			FROM    	items_t
+			WHERE		on_sale_yn = 1
+			ORDER BY 	created_at DESC
+		`;
+		if(page) {
+			sql+= `LIMIT	?, 100`;
+		}
+		console.debug(sql);
+
+		return await connection.query(sql, [page])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
+
+	async getItemsByCategoryCnt(category_code, page) {
+		let sql = `
+			SELECT 		COUNT(item_id) AS count
+			FROM    	items_t
+			WHERE		on_sale_yn = 1 		
+			AND			category_code = ?
+			ORDER BY 	created_at DESC
+		`;
+		if(page) {
+			sql+= `LIMIT	?, 100`;
+		}
+		console.debug(sql);
+
+		return await connection.query(sql, [category_code, page])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
+
+	async getItemsByItemTitleCnt(item_title, page) {
+		let sql = `
+			SELECT 		COUNT(item_id) AS count
+			FROM    	items_t
+			WHERE		on_sale_yn = 1 		
+			AND			item_title LIKE ?
+			ORDER BY 	created_at DESC
+		`;
+		if(page) {
+			sql+= `LIMIT ?, 100`;
+		}
+		console.debug(sql);
+
+		return await connection.query(sql, ['%'+item_title+'%', page])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = ItemsRepository;
