@@ -9,6 +9,7 @@ import SaleRegistration from './pages/SaleRegistration';
 import WhosArt from './pages/WhosArt';
 import ItemPurchase from './pages/ItemPurchase';
 import SearchResult from './pages/SearchResult';
+import RegisterItem from './pages/RegisterItem';
 
 // 화면 라우팅 테이블
 export default function Router() {
@@ -81,6 +82,19 @@ export default function Router() {
       children: [
         { element: <Navigate to="/search" replace /> },
         { path: "", element: <SearchResult /> },
+      ],
+    },
+    { path: "*", element: <Navigate to="/404" replace /> },
+    // /**
+    //  * HSH | 2022.03.21 | v1.0
+    //  * RegisterItem 이동
+    //  */
+    {
+      path: "/registerItem",
+      element: <MainLayout />,
+      children: [
+        { element: <Navigate to="/registerItem" replace /> },
+        { path: "", element: <RegisterItem /> },
       ],
     },
     { path: "*", element: <Navigate to="/404" replace /> },
