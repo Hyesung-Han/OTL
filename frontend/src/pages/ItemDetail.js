@@ -25,8 +25,9 @@ const ImgStyle = styled('img')({
  * CSW | 2022.03.22 | UPDATE
  * @name ItemDetail
  * @des ItemDetail P
+ * @api {get} /items/:token_id
  * TODO
- * 2. 컨트랙트에서 price, 판매날짜, 주소 받아오기
+ * 2. web3 컨트랙트에서 price, 판매날짜, 주소, 이미지url 받아오기
  */
 const ItemDetail = () => {
     const symbol ="ETH";
@@ -76,7 +77,7 @@ const ItemDetail = () => {
 
             </Grid>
             <Grid item xs={3} style={{alignItems :"center", display :"flex", justifyContent:"center", paddingLeft:0, paddingBottom:24}}>
-                <div style={{width: 300, height:300}}>
+                <div style={{width: 350, height:350}}>
                     <ImgStyle src="" />
                 </div>
             </Grid>
