@@ -93,6 +93,7 @@ contract Sale {
     event HighestBidIncereased(address bidder, uint256 amount);
     event SaleEnded(address winner, uint256 amount);
 
+
     constructor(
         address _admin,
         address _seller,
@@ -120,7 +121,38 @@ contract Sale {
     }
 
     function bid(uint256 bid_amount) public {
-        // TODO
+        //제안자는 제안을 철회할 수 없다.
+
+        // 판매자가 아닌 경우 호출 가능
+        buyer = msg.sender;
+        require(seller != buyer, "Seller can not buy this NFT");
+
+        // 해당 Sale의 판매 시점이 유효한 경우 구매 가능
+        require(block.timestamp < saleEndTime, "NFT Selling is closed");
+        
+        // 구매 희망자가 Sale 컨트랙트에게 구매 희망자의 ERC-20 토큰을 
+        // 송금할 수 있는 권한을 허용한 경우(ERC-20 approve)
+        require(erc20Contract.approve(buyer, purchasePrice), "Not Approved");
+
+        //판매자가 지정한 최저 제안가 이상의 금액 제시
+        require(minPrice <= bid_amount, "minPrice is higher than yours");
+
+        //현재 최고 제안가 초과 금액 제시
+        require(highestBid < bid_amount, "You should bid more amount");
+
+        //즉시 구매가보다 낮은 금액으로 호출
+        require(bid_amount < purchasePrice, "Your bid_amount is higher than purchase_Price");
+
+        //환불 먼저 진행하고 제안자 정보 갱신, 금액 갱신, 송금
+        erc20Contract.transferFrom(address(this), highestBidder, highestBid);
+
+        highestBidder = buyer;
+        highestBid = bid_amount;
+
+        erc20Contract.transferFrom(buyer, address(this), bid_amount);
+
+        emit HighestBidIncereased(buyer, bid_amount);
+
     }
 
     function purchase() public payable onlyAfterStart endcheck{
@@ -137,7 +169,9 @@ contract Sale {
         require(erc20Contract.approve(buyer, purchasePrice), "Not Approved");
 
         //1번 bid
-        // TODO
+        if(highestBid > 0){
+            erc20Contract.transferFrom(address(this), highestBidder, highestBid);
+        }
 
         //2. 구매자의 ERC-20 토큰을 즉시 구매가만큼 판매자에게 송금한다.
         erc20Contract.transferFrom(buyer, seller, purchasePrice);
@@ -148,7 +182,6 @@ contract Sale {
         //4. 컨트랙트의 거래 상태와 구매자 정보를 업데이트 한다.
         _end();
         emit SaleEnded(buyer, purchasePrice);
-
 
     }
 
