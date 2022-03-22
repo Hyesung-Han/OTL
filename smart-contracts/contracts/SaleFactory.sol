@@ -204,9 +204,19 @@ contract Sale {
 
     }
     
-    function cancelSales() public {
+    function cancelSales() public payable onlyAfterStart endcheck{
         // TODO
+        //철회시점 유효
+        require(block.timestamp < saleEndTime, "You cannot cancel");
 
+        require(msg.sender == admin || msg.sender == seller, "You dont have any permission");
+    
+        if(highestBid > 0){
+            erc20Contract.transferFrom(highestBidder, address(this), highestBid);
+        }
+        erc721Constract.safeTransferFrom(address(this), seller, tokenId);
+
+        _end();
 
     }
 
