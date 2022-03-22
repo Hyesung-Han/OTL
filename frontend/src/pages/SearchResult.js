@@ -113,7 +113,7 @@ const SearchResult = () => {
         <>
           {isCollection === true ? (
             
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" sx={{my:3}}>
 
                 <HorizonLine text="Artist" />
                 <ProfileList sx={{ mt: 1 }} products={productsprofile} />
