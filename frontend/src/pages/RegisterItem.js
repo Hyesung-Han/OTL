@@ -27,7 +27,7 @@ function RegisterItem() {
   const [Description, setDescription] = useState("");
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name RootStyle
    * @des 가장 바깥 root css
    */
@@ -40,7 +40,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name BodyStyle
    * @des root 바로 다음. 폭 넓이 지정해주는 css
    */
@@ -49,7 +49,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name ContentStyle
    * @des author, title 등등 text 부분 영역
    */
@@ -62,7 +62,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name ImageStyle
    * @des uproad image 영역
    */
@@ -82,7 +82,7 @@ function RegisterItem() {
   }));
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name onClickImg
    * @des 이미지 클릭 시 실행되는 함수
    */
@@ -91,7 +91,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name onChangeAutor
    * @des author 변경 시 실행
    */
@@ -100,7 +100,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name onChangeTitle
    * @des title 변경 시 실행
    */
@@ -109,7 +109,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name onChangeDescription
    * @des description 변경 시 실행
    */
@@ -118,7 +118,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name inputTexts
    * @des author, title, Description에 관한 정보 저장
    */
@@ -150,7 +150,7 @@ function RegisterItem() {
   ];
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name inputTextList
    * @des inputTexts의 값들을 뿌려주는 컴포넌트
    */
@@ -180,7 +180,7 @@ function RegisterItem() {
   ));
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name ButtonStyle
    * @des create, cancel 버튼 css
    */
@@ -204,7 +204,7 @@ function RegisterItem() {
   }));
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name onClickCreate
    * @des create 버튼 클릭 시 실행
    */
@@ -213,7 +213,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name onClickCancel
    * @des cancel 버튼 클릭 시 실행
    */
@@ -222,7 +222,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name onImgChange
    * @des 파일 선택장에서 파일 선택 시 실행
    */
@@ -231,7 +231,7 @@ function RegisterItem() {
   };
 
   /**
-   * HSW | 2022.03.21 | v1.0
+   * HSH | 2022.03.21 | v1.0
    * @name categoryList
    * @des 카테고리 리스트
    * HACK
