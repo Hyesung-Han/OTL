@@ -5,6 +5,11 @@
 const SalesRepository = require('./sales.repository');
 const salesRepository = new SalesRepository();
 
+const ItemsRepository = require('../items/items.repository');
+const itemsRepository = new ItemsRepository();
+
+const connection = require('../../config/connection').promise();
+
 class SalesService {
 
 	async createSales(data) {
@@ -28,18 +33,24 @@ class SalesService {
 		};
 	}
 
-	/**
-	 * PJT Ⅲ 과제 3: 
-	 * Req.3-B1 구매자 정보 업데이트
-	 * Req.3-B3 판매 완료
-	 */
-	async completeSales(tokenId, data) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success'
-			}
-		};
+	async completeSales(token_id, buyer_address) {
+		try {
+			await connection.beginTransaction();
+
+			await salesRepository.completeSales(token_id, buyer_address);
+			await itemsRepository.updateItemOwnerAddress(token_id, buyer_address);
+
+			await connection.commit();
+			return {
+				statusCode: 201,
+				responseBody: {
+					result: 'success'
+				}
+			};
+		} catch(e) {
+			await connection.rollback();
+			throw e;
+		}
 	}
 
 	/**

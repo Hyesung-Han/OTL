@@ -74,6 +74,30 @@ paths:
       responses:
         default:
           description: "successful operation"
+  /sales/{token_id}/complete:
+    patch:
+      tags:
+        - "sales"
+      summary: "sale complete"
+      description: "sale complete"
+      operationId: "sale complete"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token_id"
+          in: "path"
+          description: "token_id"
+          required: true
+          type: "integer"
+        - name: "buyer_address"
+          in: "formData"
+          description: "buyer_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
 
 externalDocs:
   description: "Find out more about Swagger"

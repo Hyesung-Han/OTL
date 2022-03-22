@@ -41,8 +41,20 @@ class SalesRepository {
 		return null;
 	}
 
-	async completeSales(tokenId, data) {
-		return null;
+	async completeSales(token_id, buyer_address) {
+		const sql = `
+			UPDATE sales_t
+			SET sale_yn = '0', buyer_address = ?
+			WHERE token_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [buyer_address, token_id])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 }
 

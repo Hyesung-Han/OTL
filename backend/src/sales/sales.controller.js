@@ -43,17 +43,24 @@ router.get('/', async function (req, res) {
 });
 
 /**
- * PJT Ⅲ 과제 3: 
- * Req.3-B1 구매자 정보 업데이트
+ * LJA | 2022.03.22 | v1.0
+ * @name sales
+ * @api {patch} /sales/:token_id/complete
+ * @des 판매 완료 처리(items, sales 테이블)
  */
- router.patch('/:tokenId/complete', async function (req, res) {
-	const tokenId = req.params['tokenId'];
-	const data = req.body;
+ router.patch('/:token_id/complete', async function (req, res) {
+	const token_id = req.params['token_id'];
+	const buyer_address = req.body.buyer_address;
+	try {
+		const { statusCode, responseBody } = await salesService.completeSales(token_id, buyer_address)
+	
+		res.statusCode = statusCode;
+		res.send(responseBody);
 
-	const { statusCode, responseBody } = await salesService.completeSales(tokenId, data)
-
-	res.statusCode = statusCode;
-	res.send(responseBody);
+	} catch(e) {
+		console.error("completeSales",e);
+		res.status(403).send({result:"fail", error:e});
+	}
 });
 /**
  * PJT Ⅲ 과제 3: 
