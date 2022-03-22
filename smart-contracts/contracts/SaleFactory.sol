@@ -28,9 +28,10 @@ contract SaleFactory is Ownable {
     /**
      * OYT | 2022.03.17 | v1.0
      * @dev sale contract를 생성하고 saleFactory에 CA를 저장
+     * startTime, endTime -> front에서 Date.now() 사용 초단위로 변환해서 보내줘야함
      */
     function createSale(
-        uint256 itemId, // DB에 저장된 ItemId ?? tokenId?
+        uint256 itemId, // tokenId
         uint256 minPrice, // 최소 bid
         uint256 purchasePrice, // 즉시구매가
         uint256 startTime, // 판매 시작일
@@ -124,9 +125,6 @@ contract Sale {
 
     function purchase() public payable onlyAfterStart endcheck{
 
-        //이더리움 왔다갔다하는건데 payable 안써도 되는건가?
-        // TODO 
-
         // 판매자가 아닌 경우 호출 가능
         buyer = msg.sender;
         require(seller != buyer, "Seller can not buy this NFT");
@@ -139,6 +137,7 @@ contract Sale {
         require(erc20Contract.approve(buyer, purchasePrice), "Not Approved");
 
         //1번 bid
+        // TODO
 
         //2. 구매자의 ERC-20 토큰을 즉시 구매가만큼 판매자에게 송금한다.
         erc20Contract.transferFrom(buyer, seller, purchasePrice);
