@@ -1,33 +1,52 @@
 import { Link as RouterLink } from "react-router-dom";
-import { Grid, Button, Typography, Container } from "@mui/material";
+import { Grid, Box, Button, Typography, Divider } from "@mui/material";
 import Page from "../components/Page";
+import logo from "../image/logo.png";
 
 function RegisterSale() {
+  /**
+   * HSH | 2022.03.22 | v1.0
+   * @name ItemDetailGridStyle
+   * @des 이미지, author, title, description이 들어가는 영역
+   */
   const ItemDetailGridStyle = {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
-
-    backgroundColor: "#444444",
   };
 
-  const ItemSaleGridStyle = {
-      height:"500px",
-    backgroundColor: "#333333",
-  };
+  /**
+   * HSH | 2022.03.22 | v1.0
+   * @name ItemSaleGridStyle
+   * @des buy now, make offer, end date가 들어가는 영역
+   */
+  const ItemSaleGridStyle = {};
 
+  /**
+   * HSH | 2022.03.22 | v1.0
+   * @name DetailImgGridStyle
+   * @des ItemDetailGridStyle안에서 Image가 들어가는 영역 css
+   */
   const DetailImgGridStyle = {
-    padding: 10,
+    margin: 5,
     width: "300px",
     height: "300px",
-    backgroundColor: "#222222",
+
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+
+    border: "solid #ababab",
+    borderRadius: "20px",
   };
 
+  /**
+   * HSH | 2022.03.22 | v1.0
+   * @name DetailGridStyle
+   * @des ItemDetailGridStyle안에서 Author, title, description이 들어가는 영역
+   */
   const DetailGridStyle = {
-    padding: 10,
-    width: "400px",
-    height: "300px",
-    backgroundColor: "#111111",
+    margin: 5,
   };
 
   return (
@@ -36,10 +55,22 @@ function RegisterSale() {
         display="flex"
         flexDirection="column"
         justifyContent="center"
-        sx={{ width: 1000, mb:10 }}
+        sx={{ width: 1000, mb: 10 }}
       >
+        <Typography variant="h4">Sales Registration</Typography>
+        <Divider />
         <Grid sx={ItemDetailGridStyle}>
-          <Grid sx={DetailImgGridStyle}></Grid>
+          {/**
+           * HACK
+           * 이미지 임시로 logo 이미지로 넣어둠
+           */}
+          <Grid sx={DetailImgGridStyle}>
+            <Box
+              component="img"
+              sx={{ maxWidth: "300px", maxHeight: "300px" }}
+              src={logo}
+            />
+          </Grid>
           <Grid sx={DetailGridStyle}></Grid>
         </Grid>
         <Grid sx={ItemSaleGridStyle}></Grid>
