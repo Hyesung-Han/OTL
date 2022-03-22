@@ -28,9 +28,10 @@ contract SaleFactory is Ownable {
     /**
      * OYT | 2022.03.17 | v1.0
      * @dev sale contract를 생성하고 saleFactory에 CA를 저장
+     * startTime, endTime -> front에서 Date.now() 사용 초단위로 변환해서 보내줘야함
      */
     function createSale(
-        uint256 itemId, // DB에 저장된 ItemId ?? tokenId?
+        uint256 itemId, // tokenId
         uint256 minPrice, // 최소 bid
         uint256 purchasePrice, // 즉시구매가
         uint256 startTime, // 판매 시작일
@@ -68,6 +69,7 @@ contract SaleFactory is Ownable {
  *  PJT Ⅲ - Req.1-SC2) Sale 구현
  */
 contract Sale {
+
     // 생성자에 의해 정해지는 값
     address public seller;
     address public buyer;
@@ -110,7 +112,7 @@ contract Sale {
         admin = _admin;
         saleStartTime = startTime;
         saleEndTime = endTime;
-        currencyAddress = _currencyAddress;
+        currencyAddress = _currencyAddress; //어떤 화폐인지
         nftAddress = _nftAddress;
         ended = false;
         erc20Contract = IERC20(_currencyAddress);
@@ -121,8 +123,33 @@ contract Sale {
         // TODO
     }
 
-    function purchase() public {
-        // TODO 
+    function purchase() public payable onlyAfterStart endcheck{
+
+        // 판매자가 아닌 경우 호출 가능
+        buyer = msg.sender;
+        require(seller != buyer, "Seller can not buy this NFT");
+
+        // 해당 Sale의 판매 시점이 유효한 경우 구매 가능
+        require(block.timestamp < saleEndTime, "NFT Selling is closed");
+        
+        // 구매 희망자가 Sale 컨트랙트에게 구매 희망자의 ERC-20 토큰을 
+        // 송금할 수 있는 권한을 허용한 경우(ERC-20 approve)
+        require(erc20Contract.approve(buyer, purchasePrice), "Not Approved");
+
+        //1번 bid
+        // TODO
+
+        //2. 구매자의 ERC-20 토큰을 즉시 구매가만큼 판매자에게 송금한다.
+        erc20Contract.transferFrom(buyer, seller, purchasePrice);
+
+        //3. NFT 소유권을 구매자에게 이전한다.
+        erc721Constract.safeTransferFrom(address(this), buyer, tokenId);
+
+        //4. 컨트랙트의 거래 상태와 구매자 정보를 업데이트 한다.
+        _end();
+        emit SaleEnded(buyer, purchasePrice);
+
+
     }
 
     function confirmItem() public {
@@ -189,6 +216,11 @@ contract Sale {
             block.timestamp >= saleStartTime,
             "Sale: This sale is not started."
         );
+        _;
+    }
+
+    modifier endcheck(){
+        require(!ended, "This NFT selling is already closed");
         _;
     }
 }
