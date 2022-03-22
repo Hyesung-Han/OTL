@@ -17,16 +17,13 @@ class SalesService {
 		};
 	}
 
-	/**
-	 * PJT Ⅲ 과제 2: 
-	 * Req.2-B2 판매 정보 상세 조회 
-	 */
-	async getSales(tokenId) {
+	async getSales(token_id) {
+		const data = await salesRepository.getSalesByTokenId(token_id);
 		return {
 			statusCode: 200,
 			responseBody: {
 				result: 'success',
-				data: []
+				data: data[0]
 			}
 		};
 	}

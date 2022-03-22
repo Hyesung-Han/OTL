@@ -21,12 +21,20 @@ class SalesRepository {
 			});
 	}
 
-	async getSalesByTokenId(tokenId) {
-		return null;
-	}
+	async getSalesByTokenId(token_id) {
+		const sql = `
+			SELECT sale_id, sale_contract_address, sale_yn, token_id, seller_address, buyer_address, created_at, completed_at
+			FROM sales_t
+			WHERE token_id = ?
+		`;
+		console.debug(sql);
 
-	async getSales() {
-		return null;
+		return await connection.query(sql, token_id)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
 	async deleteSales(saleId) {
