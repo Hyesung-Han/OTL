@@ -187,12 +187,27 @@ contract Sale {
 
     }
 
-    function confirmItem() public {
+    function confirmItem() public payable{
+        //최고 입찰자가 부르는 함수
         // TODO 
+        require(block.timestamp > saleEndTime, "NFT Selling is not closed");
+
+        require(msg.sender == highestBidder, "You are not a highest bidder");
+
+        erc20Contract.transferFrom(address(this), seller, highestBid);
+
+        erc721Constract.safeTransferFrom(address(this), highestBidder, tokenId);
+
+        _end();
+
+        emit SaleEnded(highestBidder, highestBid);
+
     }
     
     function cancelSales() public {
         // TODO
+
+
     }
 
     function getTimeLeft() public view returns (int256) {
