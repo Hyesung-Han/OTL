@@ -1,9 +1,13 @@
 import { Link as RouterLink } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { Grid, Box, Button, Typography, Divider } from "@mui/material";
 import Page from "../components/Page";
 import logo from "../image/logo.png";
 
-function RegisterSale() {
+function RegisterSale(){
+    const { item_id } = useParams();
+    console.log(item_id);
+
   /**
    * HSH | 2022.03.22 | v1.0
    * @name ItemDetailGridStyle

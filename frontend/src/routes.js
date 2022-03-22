@@ -123,6 +123,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/registerSale" replace /> },
         { path: "", element: <RegisterSale /> },
+        { path: ":item_id", element: <RegisterSale /> },
       ],
     },
     { path: "*", element: <Navigate to="/404" replace /> },
