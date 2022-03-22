@@ -1,12 +1,18 @@
 import { Link as RouterLink } from "react-router-dom";
-import { useParams } from 'react-router-dom';
-import { Grid, Box, Button, Typography, Divider } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Grid, Box, Button, Typography, Divider,Paper,InputBase } from "@mui/material";
 import Page from "../components/Page";
+import { useState } from "react";
+
 import logo from "../image/logo.png";
 
-function RegisterSale(){
-    const { item_id } = useParams();
-    console.log(item_id);
+function RegisterSale() {
+  const { item_id } = useParams();
+  // console.log(item_id);
+
+  const [author, setAuthor] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
   /**
    * HSH | 2022.03.22 | v1.0
@@ -17,6 +23,7 @@ function RegisterSale(){
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
+    alignItems:"center",
   };
 
   /**
@@ -32,9 +39,9 @@ function RegisterSale(){
    * @des ItemDetailGridStyle안에서 Image가 들어가는 영역 css
    */
   const DetailImgGridStyle = {
-    margin: 5,
-    width: "300px",
-    height: "300px",
+    margin: 3,
+    width: "350px",
+    height: "350px",
 
     display: "flex",
     justifyContent: "center",
@@ -52,6 +59,24 @@ function RegisterSale(){
   const DetailGridStyle = {
     margin: 5,
   };
+
+  const TextFiledList = [
+    {
+      name: "Author",
+      value: author,
+      rows: 1,
+    },
+    {
+      name: "Title",
+      value: title,
+      rows: 1,
+    },
+    {
+      name: "Description",
+      value: description,
+      rows: 4,
+    },
+  ];
 
   return (
     <Page display="flex" justifyContent="center" title="SSAFY NFT">
@@ -71,11 +96,36 @@ function RegisterSale(){
           <Grid sx={DetailImgGridStyle}>
             <Box
               component="img"
-              sx={{ maxWidth: "300px", maxHeight: "300px" }}
+              sx={{ maxWidth: "350px", maxHeight: "350px" }}
               src={logo}
             />
           </Grid>
-          <Grid sx={DetailGridStyle}></Grid>
+          <Grid sx={DetailGridStyle}>
+              {TextFiledList.map((item,index)=>(
+                 <Box key={index} mb={3}>
+                 <Typography variant="h5">{item.name}</Typography>
+                 <Paper
+                   sx={{
+                     display: "flex",
+                     justifyContent: "center",
+           
+                     p: "2px 4px",
+                     width: 500,
+                     border: "2px solid #cbcbcb",
+                     backgroundColor:"#dfdfdf",
+                   }}
+                 >
+                   <InputBase
+                     value={item.value}
+                     multiline={(item.rows===1)?false:true}
+                     rows={item.rows}
+                     sx={{ width: "95%" }}
+                     disabled
+                   />
+                 </Paper>
+               </Box> 
+              ))}
+          </Grid>
         </Grid>
         <Grid sx={ItemSaleGridStyle}></Grid>
       </Grid>
