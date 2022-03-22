@@ -1,5 +1,6 @@
 import { Link as RouterLink } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { styled } from "@mui/material/styles";
 import {
   Grid,
   Box,
@@ -62,6 +63,30 @@ function RegisterSale() {
   const DetailGridStyle = {
     margin: 3,
   };
+
+  const ButtonGridStyle={
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  }
+
+  const ButtonStyle = styled(Button)((theme) => ({
+    margin: "10px 10px",
+    width: "100px",
+    font: "1em Fira Sans",
+
+    border: "2px solid #ababab",
+    borderRadius: "10px",
+    color: "#404040",
+
+    "&:hover": {
+      /**
+       * HACK
+       * 테마 적용하고 싶은데 에러나서 그냥 테마 값 가져다 씀
+       */
+      color: "#00AB55",
+    },
+  }));
 
   const itemDetailList = [
     {
@@ -128,6 +153,25 @@ function RegisterSale() {
   function onChangeEndDate(e) {
     setendDate(e.target.value);
   }
+
+  /**
+   * HSH | 2022.03.22 | v1.0
+   * @name onClickCreate
+   * @des create 버튼 클릭 시 실행
+   */
+   const onClickCreate = () => {
+    console.log("onClickCreate");
+  };
+
+  /**
+   * HSH | 2022.03.22 | v1.0
+   * @name onClickCancel
+   * @des cancel 버튼 클릭 시 실행
+   */
+   const onClickCancel = () => {
+    console.log("onClickCancel");
+  };
+
 
   return (
     <Page display="flex" justifyContent="center" title="SSAFY NFT">
@@ -203,6 +247,10 @@ function RegisterSale() {
             </Box>
           ))}
         </Grid>
+            <Box mt={3} display="flex" justifyContent="right">
+              <ButtonStyle onClick={onClickCreate}>CREATE</ButtonStyle>
+              <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
+            </Box>
       </Grid>
     </Page>
   );
