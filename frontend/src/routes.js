@@ -1,17 +1,17 @@
-import { Navigate, useRoutes } from 'react-router-dom';
-import MainLayout from './layouts';
-import NotFound from './pages/Page404';
-import Main from './pages/Main';
+import { Navigate, useRoutes } from "react-router-dom";
+import MainLayout from "./layouts";
+import NotFound from "./pages/Page404";
+import Main from "./pages/Main";
 import ConnectWallet from "./pages/ConnectWallet";
-import Items from './pages/Items';
-import ItemRegistration from './pages/ItemRegistration';
-import SaleRegistration from './pages/SaleRegistration';
-import WhosArt from './pages/WhosArt';
-import ItemPurchase from './pages/ItemPurchase';
-import SearchResult from './pages/SearchResult';
-import RegisterItem from './pages/RegisterItem';
-import ItemDetail from './pages/ItemDetail';
-
+import Items from "./pages/Items";
+import ItemRegistration from "./pages/ItemRegistration";
+import SaleRegistration from "./pages/SaleRegistration";
+import WhosArt from "./pages/WhosArt";
+import ItemPurchase from "./pages/ItemPurchase";
+import SearchResult from "./pages/SearchResult";
+import RegisterItem from "./pages/RegisterItem";
+import ItemDetail from "./pages/ItemDetail";
+import RegisterSale from "./pages/RegisterSale"
 
 // 화면 라우팅 테이블
 export default function Router() {
@@ -38,7 +38,7 @@ export default function Router() {
       ],
     },
     {
-      path: '/',
+      path: "/",
       element: <MainLayout />,
       children: [
         { path: "404", element: <NotFound /> },
@@ -78,7 +78,7 @@ export default function Router() {
     //  * HACK
     //  * 검색결과 페이지 확인을 위한 임시 경로 설정
     //  */
-     {
+    {
       path: "/search",
       element: <MainLayout />,
       children: [
@@ -110,6 +110,20 @@ export default function Router() {
       children: [
         { element: <Navigate to="/registerItem" replace /> },
         { path: "", element: <RegisterItem /> },
+      ],
+    },
+    { path: "*", element: <Navigate to="/404" replace /> },
+    /**
+     * HSH | 2022.03.21 | v1.0
+     * RegisterItem 이동
+     */
+    {
+      path: "/registerSale",
+      element: <MainLayout />,
+      children: [
+        { element: <Navigate to="/registerSale" replace /> },
+        { path: "", element: <RegisterSale /> },
+        { path: ":item_id", element: <RegisterSale /> },
       ],
     },
     { path: "*", element: <Navigate to="/404" replace /> },
