@@ -74,6 +74,7 @@ paths:
       responses:
         default:
           description: "successful operation"
+
   /sales/{token_id}/complete:
     patch:
       tags:
@@ -95,6 +96,26 @@ paths:
           description: "buyer_address"
           required: true
           type: "string"
+      responses:
+        default:
+          description: "successful operation"
+          
+  /sales/{sale_id}:
+    delete:
+      tags:
+        - "sales"
+      summary: "sale cancel"
+      description: "sale cancel"
+      operationId: "sale cancel"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "sale_id"
+          in: "path"
+          description: "sale_id"
+          required: true
+          type: "integer"
       responses:
         default:
           description: "successful operation"

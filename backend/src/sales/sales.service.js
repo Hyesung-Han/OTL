@@ -53,17 +53,24 @@ class SalesService {
 		}
 	}
 
-	/**
-	 * PJT Ⅲ 과제 3: 
-	 * Req.3-B2 판매 취소
-	 */
-	async deleteSales(saleId) {
-		return {
-			statusCode: 201,
-			responseBody: {
-				result: 'success'
-			}
-		};
+	async deleteSales(sale_id) {
+		try {
+			await connection.beginTransaction();
+
+			const data = await salesRepository.deleteSales(sale_id);
+			console.log(data);
+
+			await connection.commit();
+			return {
+				statusCode: 201,
+				responseBody: {
+					result: 'success'
+				}
+			};
+		} catch(e) {
+			await connection.rollback();
+			throw e;
+		}
 	}
 
 }

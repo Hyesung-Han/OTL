@@ -37,8 +37,19 @@ class SalesRepository {
 			});
 	}
 
-	async deleteSales(saleId) {
-		return null;
+	async deleteSales(sale_id) {
+		const sql = `
+			DELETE FROM sales_t
+			WHERE sale_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, sale_id)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
 	async completeSales(token_id, buyer_address) {

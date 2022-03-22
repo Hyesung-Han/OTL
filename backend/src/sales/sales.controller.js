@@ -62,15 +62,17 @@ router.get('/', async function (req, res) {
 		res.status(403).send({result:"fail", error:e});
 	}
 });
-/**
- * PJT Ⅲ 과제 3: 
- * Req.3-B2 판매 취소
- */
- router.delete('/:saleId', async function (req, res) {
-	const { statusCode, responseBody } = await salesService.deleteSales(req.params['saleId']);
 
-	res.statusCode = statusCode;
-	res.send(responseBody);
+ router.delete('/:sale_id', async function (req, res) {
+	 try {
+		const { statusCode, responseBody } = await salesService.deleteSales(req.params['sale_id']);
+	
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	 } catch(e) {
+		console.error("deleteSales",e);
+		res.status(403).send({result:"fail", error:e});
+	}
 });
 
 module.exports = router;
