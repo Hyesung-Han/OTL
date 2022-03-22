@@ -67,6 +67,7 @@
     "redux-persist": "^6.0.0",
     "simplebar": "^5.3.5",
     "simplebar-react": "^2.3.5",
+    "sweetalert2": "^11.4.6",
     "web-vitals": "^2.1.0",
     "web3": "^1.6.1",
     "yup": "^0.32.9"
