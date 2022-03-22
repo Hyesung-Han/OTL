@@ -8,20 +8,19 @@ import App from "./App";
 import { StrictMode } from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-// End
 
-// store
+// store와 날라가지 않고 session에 저장하기 위한 persist 설정 [220322]
 import store from "./redux/configStore";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import persistStore from "redux-persist/es/persistStore";
+import { PersistGate } from "redux-persist/integration/react";
 
 const persistor = persistStore(store);
 
 /**
  * LDJ | 2022.03.17 | v1.0
  * @name getLibrary(provider)
- * @api {}
+ * @api -
  * @des MetaMask 지갑 주소를 기반으로 연동하기 위한 기본 설정
  */
 
