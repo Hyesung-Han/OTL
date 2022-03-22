@@ -122,7 +122,7 @@ contract Sale {
         // TODO
     }
 
-    function purchase() public onlyAfterStart endcheck{
+    function purchase() public payable onlyAfterStart endcheck{
 
         //이더리움 왔다갔다하는건데 payable 안써도 되는건가?
         // TODO 
