@@ -19,7 +19,7 @@ import { useState } from "react";
 
 // 로그인 기능 구현 후 삭제 예정
 import { useDispatch } from "react-redux";
-import { setToken } from "../../redux/reducers/AuthReducer";
+import { setValue } from "../../redux/reducers/SearchReducer";
 import { useEffect } from "react";
 import { nominalTypeHack } from "prop-types";
 
@@ -39,6 +39,9 @@ const SearchNavbar = () => {
   const open = Boolean(anchorEl);
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
+  const SearchData = useSelector((state) => state.Search.data);
+  const [inputValue, setInputValue] = useState(SearchData.searchValue);
+
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
     backdropFilter: "blur(6px)",
@@ -55,6 +58,10 @@ const SearchNavbar = () => {
     maxWidth: 1400,
     minWidth: 1400,
   }));
+
+  useEffect(() => {
+    dispatch(setValue(""));
+  });
 
   /**
    * HSH | 2022.03.14 | v1.0
@@ -134,6 +141,11 @@ const SearchNavbar = () => {
    * @des root css
    */
   const rootStyle = {
+    background: "none",
+    boxShadow: "none",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)",
+
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -149,8 +161,8 @@ const SearchNavbar = () => {
     flexDirection: "row",
     justifyContent: "space-between",
 
-    width:1400,
-    height:100,
+    width: 1400,
+    height: 100,
   };
 
   /**
@@ -173,9 +185,26 @@ const SearchNavbar = () => {
     width: "50px",
   };
 
+  /**
+   * HSH | 2022.03.21 | v1.0
+   * @name onChangeSerchValue
+   * @des 검색창 입력시 실행
+   */
+  const onChangeSerchValue = (e) => {
+    setInputValue(e.target.value);
+  };
+  /**
+   * HSH | 2022.03.21 | v1.0
+   * @name onClickSearch
+   * @des 검색 버튼 클릭시 실행
+   */
+  const onClickSearch = () => {
+    dispatch(setValue(inputValue));
+  };
+
   return (
-      <RootStyle>
-        <ToolbarStyle>
+    <AppBar sx={rootStyle}>
+      <Toolbar sx={toolbarStyle}>
         <Box
           sx={{
             px: 2.5,
@@ -198,7 +227,6 @@ const SearchNavbar = () => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-
           }}
         >
           <Paper
@@ -209,12 +237,23 @@ const SearchNavbar = () => {
               alignItems: "center",
               width: 600,
 
-              border: '2px solid #f1f1f1',
-              padding: '0 10px'
+              border: "2px solid #f1f1f1",
+              padding: "0 10px",
             }}
           >
-            <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search Item" />
-            <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+            <InputBase
+              value={inputValue}
+              onChange={onChangeSerchValue}
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Search Item"
+            />
+            <IconButton
+              onClick={onClickSearch}
+              sx={{ p: "10px" }}
+              aria-label="search"
+              to="/search"
+              component={RouterLink}
+            >
               <SearchIcon />
             </IconButton>
           </Paper>
@@ -235,7 +274,7 @@ const SearchNavbar = () => {
             LIST
           </ButtonStyle>
           <ButtonStyle
-            to="/register"
+            to="/RegisterItem"
             size="large"
             sx={{ fontSize: 17 }}
             component={RouterLink}
@@ -263,7 +302,7 @@ const SearchNavbar = () => {
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{mt: "50px", ml: "550px" }}
+                sx={{ mt: "50px", ml: "550px" }}
                 // anchorEl={anchorEl}
                 anchorOrigin={{
                   vertical: "top",
@@ -295,8 +334,8 @@ const SearchNavbar = () => {
             </div>
           )}
         </Stack>
-    </ToolbarStyle>
-    </RootStyle>
+      </Toolbar>
+    </AppBar>
   );
 };
 
