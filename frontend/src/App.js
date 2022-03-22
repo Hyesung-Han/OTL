@@ -16,10 +16,12 @@ import { CommonContext } from "./context/CommonContext";
 const HOST = "localhost:3000/api";
 const serverUrlBase = `http://${HOST}`;
 
+
 export default function App() {
   return (
     <CommonContext.Provider
       value={{
+
         serverUrlBase,
       }}
     >
@@ -27,6 +29,9 @@ export default function App() {
         <GlobalStyles />
         <Router />
       </ThemeConfig>
+
     </CommonContext.Provider>
+
+
   );
 }

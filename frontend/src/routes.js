@@ -96,7 +96,7 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         { element: <Navigate to="/itemdetail" replace /> },
-        { path: "", element: <ItemDetail /> },
+        { path: ":token_id", element: <ItemDetail /> },
       ],
     },
     { path: "*", element: <Navigate to="/404" replace /> },

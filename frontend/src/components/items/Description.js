@@ -6,37 +6,35 @@
  import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
  import { styled } from '@mui/material/styles';
 
-
-
 /**
  * CSW | 2022.03.21 | UPDATE
  * @name Description
  * @des itemDetail Description 컴포넌트
  */
 
- export default function ControlledAccordions() {
+ export default function ControlledAccordions(props) {
    const [expanded, setExpanded] = React.useState(false);
- 
+
+
    const handleChange = (panel) => (event, isExpanded) => {
      setExpanded(isExpanded ? panel : false);
    };
  
    return (
-     <div style={{ borderRadius:10, width: "85%", height:"100%"}}>
+     <div style={{border:'1px solid rgba(0, 0, 0, 0.1)', borderRadius:10, width: "85%", height:"100%", boxShadow: '0 0 10px rgba(225, 223, 214, 1)'}}>
        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
          <AccordionSummary
            expandIcon={<ExpandMoreIcon />}
            aria-controls="panel1bh-content"
            id="panel1bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
              Description
            </Typography>
          </AccordionSummary>
-         <AccordionDetails>
+         <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
-             Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-             Aliquam eget maximus est, id dignissim quam.
+              {props.description}
            </Typography>
          </AccordionDetails>
        </Accordion>
@@ -46,14 +44,12 @@
            aria-controls="panel2bh-content"
            id="panel2bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Author</Typography>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Author</Typography>
 
          </AccordionSummary>
-         <AccordionDetails>
+         <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
-             Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus,
-             varius pulvinar diam eros in elit. Pellentesque convallis laoreet
-             laoreet.
+             {props.author}
            </Typography>
          </AccordionDetails>
        </Accordion>
@@ -63,14 +59,13 @@
            aria-controls="panel3bh-content"
            id="panel3bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
              Category
            </Typography>
          </AccordionSummary>
-         <AccordionDetails>
+         <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
-             Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-             amet egestas eros, vitae egestas augue. Duis vel est augue.
+             {props.category}
            </Typography>
          </AccordionDetails>
        </Accordion>
@@ -80,9 +75,9 @@
            aria-controls="panel4bh-content"
            id="panel4bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Contract</Typography>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Contract</Typography>
          </AccordionSummary>
-         <AccordionDetails>
+         <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
              Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
              amet egestas eros, vitae egestas augue. Duis vel est augue.
