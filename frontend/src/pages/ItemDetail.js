@@ -72,7 +72,7 @@ const ItemDetail = () => {
       alignItems="center"
       display="flex"
     >
-        <Grid container spacing={3}>
+        <Grid sx={{my:3}} container spacing={3}>
             <Grid item xs={2}>
 
             </Grid>

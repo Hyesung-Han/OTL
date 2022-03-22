@@ -21,14 +21,14 @@
    };
  
    return (
-     <div style={{border:'1px solid rgba(0, 0, 0, 0.1)', borderRadius:10, width: "85%", height:"100%"}}>
+     <div style={{border:'1px solid rgba(0, 0, 0, 0.1)', borderRadius:10, width: "85%", height:"100%", boxShadow: '0 0 10px rgba(225, 223, 214, 1)'}}>
        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
          <AccordionSummary
            expandIcon={<ExpandMoreIcon />}
            aria-controls="panel1bh-content"
            id="panel1bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
              Description
            </Typography>
          </AccordionSummary>
@@ -44,7 +44,7 @@
            aria-controls="panel2bh-content"
            id="panel2bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Author</Typography>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Author</Typography>
 
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
@@ -59,7 +59,7 @@
            aria-controls="panel3bh-content"
            id="panel3bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>
              Category
            </Typography>
          </AccordionSummary>
@@ -75,7 +75,7 @@
            aria-controls="panel4bh-content"
            id="panel4bh-header"
          >
-           <Typography sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Contract</Typography>
+           <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Contract</Typography>
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
