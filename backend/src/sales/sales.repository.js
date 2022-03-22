@@ -7,7 +7,18 @@ const connection = require('../../config/connection').promise();
 class SalesRepository {
 
 	async createSales(data) {
-		return true;
+		const sql = `
+			INSERT INTO sales_t(sale_contract_address, token_id, seller_address, completed_at)
+			VALUES(?, ?, ?, ?);
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [data.sale_contract_address, data.token_id, data.saller_address, data.completed_at])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
 	async getSalesByTokenId(tokenId) {

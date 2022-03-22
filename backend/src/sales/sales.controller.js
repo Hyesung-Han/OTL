@@ -6,15 +6,23 @@ const router = express.Router();
 const SalesService = require('./sales.service');
 const salesService = new SalesService();
 
+
 /**
- * PJT Ⅲ 과제 2: 
- * Req.2-B1 판매 정보 등록 
+ * LJA | 2022.03.22 | v1.0
+ * @name sales
+ * @api {post} /sales
+ * @des 아이템 판매 등록
  */
 router.post('/', async function (req, res) {
-	const { statusCode, responseBody } = await salesService.createSales(req.body);
+	try {
+		const { statusCode, responseBody } = await salesService.createSales(req.body);
 
-	res.statusCode = statusCode;
-	res.send(responseBody);
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("createSales",e);
+		res.status(403).send({result:"fail", error:e});
+	}
 });
 
 /**

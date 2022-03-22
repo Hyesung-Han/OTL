@@ -1,0 +1,62 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+  - name: "sales"
+    description: "Operations about sales"
+    externalDocs:
+      description: "Find out more about our store"
+      url: "http://swagger.io"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /sales:
+    post:
+      tags:
+        - "sales"
+      summary: "sale item"
+      description: "sale item"
+      operationId: "sale item"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token_id"
+          in: "formData"
+          description: "token_id"
+          required: true
+          type: "integer"
+        - name: "seller_address"
+          in: "formData"
+          description: "seller_address"
+          required: true
+          type: "string"
+        - name: "completed_at"
+          in: "formData"
+          description: "completed_at"
+          required: true
+          type: "string"
+          format: "date"
+        - name: "sale_contract_address"
+          in: "formData"
+          description: "sale_contract_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

@@ -7,12 +7,8 @@ const salesRepository = new SalesRepository();
 
 class SalesService {
 
-
-	/**
-	 * PJT Ⅲ 과제 2: 
-	 * Req.2-B1 판매 정보 등록 
-	 */	
 	async createSales(data) {
+		await salesRepository.createSales(data);
 		return {
 			statusCode: 201,
 			responseBody: {
