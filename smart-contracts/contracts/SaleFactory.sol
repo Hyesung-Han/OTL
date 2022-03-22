@@ -120,7 +120,7 @@ contract Sale {
         erc721Constract = IERC721(_nftAddress);
     }
 
-    function bid(uint256 bid_amount) public {
+    function bid(uint256 bid_amount) public payable onlyAfterStart endcheck{
         //제안자는 제안을 철회할 수 없다.
 
         // 판매자가 아닌 경우 호출 가능
@@ -143,9 +143,11 @@ contract Sale {
         //즉시 구매가보다 낮은 금액으로 호출
         require(bid_amount < purchasePrice, "Your bid_amount is higher than purchase_Price");
 
-        //환불 먼저 진행하고 제안자 정보 갱신, 금액 갱신, 송금
-        erc20Contract.transferFrom(address(this), highestBidder, highestBid);
-
+        //이전에 제안자가 있으면 환불 먼저 진행하고 제안자 정보 갱신, 금액 갱신, 송금
+        if(highestBid > 0){
+            erc20Contract.transferFrom(address(this), highestBidder, highestBid);
+        }
+        
         highestBidder = buyer;
         highestBid = bid_amount;
 
