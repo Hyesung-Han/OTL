@@ -62,9 +62,9 @@ class ItemsService {
 		}
 	}
 
-	async getItems(user_address, page) {
+	async getItemsByOwnerAddress(user_address, page) {
 		try {
-			const data = await itemRepository.getItems(user_address, (page-1)*100);
+			const data = await itemRepository.getItemsByOwnerAddress(user_address, (page-1)*100);
 			return {
 				statusCode: 200,
 				responseBody: {
@@ -92,20 +92,6 @@ class ItemsService {
 		}
 	}
 
-	/*
-	 * PJT Ⅲ 과제 3: 
-	 * Req.4-B3 최근 등록 작품 조회
-	 */
-	async getRecentItems() {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				data: []
-			}
-		}
-	}
-
 	async updateItemOwnerAddress(tokenId, ownerAddress) {
 		if (await itemRepository.updateItemOwnerAddress(tokenId, ownerAddress)) {
 			return {
@@ -125,6 +111,28 @@ class ItemsService {
 				result: 'success',
 				data: data,
 			}
+		}
+	}
+
+	async getItemList(category_code, item_title, page) {
+		try {
+			let data;
+			if(category_code) {
+				data = await itemRepository.getItemsByCategory(category_code,  (page-1)*100);
+			} else if(item_title) {
+				data = await itemRepository.getItemsByItemTitle(item_title,  (page-1)*100);
+			} else {
+				data = await itemRepository.getItems( (page-1)*100);
+			}
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data,
+				}
+			};
+		} catch(e) {
+			throw e;
 		}
 	}
 }

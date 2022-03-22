@@ -6,7 +6,7 @@ const connection = require('../../config/connection').promise();
 
 class ItemsRepository {
 
-	async getItems(user_address, page) {
+	async getItemsByOwnerAddress(user_address, page) {
 		let sql = `
 			SELECT 		item_id,
 						token_id,
@@ -36,18 +36,6 @@ class ItemsRepository {
 			});
 	}
 
-	async getItemsByOwnerAddress(address) {
-		return null;
-	}
-
-	async getRecentRegisteredItem() {
-		return null;
-	}
-
-	async getRecentItemsOnSale() {
-		return null;
-	}
-
 	async getItemByTokenId(token_id) {
 		let sql = `
 			SELECT 		item_id,
@@ -74,10 +62,6 @@ class ItemsRepository {
 			});
 	}
 
-	async updateItemOwnerAddress(tokenId, ownerAddress) {
-		return null;
-	}
-
 	async updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address) {
 		const sql = `
 			update items_t
@@ -92,10 +76,6 @@ class ItemsRepository {
 				console.error(e);
 				throw e;
 			});
-	}
-
-	async validateItemDuplicated(hashCode) {
-		return null;
 	}
 
 	async insertItem(item) {
@@ -121,6 +101,98 @@ class ItemsRepository {
 		console.debug(sql);
 
 		return await connection.query(sql)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
+
+	async getItems(page) {
+		let sql = `
+			SELECT 		item_id,
+						token_id,
+						author_name,
+						item_title,
+						item_description,
+						item_hash,
+						owner_address,
+						on_sale_yn,
+						on_use_yn,
+						category_code,
+						created_at
+			FROM    	items_t
+			WHERE		on_sale_yn = 1
+			ORDER BY 	created_at DESC
+		`;
+		if(page) {
+			sql+= `LIMIT	?, 100`;
+		}
+		console.debug(sql);
+
+		return await connection.query(sql, [page])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
+
+	async getItemsByCategory(category_code, page) {
+		let sql = `
+			SELECT 		item_id,
+						token_id,
+						author_name,
+						item_title,
+						item_description,
+						item_hash,
+						owner_address,
+						on_sale_yn,
+						on_use_yn,
+						category_code,
+						created_at
+			FROM    	items_t
+			WHERE		on_sale_yn = 1 		
+			AND			category_code = ?
+			ORDER BY 	created_at DESC
+		`;
+		if(page) {
+			sql+= `LIMIT	?, 100`;
+		}
+		console.debug(sql);
+
+		return await connection.query(sql, [category_code, page])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
+
+	async getItemsByItemTitle(item_title, page) {
+		let sql = `
+			SELECT 		item_id,
+						token_id,
+						author_name,
+						item_title,
+						item_description,
+						item_hash,
+						owner_address,
+						on_sale_yn,
+						on_use_yn,
+						category_code,
+						created_at
+			FROM    	items_t
+			WHERE		on_sale_yn = 1 		
+			AND			item_title LIKE ?
+			ORDER BY 	created_at DESC
+		`;
+		if(page) {
+			sql+= `LIMIT ?, 100`;
+		}
+		console.debug(sql);
+
+		return await connection.query(sql, ['%'+item_title+'%', page])
 			.then(data => data[0])
 			.catch((e) => {
 				console.error(e);

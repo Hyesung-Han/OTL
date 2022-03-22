@@ -97,12 +97,33 @@ router.get("/category", async function (req, res) {
  */
 router.get('/', async function (req, res) {
 	try {
-		const { statusCode, responseBody } = await itemService.getItems(req.query['user_address'], req.query['page']);
+		const { statusCode, responseBody } = await itemService.getItemsByOwnerAddress(req.query['user_address'], req.query['page']);
 
 		res.statusCode = statusCode;
 		res.send(responseBody);
 	} catch(e) {
-		console.error("getItems",e);
+		console.error("getItemsByOwnerAddress",e);
+		res.status(403).send({result:"fail", error:e});
+	}
+});
+
+/**
+ * LJA | 2022.03.22 | v1.0
+ * @name items
+ * @api {get} /items/list?category_code=code&item_title=title&page=page
+ * @des
+ * 전체 작품 목록
+ * 전체 작품 검색, 카테고리별 검색, 제목별 검색 가능
+ */
+router.get('/list', async function (req, res) {
+	console.log("/list 호출");
+	try {
+		const { statusCode, responseBody } = await itemService.getItemList(req.query['category_code'], req.query['item_title'], req.query['page']);
+	
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("getItemList",e);
 		res.status(403).send({result:"fail", error:e});
 	}
 });
@@ -110,7 +131,7 @@ router.get('/', async function (req, res) {
 /**
  * LJA | 2022.03.21 | v1.0
  * @name items
- * @api {get} /items/"token_id"
+ * @api {get} /items/:token_id
  * @des 작품 상세보기
  */
 router.get('/:token_id', async function (req, res) {
@@ -123,17 +144,6 @@ router.get('/:token_id', async function (req, res) {
 		console.error("getItemByTokenId",e);
 		res.status(403).send({result:"fail", error:e});
 	}
-});
-
-/*
- * PJT Ⅲ 과제 3: 
- * Req.4-B3 최근 등록 작품 조회
- */
-router.get('/recent', async function (req, res) {
-	const { statusCode, responseBody } = await itemService.getRecentItems(res);
-
-	res.statusCode = statusCode;
-	res.send(responseBody);
 });
 
 module.exports = router;

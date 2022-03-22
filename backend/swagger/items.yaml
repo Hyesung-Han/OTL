@@ -90,6 +90,7 @@ paths:
       responses:
         default:
           description: "successful operation"
+
   /items/{item_id}:
     patch:
       tags:
@@ -119,6 +120,7 @@ paths:
       responses:
         default:
           description: "successful operation"
+
   /items/{token_id}:
     get:
       tags:
@@ -135,6 +137,36 @@ paths:
           description: "token_id"
           required: true
           type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+  /items/list:
+    get:
+      tags:
+        - "items"
+      summary: "item list"
+      description: "item list"
+      operationId: "item list"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "category_code"
+          in: "query"
+          description: "category_code"
+          required: false
+          type: "string"
+        - name: "item_title"
+          in: "query"
+          description: "item_title"
+          required: false
+          type: "string"
+        - name: "page"
+          in: "query"
+          description: "page"
+          required: false
+          type: "integer"
       responses:
         default:
           description: "successful operation"
