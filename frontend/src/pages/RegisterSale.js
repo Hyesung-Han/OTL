@@ -1,22 +1,51 @@
-import { motion } from 'framer-motion';
-import { Link as RouterLink } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
-import { Box, Button, Typography, Container } from '@mui/material';
-import { MotionContainer, varBounceIn } from '../components/animate';
-import Page from '../components/Page';
+import { Link as RouterLink } from "react-router-dom";
+import { Grid, Button, Typography, Container } from "@mui/material";
+import Page from "../components/Page";
 
-const RootStyle = styled(Page)(({ theme }) => ({
-  display: 'flex',
-  minHeight: '100%',
-  alignItems: 'center',
-  paddingTop: theme.spacing(15),
-  paddingBottom: theme.spacing(10)
-}));
+function RegisterSale() {
+  const ItemDetailGridStyle = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
 
-export default function RegisterSale() {
+    backgroundColor: "#444444",
+  };
+
+  const ItemSaleGridStyle = {
+      height:"500px",
+    backgroundColor: "#333333",
+  };
+
+  const DetailImgGridStyle = {
+    padding: 10,
+    width: "300px",
+    height: "300px",
+    backgroundColor: "#222222",
+  };
+
+  const DetailGridStyle = {
+    padding: 10,
+    width: "400px",
+    height: "300px",
+    backgroundColor: "#111111",
+  };
+
   return (
-    <RootStyle title="SSAFY NFT">
-      
-    </RootStyle>
+    <Page display="flex" justifyContent="center" title="SSAFY NFT">
+      <Grid
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        sx={{ width: 1000, mb:10 }}
+      >
+        <Grid sx={ItemDetailGridStyle}>
+          <Grid sx={DetailImgGridStyle}></Grid>
+          <Grid sx={DetailGridStyle}></Grid>
+        </Grid>
+        <Grid sx={ItemSaleGridStyle}></Grid>
+      </Grid>
+    </Page>
   );
 }
+
+export default RegisterSale;
