@@ -136,7 +136,7 @@ paths:
           in: "path"
           description: "token_id"
           required: true
-          type: "string"
+          type: "integer"
       responses:
         default:
           description: "successful operation"
