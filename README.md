@@ -2,7 +2,8 @@
 [[_TOC_]]
 
 ## PJT 소개
-## 일정/진행 사항
+### 일정/진행 사항
+---
   - 시작 날짜 : 2022년 2월 28일 [월]
   - 종료 날짜 : 2022년 4월 08일 [금]
   - 진행 사항
@@ -14,7 +15,8 @@
      | Blockchain| NFT SaleFactory/생성자/Purchase 구현 |Bid/Confirm/Cancel 구현 |
      | 기획| 화면정의서, WireFrame, Sequence Diagram, ERD, Rest API 명세서 |UCC 제작, Testcase 제작 |
 
-## 기획 배경
+### 기획 배경
+---
 - 📍 **타겟 : MZ세대**
   ```
     M세대 : 디지털기기와 아날로그를 모두 섭렵한 밀레니얼 세대
@@ -34,7 +36,8 @@
   3️⃣ **커스터마이징** : 시중에서 판매하는 무선 이어폰을 자신의 좋아하는 컬러, 캐릭터 등으로 꾸미기도 하고 외식메뉴를 자신의 취향대로 구성합니다.
 
 
-## 주제
+### 주제
+---
  - <h3> OTL : (One can Take Limited item) </h3>
 
    - 나만 가질 수 있는, 나만의 아이템으로 꾸민 개성있는 미니홈피 서비스입니다.
@@ -43,7 +46,8 @@
 
    - OTL에서 **세상에 단 하나뿐인 아이템**을 통해 자신의 개성을 드러낼 수 있는 공간을 마련하고, NFT 거래를 통해 자신의 아이템들을 판매함으로써 수익을 창출할 수 있습니다.
 
-## 주요 기능
+### 주요 기능
+---
 - 💰 **NFT 거래**
 
     - 홈페이지에서 자신이 가지고 싶은 **NFT작품을 검색**해 볼 수 있습니다.
@@ -58,7 +62,8 @@
 
     - 본인이 소유한 NFT를 이용해 **마이홈**을 꾸밀 수 있습니다.
 
-## 팀 소개
+### 팀 소개
+---
 - 팀명 : 👖 **청바지**! (**청**춘은 **바**로 **지**금)
 
 - 팀원 소개
@@ -70,7 +75,8 @@
     <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white" /> 
   </a>
 
-## 기술 스택 및 버전
+### 기술 스택 및 버전
+---
 <img src="/uploads/1d8180dc6af760fed7b1497dd0cc32ba/image.png" width="1000" height="500"/>
 
 <img src="https://img.shields.io/badge/REACT-17.0.0-76B900?style=for-the-badge&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/REDUX-4.1.2-76B900?style=for-the-badge&logo=redux&logoColor=white"/> <img src="https://img.shields.io/badge/MATERIAL UI-5.2.8-76B900?style=for-the-badge&logo=mui&logoColor=white"/> <img src="https://img.shields.io/badge/Web3-1.6.1-76B900?style=for-the-badge&logo=web3&logoColor=white"/> 
