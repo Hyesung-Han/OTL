@@ -71,8 +71,10 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 - [**`Sequence Diagram 폴더`**](outputs/SequenceDiagram)
 
 - [메인기능1] Contract 호출
+<img src="/uploads/6fc291af73dcaefeb1cccd435a37468d/image.png" width="700" height="700"/>
 
 - [메인기능2] MyRoom 수정
+<img src="/uploads/076dc90a34a9344ab2c053d04e5c60b8/image.png" width="700" height="700"/>
 
 
 ### DB Modeling [ERD]
