@@ -12,7 +12,7 @@
      | ------ | ------ | ------ |
      | Backend| Swagger, DB생성, 작품 API, 로그인 API| CI/CD 자동 배포, 마이룸 API |
      | Frontend| Main/ConnectWallet/SearchResult/RegisterItem/RegisterSale제작. Metamask연동 |MyRoom/DecorateRoom/CreateProfile 페이지 제작. 페이지 API 적용 |
-     | Blockchain| NFT SaleFactory/생성자/Purchase 구현 |Bid/Confirm/Cancel 구현 |
+     | Blockchain| NFT SaleFactory/생성자/Purchase/Bid/Confirm/Cancel 구현 | Web3 구현 |
      | 기획| 화면정의서, WireFrame, Sequence Diagram, ERD, Rest API 명세서 |UCC 제작, Testcase 제작 |
 
 ### 기획 배경
