@@ -7,9 +7,9 @@
      | | 완료| 예정|
      | ------ | ------ | ------ |
      | Backend| Swagger, DB생성, 작품 API, 로그인 API| CI/CD 자동 배포, 마이룸 API |
-     | frontend| main/ConnectWallet/SearchResult/RegisterItem/RegisterSale제작. Metamask연동 |myRoom/DecorateRoom/CreateProfile 페이지 제작. 페이지 API 적용 |
-     | blockchain| NFT SaleFactory/생성자/Purchase 구현 |Bid/Confirm/Cancel 구현 |
-     | 기획| 아래 Project산출물 정리 참고 |UCC 제작, Testcase 제작 |
+     | Frontend| Main/ConnectWallet/SearchResult/RegisterItem/RegisterSale제작. Metamask연동 |MyRoom/DecorateRoom/CreateProfile 페이지 제작. 페이지 API 적용 |
+     | Blockchain| NFT SaleFactory/생성자/Purchase 구현 |Bid/Confirm/Cancel 구현 |
+     | 기획| 화면정의서, WireFrame, Sequence Diagram, ERD, Rest API 명세서 |UCC 제작, Testcase 제작 |
 
 <br/>
 
@@ -69,6 +69,12 @@
 
 - 팀원 소개
 <img src="/uploads/2857bc646d63a11a1a7642de62763e43/image.png" width="900" height="600"/>
+
+- 팀 페이지 바로가기
+
+  <a href="https://www.notion.so/8fc2391a556b447d9ca4a70cf1fd194a">
+    <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white" /> 
+  </a>
 
 <br/>
 
