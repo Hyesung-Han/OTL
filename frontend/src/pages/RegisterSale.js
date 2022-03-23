@@ -9,10 +9,17 @@ import {
   Divider,
   Paper,
   InputBase,
+  TextField,
 } from "@mui/material";
+
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import MobileDatePicker from "@mui/lab/MobileDatePicker";
+
 import Page from "../components/Page";
 import { useState } from "react";
 
+import DateRangeIcon from '@mui/icons-material/DateRange';
 import logo from "../image/logo.png";
 
 /**
@@ -24,13 +31,15 @@ function RegisterSale() {
   const { item_id } = useParams();
   // console.log(item_id);
 
+  const curDate=new Date();
+
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const [buyNow, setBuyNow] = useState("");
   const [makeOffer, setMakeOffer] = useState("");
-  const [endDate, setendDate] = useState("");
+  const [endDate, setendDate] = useState(curDate);
 
   const itemSize = "320px";
 
@@ -64,11 +73,11 @@ function RegisterSale() {
     margin: 3,
   };
 
-  const ButtonGridStyle={
+  const ButtonGridStyle = {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-  }
+  };
 
   const ButtonStyle = styled(Button)((theme) => ({
     margin: "10px 10px",
@@ -119,12 +128,6 @@ function RegisterSale() {
       value: makeOffer,
       func: onChangeMakeOffer,
     },
-    {
-      name: "Duration",
-      unit: "DAY",
-      value: endDate,
-      func: onChangeEndDate,
-    },
   ];
 
   /**
@@ -159,7 +162,7 @@ function RegisterSale() {
    * @name onClickCreate
    * @des create 버튼 클릭 시 실행
    */
-   const onClickCreate = () => {
+  const onClickCreate = () => {
     console.log("onClickCreate");
   };
 
@@ -168,10 +171,9 @@ function RegisterSale() {
    * @name onClickCancel
    * @des cancel 버튼 클릭 시 실행
    */
-   const onClickCancel = () => {
+  const onClickCancel = () => {
     console.log("onClickCancel");
   };
-
 
   return (
     <Page display="flex" justifyContent="center" title="SSAFY NFT">
@@ -246,11 +248,24 @@ function RegisterSale() {
               </Paper>
             </Box>
           ))}
+          <Box mb={3}>
+            <Typography variant="h5">End Date</Typography>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <MobileDatePicker
+                value={endDate}
+                minDate={curDate}
+                onChange={(newValue) => {
+                  setendDate(newValue);
+                }}
+                renderInput={(params) => <TextField sx={{width: 900}} {...params}/>}
+              />
+            </LocalizationProvider>
+          </Box>
         </Grid>
-            <Box mt={3} display="flex" justifyContent="right">
-              <ButtonStyle onClick={onClickCreate}>CREATE</ButtonStyle>
-              <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
-            </Box>
+        <Box mt={3} display="flex" justifyContent="right">
+          <ButtonStyle onClick={onClickCreate}>CREATE</ButtonStyle>
+          <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
+        </Box>
       </Grid>
     </Page>
   );
