@@ -51,7 +51,7 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 ### WireFrame
 
 ---
-
+- [**`WireFrame 링크`**](https://www.figma.com/file/RGjZpCgeXMgufK09UbDWUh/OTL?node-id=0%3A1)
 
 
 
@@ -78,6 +78,7 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 ### 시스템 구성도
 
 ---
+<img src="/uploads/9011fa1d0dd7b66a5288f2c8655e99e9/image.png" width="1000" height="500"/>
 
 
 
@@ -88,13 +89,6 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 ---
 
 
-
-
-
-
-### Rest API URL (Node.js with Express)
-
----
 
 
 
