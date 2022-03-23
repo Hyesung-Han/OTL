@@ -82,15 +82,14 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 ---
 - [**`ERD`**](outputs/ERD.png)
 
-![image](/uploads/6fe57581d3a7c8eb195fad63cbac5eba/image.png)
+![Erd]](/uploads/6fe57581d3a7c8eb195fad63cbac5eba/image.png)
 
+### Rest API URL (Node.js with Express)
 
+---
 
+- [**`Swagger 링크`**](http://localhost:3000/api/api-docs/)
 
-
-
-
-
-
+![Swagger](/uploads/761f72688184a23864805d31147bbcf3/image.png)
 
 
