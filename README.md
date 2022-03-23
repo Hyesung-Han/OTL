@@ -44,6 +44,7 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 ---
 <img src="/uploads/9011fa1d0dd7b66a5288f2c8655e99e9/image.png" width="1000" height="500"/>
 
+
 ### 화면 정의서
 
 ---
@@ -67,7 +68,11 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 ### Sequence Diagram
 
 ---
+- [**`Sequence Diagram 폴더`**](outputs/SequenceDiagram)
 
+- [메인기능1] Contract 호출
+
+- [메인기능2] MyRoom 수정
 
 
 ### DB Modeling [ERD]
@@ -75,8 +80,7 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 ---
 - [**`ERD`**](outputs/ERD.png)
 
-
-
+![image](/uploads/6fe57581d3a7c8eb195fad63cbac5eba/image.png)
 
 
 
