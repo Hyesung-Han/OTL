@@ -240,30 +240,57 @@ const Main = () => {
    * @des 메인 Top에 있는 Typography 애니메이션
    */
   const floating = keyframes`
-    0 {
+    0% {
+        opacity: 0;
         transform: translateY(50px);    
     }
-    100% {
-        opacity:1;
-        transform: translateY(-50px);
+    100%{
+        transform: translateY(0px);
     }
+  `;
+
+  const colorChange = keyframes`
+    0% {
+    }
+    100%{
+      color:#ff3300;
+    }
+`;
+
+  /**
+   * HSH | 2022.03.17 | v1.0
+   * @name NonChangeTextStyle
+   * @des 메인 Top에 있는 Typography. 글자 색 바뀌지 않는 부분
+   */
+  const NonChangeTextStyle = emoStyled.p`
+    font-size: 50px;
+    font-weight: bold;
+    color:"#000000";
+
+    animation-fill-mode: forwards;
+    animation-name: ${floating};
+    animation-delay: 0s;
+    animation-duration: ${(props) => props.time}s;
   `;
 
   /**
    * HSH | 2022.03.17 | v1.0
-   * @name TextStyle
-   * @des 메인 Top에 있는 Typography CSS
+   * @name ChangeTextStyle
+   * @des 메인 Top에 있는 Typography CSS. 글자 색 바뀌는 부분
    */
-  const TextStyle = emoStyled.p`
-    font-size: 50px;
-    font-weight: bold;
-    color: ${(props) => props.color};
+  const ChangeTextStyle = emoStyled.p`
+   font-size: 50px;
+   font-weight: bold;
+   color:"#000000";
 
-    opacity: 0;
-    animation: ${floating} ${(props) => props.time}s forwards;
-  `;
+   animation-fill-mode: forwards;
+   animation-name: ${floating}, ${colorChange};
+   animation-delay: 0s, 2s;
+   animation-duration: ${(props) => props.time}s, 1s;
+ `;
 
-  const TopTitle = ["One can Take Limited item"];
+  const MainTitle = "One can Take Limited item";
+
   /**
    * HSH | 2022.03.17 | v1.0
    * @name TypograpyStr
@@ -272,38 +299,36 @@ const Main = () => {
   const TypograpyStr = (prop) => {
     const str = prop.str;
 
-    let color;
     const arr = [];
     for (let i = 0; i < str.length; i++) {
-      color = "#000000";
-      if (str[i] >= "A" && str[i] <= "Z") color = "#ff3300";
-
-      if (str[i] == " ") {
+      if (str[i] >= "A" && str[i] <= "Z") {
         arr.push(
-          <TextStyle color={color} time={i / 10}>
+        <ChangeTextStyle key={i} time={i / 10}>
+          {str[i]}
+        </ChangeTextStyle>
+        );
+      } else if (str[i] == " ") {
+        arr.push(
+          <NonChangeTextStyle key={i} time={i / 10}>
             &nbsp;
-          </TextStyle>
+          </NonChangeTextStyle>
         );
       } else {
         arr.push(
-          <TextStyle color={color} time={i / 10}>
+          <NonChangeTextStyle key={i} time={i / 10}>
             {str[i]}
-          </TextStyle>
+          </NonChangeTextStyle>
         );
       }
     }
     return arr;
   };
 
-  const TopTypograpy = TopTitle.map((item, index) => (
-    <TypograpyStr key={index} accentIndex={index} str={item} />
-  ));
-
   return (
     <RootStyle>
       <MainTopStyle>
         <Grid display="flex" flexDirection="row" alignItems="center">
-          {TopTypograpy}
+          <TypograpyStr str={MainTitle} />
         </Grid>
       </MainTopStyle>
       <Divider />
