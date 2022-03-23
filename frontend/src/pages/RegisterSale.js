@@ -118,13 +118,13 @@ function RegisterSale() {
   const saleData = [
     {
       name: "Buy Now",
-      unit: "ETH",
+      unit: "SSF",
       value: buyNow,
       func: onChangeBuyNow,
     },
     {
       name: "Make Offer",
-      unit: "ETH",
+      unit: "SSF",
       value: makeOffer,
       func: onChangeMakeOffer,
     },
