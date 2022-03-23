@@ -1,9 +1,11 @@
-## 1. OTL 소개
+## 1. OTL [ One can Take Limited item ]
 
 - 개발 기간 : 2022년 2월 28일 [월] ~ 2022년 4월 8일 [금]
-- 주제 : **One can Take Limited item**의 줄임말로, 나만 가질 수 있는, 나만의 아이템으로 꾸민 개성있는 미니홈피 서비스
+- 주제 : **One can Take Limited item**의 줄임말로, 세상에 단 하나뿐인 아이템으로 꾸민 개성있는 미니홈피 서비스
 - 개발 인원 : 오윤택, 한혜성, 이정아, 황소현, 이동준, 최소원
 - 역할 [팀명 : 👖 **청바지**! (**청**춘은 **바**로 **지**금)]
+
+<img src="/uploads/2857bc646d63a11a1a7642de62763e43/image.png" width="900" height="600"/>
 
 ## 2. 개요
 
@@ -23,8 +25,9 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 - **마이홈 꾸미기**
     - 본인이 소유한 NFT를 이용해 프로필과 마이홈을 꾸미는 행위를 통해 개성을 나타내고 하나뿐인 미니홈피를 꾸밀 수 있다.
 
-## 3. 기술 스택
+## 3. 기술 스택 및 버전
 <img src="/uploads/1d8180dc6af760fed7b1497dd0cc32ba/image.png" width="1000" height="500"/>
+
 
 <img src="https://img.shields.io/badge/REACT-17.0.0-76B900?style=for-the-badge&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/REDUX-4.1.2-76B900?style=for-the-badge&logo=redux&logoColor=white"/> <img src="https://img.shields.io/badge/MATERIAL UI-5.2.8-76B900?style=for-the-badge&logo=mui&logoColor=white"/> <img src="https://img.shields.io/badge/Web3-1.6.1-76B900?style=for-the-badge&logo=web3&logoColor=white"/> 
 
@@ -34,5 +37,65 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 
 <img src="https://img.shields.io/badge/MYSQL-8.0.0-93b023?&style=for-the-badge&logo=mysql&logoColor=white"/> <img src="https://img.shields.io/badge/docker-20.10.12-93b023?&style=for-the-badge&logo=docker&logoColor=white"/> <img src="https://img.shields.io/badge/jenkins-2.319.2-93b023?&style=for-the-badge&logo=jenkins&logoColor=white"/> 
 
-## 4. 팀원 소개
+## 4. PJT 산출물
+### 화면 정의서
+
+---
+
+
+
+
+
+
+
+### WireFrame
+
+---
+
+
+
+
+
+
+
+### Sequence Diagram
+
+---
+
+
+
+
+
+### DB Modeling [ERD]
+
+---
+
+
+
+
+
+
+### 시스템 구성도
+
+---
+
+
+
+
+
+### Project File Structure
+
+---
+
+
+
+
+
+
+### Rest API URL (Node.js with Express)
+
+---
+
+
+
 
