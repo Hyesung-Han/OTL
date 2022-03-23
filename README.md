@@ -38,10 +38,16 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 <img src="https://img.shields.io/badge/MYSQL-8.0.0-93b023?&style=for-the-badge&logo=mysql&logoColor=white"/> <img src="https://img.shields.io/badge/docker-20.10.12-93b023?&style=for-the-badge&logo=docker&logoColor=white"/> <img src="https://img.shields.io/badge/jenkins-2.319.2-93b023?&style=for-the-badge&logo=jenkins&logoColor=white"/> 
 
 ## 4. PJT 산출물
+
+### 시스템 구성도
+
+---
+<img src="/uploads/9011fa1d0dd7b66a5288f2c8655e99e9/image.png" width="1000" height="500"/>
+
 ### 화면 정의서
 
 ---
-
+- [**`화면정의서`**](outputs/화면정의서.pdf)
 
 
 
@@ -64,29 +70,18 @@ OTL은 이러한 MZ 세대의 **니즈를 충족**시키고, 온라인 환경에
 
 
 
-
-
 ### DB Modeling [ERD]
 
 ---
+- [**`ERD`**](outputs/ERD.png)
 
 
 
 
 
 
-### 시스템 구성도
-
----
-<img src="/uploads/9011fa1d0dd7b66a5288f2c8655e99e9/image.png" width="1000" height="500"/>
 
 
-
-
-
-### Project File Structure
-
----
 
 
 
