@@ -79,7 +79,7 @@
 <br/>
 
 ## 기술 스택 및 버전
-<img src="/uploads/1d8180dc6af760fed7b1497dd0cc32ba/image.png" width="1000" height="500"/>
+<img src="/uploads/1d8180dc6af760fed7b1497dd0cc32ba/image.png" width="1000" height="450"/>
 
 <img src="https://img.shields.io/badge/REACT-17.0.0-76B900?style=for-the-badge&logo=react&logoColor=white"/> <img src="https://img.shields.io/badge/REDUX-4.1.2-76B900?style=for-the-badge&logo=redux&logoColor=white"/> <img src="https://img.shields.io/badge/MATERIAL UI-5.2.8-76B900?style=for-the-badge&logo=mui&logoColor=white"/> <img src="https://img.shields.io/badge/Web3-1.6.1-76B900?style=for-the-badge&logo=web3&logoColor=white"/> 
 
@@ -106,9 +106,8 @@
 - [**`화면정의서`**](outputs/화면정의서.pdf)
 
 
+
 <br/>
-
-
 
 ### WireFrame
 
@@ -118,7 +117,7 @@
 
 
 
-
+<br/>
 
 ### Sequence Diagram
 
@@ -126,7 +125,8 @@
 - [**`Sequence Diagram 폴더`**](outputs/SequenceDiagram)
 
 - [메인기능] Contract 호출 / MyRoom 수정
-<img src="/uploads/7edd1721ee490061b1c5d6a5d736344c/image.png" width="1000" height="500"/>
+<img src="/uploads/7edd1721ee490061b1c5d6a5d736344c/image.png" width="1000" height="450"/>
+
 
 ### DB Modeling [ERD]
 
@@ -134,6 +134,7 @@
 - [**`ERD`**](outputs/ERD.png)
 
 ![image](/uploads/6fe57581d3a7c8eb195fad63cbac5eba/image.png)
+<br/>
 
 ### Rest API URL (Node.js with Express)
 
