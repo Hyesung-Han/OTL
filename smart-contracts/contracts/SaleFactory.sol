@@ -12,6 +12,7 @@ import "./SsafyNFT.sol";
  */
 contract SaleFactory is Ownable {
     SsafyNFT public mintSsafyNftAddress;
+    Sale public saleContract;
     address public admin;
     address[] public sales;
 
@@ -49,20 +50,21 @@ contract SaleFactory is Ownable {
         require(purchasePrice > 0, "Price is zero or lower.");
 
         // sale contract 생성
-        address saleContract = address(new Sale(admin, tokenOwner, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress));
-
+        saleContract = new Sale(admin, tokenOwner, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
+        
         // setApprovalForAll(saleContract, true); // web3에서 호출해야함
         
-        sales.push(saleContract);
+        sales.push(address(saleContract));
         
-        emit NewSale(saleContract, owner(), (sales.length-1));
+        emit NewSale(address(saleContract), owner(), (sales.length-1));
 
-        return saleContract;
+        return address(saleContract);
     }
 
     function allSales() public view returns (address[] memory) {
         return sales;
     }
+
 }
 
 /**
@@ -132,7 +134,7 @@ contract Sale {
         
         // 구매 희망자가 Sale 컨트랙트에게 구매 희망자의 ERC-20 토큰을 
         // 송금할 수 있는 권한을 허용한 경우(ERC-20 approve)
-        require(erc20Contract.approve(buyer, purchasePrice), "Not Approved");
+        require(erc20Contract.approve(buyer, bid_amount), "Not Approved");
 
         //판매자가 지정한 최저 제안가 이상의 금액 제시
         require(minPrice <= bid_amount, "minPrice is higher than yours");
@@ -145,14 +147,14 @@ contract Sale {
 
         //이전에 제안자가 있으면 환불 먼저 진행하고 제안자 정보 갱신, 금액 갱신, 송금
         if(highestBid > 0){
-            erc20Contract.transferFrom(address(this), highestBidder, highestBid);
+            // erc20Contract.transferFrom(address(this), highestBidder, highestBid);
+            erc20Contract.transfer(highestBidder, highestBid);
         }
         
         highestBidder = buyer;
         highestBid = bid_amount;
 
         erc20Contract.transferFrom(buyer, address(this), bid_amount);
-
         emit HighestBidIncereased(buyer, bid_amount);
 
     }
@@ -172,7 +174,8 @@ contract Sale {
 
         //1번 bid
         if(highestBid > 0){
-            erc20Contract.transferFrom(address(this), highestBidder, highestBid);
+            // erc20Contract.transferFrom(address(this), highestBidder, highestBid);
+            erc20Contract.transfer(highestBidder, highestBid);
         }
 
         //2. 구매자의 ERC-20 토큰을 즉시 구매가만큼 판매자에게 송금한다.
@@ -194,7 +197,7 @@ contract Sale {
 
         require(msg.sender == highestBidder, "You are not a highest bidder");
 
-        erc20Contract.transferFrom(address(this), seller, highestBid);
+        erc20Contract.transfer(seller, highestBid);
 
         erc721Constract.safeTransferFrom(address(this), highestBidder, tokenId);
 
@@ -212,7 +215,8 @@ contract Sale {
         require(msg.sender == admin || msg.sender == seller, "You dont have any permission");
     
         if(highestBid > 0){
-            erc20Contract.transferFrom(highestBidder, address(this), highestBid);
+            erc20Contract.transfer(highestBidder, highestBid);
+            // erc20Contract.transferFrom(highestBidder, address(this), highestBid);
         }
         erc721Constract.safeTransferFrom(address(this), seller, tokenId);
 
