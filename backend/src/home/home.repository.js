@@ -29,6 +29,23 @@ class HomeRepository {
 				throw e;
 			});
 	}
+
+	//마이룸 꾸미기 수정
+	async updateHomeitem(token_id, on_use_yn, x_index, y_index, z_index) {
+		const sql = `
+			UPDATE items_t
+			SET on_use_yn = ?, x_index = ?, y_index = ?, z_index = ? 
+			WHERE token_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [token_id, on_use_yn, x_index, y_index, z_index])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = HomeRepository;
