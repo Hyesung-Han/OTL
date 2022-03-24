@@ -214,27 +214,6 @@ paths:
       responses:
         default:
           description: "successful operation"
-
-  /items/{owner_address}:
-    get:
-      tags:
-        - "items"
-      summary: "used home item"
-      description: "used home item"
-      operationId: "used home item"
-      produces:
-        - "application/xml"
-        - "application/json"
-      parameters:
-        - name: "owner_address"
-          in: "path"
-          description: "owner_address"
-          required: true
-          type: "string"
-      responses:
-        default:
-          description: "successful operation"
-
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
