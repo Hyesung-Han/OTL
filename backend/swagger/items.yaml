@@ -214,7 +214,6 @@ paths:
       responses:
         default:
           description: "successful operation"
-
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
