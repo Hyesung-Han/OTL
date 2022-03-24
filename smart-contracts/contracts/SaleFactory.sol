@@ -6,10 +6,6 @@ import "./token/ERC20/ERC20.sol";
 import "./token/ERC721/ERC721.sol";
 import "./SsafyNFT.sol";
 
-/**
- * PJT Ⅲ - Req.1-SC1 SaleFactory 구현
- * 상태 변수나 함수의 시그니처, 이벤트는 구현에 따라 변경할 수 있습니다.
- */
 contract SaleFactory is Ownable {
     SsafyNFT public mintSsafyNftAddress;
     Sale public saleContract;
@@ -51,13 +47,14 @@ contract SaleFactory is Ownable {
 
         // sale contract 생성
         saleContract = new Sale(admin, tokenOwner, itemId, minPrice, purchasePrice, startTime, endTime, currencyAddress, nftAddress);
-        
-        // setApprovalForAll(saleContract, true); // web3에서 호출해야함
-        
+
+        //생성된 세일 컨트랙트를 판매중인 작품이 담겨있는 sales에 추가        
         sales.push(address(saleContract));
         
+        //세일 만들었으면 이벤트 발생
         emit NewSale(address(saleContract), owner(), (sales.length-1));
 
+        //세일 컨트랙트 주소 반환
         return address(saleContract);
     }
 
@@ -67,23 +64,20 @@ contract SaleFactory is Ownable {
 
 }
 
-/**
- *  PJT Ⅲ - Req.1-SC2) Sale 구현
- */
 contract Sale {
 
     // 생성자에 의해 정해지는 값
     address public seller;
     address public buyer;
     address admin;
-    uint256 public saleStartTime;
-    uint256 public saleEndTime;
-    uint256 public minPrice;
-    uint256 public purchasePrice;
+    uint256 public saleStartTime;//판매 시작 시간
+    uint256 public saleEndTime;//판매 종료 시작
+    uint256 public minPrice;//판매자가 지정한 bid 최소 값
+    uint256 public purchasePrice;//판매자가 지정한 바로 구매 값
     uint256 public tokenId;
-    address public currencyAddress;
+    address public currencyAddress;//화폐종류(ex. ETH, SSF etc...)
     address public nftAddress;
-    bool public ended;
+    bool public ended;//작품의 판매가 종료되었는지 체크
 
     // 현재 최고 입찰 상태
     address public highestBidder;
@@ -122,8 +116,14 @@ contract Sale {
         erc721Constract = IERC721(_nftAddress);
     }
 
+    /**
+     * HHS | 2022.03.24 | v1.0
+     * @dev 판매중인 NFT에 대하여 다른 사용자가 가격을 제안하는 경우
+     */
     function bid(uint256 bid_amount) public payable onlyAfterStart endcheck{
-        //제안자는 제안을 철회할 수 없다.
+    //onlyAfter Start : 판매 시작 시간보다 더 큰지 판별
+    //endcheck : 판매가 종료되었는지 판별(즉시 구매 시 판매 종료를 시키기 때문, 시간 체크하는 함수 아님)
+    //제안자는 제안을 철회할 수 없다.
 
         // 판매자가 아닌 경우 호출 가능
         buyer = msg.sender;
@@ -145,20 +145,26 @@ contract Sale {
         //즉시 구매가보다 낮은 금액으로 호출
         require(bid_amount < purchasePrice, "Your bid_amount is higher than purchase_Price");
 
-        //이전에 제안자가 있으면 환불 먼저 진행하고 제안자 정보 갱신, 금액 갱신, 송금
+        //이전에 제안자가 있으면 환불 먼저 진행
         if(highestBid > 0){
             // erc20Contract.transferFrom(address(this), highestBidder, highestBid);
             erc20Contract.transfer(highestBidder, highestBid);
         }
-        
+        //새로운 제안자로 정보 갱신, 금액 갱신
         highestBidder = buyer;
         highestBid = bid_amount;
 
+        //새로운 제안자가 세일 컨트랙트에게 해당 가격만큼 송금
         erc20Contract.transferFrom(buyer, address(this), bid_amount);
+
+        //새로운 비드 나온 이벤트 발생
         emit HighestBidIncereased(buyer, bid_amount);
 
     }
-
+    /**
+     * HHS | 2022.03.24 | v1.0
+     * @dev 판매중인 NFT에 대하여 즉시 구매를 하는 경우
+     */
     function purchase() public payable onlyAfterStart endcheck{
 
         // 판매자가 아닌 경우 호출 가능
@@ -174,7 +180,6 @@ contract Sale {
 
         //1번 bid
         if(highestBid > 0){
-            // erc20Contract.transferFrom(address(this), highestBidder, highestBid);
             erc20Contract.transfer(highestBidder, highestBid);
         }
 
@@ -190,36 +195,55 @@ contract Sale {
 
     }
 
+    /**
+     * HHS | 2022.03.24 | v1.0
+     * @dev 판매 시간이 종료되었고 && 즉시 구매자가 없을 경우, 최고 입찰자가 NFT 소유권 받음
+     */
     function confirmItem() public payable{
-        //최고 입찰자가 부르는 함수
+        //최고 입찰자가 부르는 함수, bid 걸은 사람이 판매 종료 시간이 되었을 때 확인 버튼을 통해 해당 NFT를 받는다.
         // TODO 
+        
+        //판매 종료시간이 되면 진행
         require(block.timestamp > saleEndTime, "NFT Selling is not closed");
 
+        //함수를 부른 자가 최고 입찰자가 맞는지 확인
         require(msg.sender == highestBidder, "You are not a highest bidder");
 
+        //세일 컨트랙트가 판매자에게 돈 송금(입찰자는 bid시 세일 컨트랙트에게 돈을 주었음)
         erc20Contract.transfer(seller, highestBid);
 
+        //세일 컨트랙트가 입찰자에게 NFT 권한을 줌
         erc721Constract.safeTransferFrom(address(this), highestBidder, tokenId);
 
+        //NFT 판매 상태를 종료로 바꿔줌 
         _end();
 
+        //판매가 끝난 것을 알리는 이벤트 발생
         emit SaleEnded(highestBidder, highestBid);
 
     }
     
+    /**
+     * HHS | 2022.03.24 | v1.0
+     * @dev 판매중인 NFT에 대하여 판매를 등록한 자 혹은 모든 권한이 있는 admin이 판매를 취소하는 경우
+     */
     function cancelSales() public payable onlyAfterStart endcheck{
-        // TODO
-        //철회시점 유효
+
+        //판매 종료 시간보다 더 이전인 경우만 취소 가능
         require(block.timestamp < saleEndTime, "You cannot cancel");
 
+        //판매자 혹은 모든 권한을 가진 사람(admin)이 이 판매를 철회하는게 맞는지 확인
         require(msg.sender == admin || msg.sender == seller, "You dont have any permission");
     
+        //누군가가 가격제안을 한 상태라면 환불 진행
         if(highestBid > 0){
             erc20Contract.transfer(highestBidder, highestBid);
-            // erc20Contract.transferFrom(highestBidder, address(this), highestBid);
         }
+
+        //세일 컨트랙트가 가지고 있던 NFT 권한을 다시 판매자에게 돌려줌
         erc721Constract.safeTransferFrom(address(this), seller, tokenId);
 
+        //판매 상태 완료로 해놓고 다른 사람들이 구매 혹은 제안하기 못하게 막기
         _end();
 
     }
@@ -269,7 +293,7 @@ contract Sale {
         return erc20Contract.balanceOf(msg.sender);
     }
 
-    // modifier를 사용하여 함수 동작 조건을 재사용하는 것을 권장합니다. 
+    // modifier를 사용하여 함수 동작 조건을 재사용 
     modifier onlySeller() {
         require(msg.sender == seller, "Sale: You are not seller.");
         _;
@@ -284,6 +308,7 @@ contract Sale {
     }
 
     modifier endcheck(){
+        //판매가 종료되었는지 확인
         require(!ended, "This NFT selling is already closed");
         _;
     }
