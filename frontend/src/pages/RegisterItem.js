@@ -30,7 +30,7 @@ function RegisterItem() {
   const [title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
 
-  const [requireImg, setRequireImg] = useState("");
+  const [imgError, setImgError] = useState("");
   const [authorError, setauthorError] = useState(true);
   const [titleError, setTitleError] = useState(true);
   const [descriptionError, setDescriptionError] = useState(true);
@@ -236,7 +236,6 @@ function RegisterItem() {
   const onClickCreate = () => {
     let isClear = true;
     if (!uploadImg) {
-      setRequireImg("* required Image");
       isClear = false;
     }
 
@@ -262,6 +261,8 @@ function RegisterItem() {
    */
   const onImgChange = async (event) => {
     setUploadImg(URL.createObjectURL(event.target.files[0]));
+
+    setImgError(false);
   };
 
   /**
@@ -329,7 +330,7 @@ function RegisterItem() {
                 </div>
               )}
             </ImageStyle>
-            <Typography color="#ff0000"> {requireImg} </Typography>
+            {!uploadImg && (<Typography color="#ff0000"> * required Image </Typography>) }
             <input
               ref={imgRef}
               type="file"
