@@ -36,7 +36,7 @@ function RegisterItem() {
   const user = useSelector((state) => state.User.user);
   const { serverUrlBase } = useContext(CommonContext);
 
-  const [img,setImg]=useState("");
+  const [img, setImg] = useState("");
   const [uploadImg, setUploadImg] = useState("");
   const imgRef = useRef();
   let navigate = useNavigate();
@@ -46,7 +46,7 @@ function RegisterItem() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("0");
 
-  const [imgError, setImgError] = useState("");
+  const [imgError, setImgError] = useState(true);
   const [authorError, setauthorError] = useState(true);
   const [titleError, setTitleError] = useState(true);
   const [descriptionError, setDescriptionError] = useState(true);
@@ -109,9 +109,9 @@ function RegisterItem() {
     }
   };
 
-  const onChangeCategory=(e)=>{
+  const onChangeCategory = (e) => {
     setCategory(e.target.value);
-  }
+  };
 
   /**
    * HSH | 2022.03.21 | v1.0
@@ -199,27 +199,39 @@ function RegisterItem() {
     console.log(category);
 
     const formData = new FormData();
-    formData.append("items", img); 
-    formData.append("user_address", "1234"); 
-    formData.append("author_name", author); 
-    formData.append("item_title", title); 
-    formData.append("item_description", description); 
-    formData.append("category_code", "bed"); 
+    formData.append("items", img);
+    /**
+     * HACK
+     * 로그인 되면 이후에 해보기
+     */
+    formData.append("user_address", "1234");
+    formData.append("author_name", author);
+    formData.append("item_title", title);
+    formData.append("item_description", description);
+    /**
+     * HACK
+     * 카테고리 연결 되면 이후에 추가
+     */
+    formData.append("category_code", "bed");
 
     Axios.post(serverUrlBase + `/items`, formData)
       .then((data) => {
-        if (data.status === 200) {
+        console.log(data);
+        if (data.status === 201) {
           /**
-				  * TODO
-				  * NFT 생성하기
-				  */
-
+           * TODO
+           * NFT 생성하기
+           */
           Swal.fire({
             icon: "success",
             title: "글이 성공적으로 등록되었습니다.",
           });
-
           navigate("/main");
+        } else if (data.status === 200) {
+            Swal.fire({
+              icon: "warning",
+              title: data.data.msg,
+            });
         } else {
           Swal.fire({
             icon: "error",
@@ -255,6 +267,8 @@ function RegisterItem() {
    * @des 파일 선택장에서 파일 선택 시 실행
    */
   const onImgChange = async (event) => {
+    if (!event.target.files[0]) return;
+
     setImg(event.target.files[0]);
     setUploadImg(URL.createObjectURL(event.target.files[0]));
 
