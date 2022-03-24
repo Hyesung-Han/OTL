@@ -15,20 +15,34 @@ import {
   FormHelperText,
 } from "@mui/material";
 import Page from "../components/Page";
+import Axios from "axios";
 
-import { useState, useRef, useEffect } from "react";
+import { CommonContext } from "../context/CommonContext";
+import { useState, useRef, useEffect, useContext } from "react";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 import BackupIcon from "@mui/icons-material/Backup";
 import logo from "../image/logo.png";
 
+/**
+ * HSH | 2022.03.24 | ADD
+ * @name RegisterItem
+ * @des 아이템 저장하기
+ */
 function RegisterItem() {
+  const user = useSelector((state) => state.User.user);
+  const { serverUrlBase } = useContext(CommonContext);
+
+  const [img,setImg]=useState("");
   const [uploadImg, setUploadImg] = useState("");
   const imgRef = useRef();
   let navigate = useNavigate();
 
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
-  const [Description, setDescription] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("0");
 
   const [imgError, setImgError] = useState("");
   const [authorError, setauthorError] = useState(true);
@@ -79,10 +93,10 @@ function RegisterItem() {
 
   /**
    * HSH | 2022.03.21 | v1.0
-   * @name onChangeDescription
+   * @name onChangedescription
    * @des description 변경 시 실행
    */
-  const onChangeDescription = (e) => {
+  const onChangedescription = (e) => {
     const value = e.target.value;
     setDescription(e.target.value);
 
@@ -93,10 +107,14 @@ function RegisterItem() {
     }
   };
 
+  const onChangeCategory=(e)=>{
+    setCategory(e.target.value);
+  }
+
   /**
    * HSH | 2022.03.21 | v1.0
    * @name inputTexts
-   * @des author, title, Description에 관한 정보 저장
+   * @des author, title, description에 관한 정보 저장
    */
   const inputTexts = [
     {
@@ -118,9 +136,9 @@ function RegisterItem() {
       error: titleError,
     },
     {
-      name: "Description",
-      data: Description,
-      set: onChangeDescription,
+      name: "description",
+      data: description,
+      set: onChangedescription,
       rows: 4,
       placeholder: "item description",
       multiline: true,
@@ -137,27 +155,27 @@ function RegisterItem() {
    */
   const categoryList = [
     {
-      id: 0,
+      id: "0",
       name: "chair",
     },
     {
-      id: 1,
+      id: "1",
       name: "table",
     },
     {
-      id: 2,
+      id: "2",
       name: "wallpaper",
     },
     {
-      id: 3,
+      id: "3",
       name: "floor",
     },
     {
-      id: 4,
+      id: "4",
       name: "wall hanging",
     },
     {
-      id: 5,
+      id: "5",
       name: "prop",
     },
   ];
@@ -176,6 +194,56 @@ function RegisterItem() {
    * @des create 버튼 클릭 시 실행
    */
   const onClickCreate = () => {
+    console.log(category);
+
+    const formData = new FormData();
+    formData.append("image", img); 
+
+    Axios.post(serverUrlBase + `/items`, {
+      body: {
+        /**
+				 * HACK
+				 * user_address 임시로 1234로 지정해놓고 로그인 하고 나중에 테스트
+				 */
+        // user_address: user.user_address,
+        user_address: "1234",
+        author_name: author,
+        item_title: title,
+        item_description: description,
+        /**
+				 * HACK
+				 * category 임시로 bed로 지정해놓고 나중에 카테고리 완성 시 변경
+				 */
+        category_code: "bed",
+        // category_code: category,
+      },
+      // file: {
+      //   image: img,
+      // },
+      file:formData
+    })
+      .then((data) => {
+        if (data.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "글이 성공적으로 등록되었습니다.",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "아이템이 정상적으로 등록되지 않았습니다",
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log("Item register error:" + error);
+
+        Swal.fire({
+          icon: "error",
+          title: "아이템이 정상적으로 등록되지 않았습니다",
+        });
+      });
+
     console.log("onClickCreate");
   };
 
@@ -195,6 +263,7 @@ function RegisterItem() {
    * @des 파일 선택장에서 파일 선택 시 실행
    */
   const onImgChange = async (event) => {
+    setImg(event.target.files[0]);
     setUploadImg(URL.createObjectURL(event.target.files[0]));
 
     setImgError(false);
@@ -345,11 +414,12 @@ function RegisterItem() {
             <Box m={0.5}>
               <FormControl fullWidth>
                 <NativeSelect
-                  defaultValue={0}
+                  defaultValue={category}
                   inputProps={{
                     name: "category",
                     id: "uncontrolled-native",
                   }}
+                  onChange={onChangeCategory}
                 >
                   {categoryList.map((item, index) => (
                     <option key={index} value={index}>
