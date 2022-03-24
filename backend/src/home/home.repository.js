@@ -39,7 +39,7 @@ class HomeRepository {
 		`;
 		console.debug(sql);
 
-		return await connection.query(sql, [token_id, on_use_yn, x_index, y_index, z_index])
+		return await connection.query(sql, [on_use_yn, x_index, y_index, z_index, token_id])
 			.then(data => data[0])
 			.catch((e) => {
 				console.error(e);
