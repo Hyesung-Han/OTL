@@ -25,6 +25,9 @@ import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import notion from "../image/notion.png";
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import HomeIcon from "@mui/icons-material/Home";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import emoStyled from "@emotion/styled";
 
@@ -232,7 +235,31 @@ const Main = () => {
     height: "300px",
 
     margin: "30px",
+    padding:"10px",
+
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   }));
+
+  const howToUseList=[
+    {
+      icon:<AccountBalanceWalletIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      title:"Set up your wallet",
+      content:"NFT를 거래하기 위해서는 지갑이 필요합니다. Metamask 지갑을 생성하고 LOGIN에서 지갑을 연동해 주세요."
+    },
+    {
+      icon:<HomeIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      title:"Create your home",
+      content:"소유하고 있는 NFT를 이용해 마이홈을 구성할 수 있습니다. 나만의 아이템으로 개성있는 나만의 페이지를 만드세요."
+    },
+    {
+      icon:<ShoppingCartIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      title:"Buy and sell NFT",
+      content:"원하는 NFT 작품을 살 수 있고, 당신이 소유하고 있는 NFT를 팔아 수익을 창출할 수 있습니다."
+    },
+  ]
 
   /**
    * HSH | 2022.03.17 | v1.0
@@ -285,7 +312,7 @@ const Main = () => {
 
    animation-fill-mode: forwards;
    animation-name: ${floating}, ${colorChange};
-   animation-delay: 0s, 2s;
+   animation-delay: 0s, 1s;
    animation-duration: ${(props) => props.time}s, 1s;
  `;
 
@@ -335,9 +362,13 @@ const Main = () => {
       <HowToUseStyle>
         <Typography variant="h4">How to use</Typography>
         <Grid display="flex" flexDirection="row" alignItems="center">
-          <HowToUseCard />
-          <HowToUseCard />
-          <HowToUseCard />
+          {howToUseList.map((item,index)=>(
+            <HowToUseCard>
+              {item.icon}
+              <Typography>{item.title}</Typography>
+              <Typography>{item.content}</Typography>
+            </HowToUseCard>
+          ))}
         </Grid>
       </HowToUseStyle>
       <Divider />
