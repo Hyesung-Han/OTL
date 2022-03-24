@@ -157,6 +157,21 @@ class ItemsService {
 			throw e;
 		}
 	}
+
+	async getHomeByOwnerAddress(owner_address) {
+		try {
+			const data = await itemRepository.getHomeByOwnerAddress(owner_address);
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data,
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
+	}
 }
 
 module.exports = ItemsService;
