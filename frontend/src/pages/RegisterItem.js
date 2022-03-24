@@ -1,4 +1,5 @@
 import { Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -10,6 +11,8 @@ import {
   Grid,
   NativeSelect,
   FormControl,
+  FormLabel,
+  FormHelperText,
 } from "@mui/material";
 import Page from "../components/Page";
 
@@ -19,18 +22,19 @@ import BackupIcon from "@mui/icons-material/Backup";
 import logo from "../image/logo.png";
 
 function RegisterItem() {
-  const [uproadImg, setUproadImg] = useState("");
+  const [uploadImg, setUploadImg] = useState("");
   const imgRef = useRef();
+  let navigate = useNavigate();
 
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name RootStyle
-   * @des 가장 바깥 root css
-   */
+  const [requireImg, setRequireImg] = useState("");
+  const [authorError, setauthorError] = useState(true);
+  const [titleError, setTitleError] = useState(true);
+  const [descriptionError, setDescriptionError] = useState(true);
+
   const RootStyle = {
     width: "100%",
 
@@ -39,20 +43,10 @@ function RegisterItem() {
     justifyContent: "center",
   };
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name BodyStyle
-   * @des root 바로 다음. 폭 넓이 지정해주는 css
-   */
   const BodyStyle = {
     width: 1000,
   };
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name ContentStyle
-   * @des author, title 등등 text 부분 영역
-   */
   const ContentStyle = {
     display: "flex",
     alignItems: "left",
@@ -61,11 +55,6 @@ function RegisterItem() {
     padding: "0 50px",
   };
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name ImageStyle
-   * @des uproad image 영역
-   */
   const ImageStyle = styled(Button)((props) => ({
     display: "flex",
     alignItems: "center",
@@ -96,7 +85,14 @@ function RegisterItem() {
    * @des author 변경 시 실행
    */
   const onChangeAutor = (e) => {
+    const value = e.target.value;
     setAuthor(e.target.value);
+
+    if (!value) {
+      setauthorError(true);
+    } else {
+      setauthorError(false);
+    }
   };
 
   /**
@@ -105,7 +101,15 @@ function RegisterItem() {
    * @des title 변경 시 실행
    */
   const onChangeTitle = (e) => {
+    const value = e.target.value;
     setTitle(e.target.value);
+
+    if(!value){
+      setTitleError(true);
+    }
+    else{
+      setTitleError(false);
+    }
   };
 
   /**
@@ -114,7 +118,15 @@ function RegisterItem() {
    * @des description 변경 시 실행
    */
   const onChangeDescription = (e) => {
+    const value = e.target.value;
     setDescription(e.target.value);
+
+    if(!value){
+      setDescriptionError(true);
+    }
+    else{
+      setDescriptionError(false);
+    }
   };
 
   /**
@@ -130,6 +142,7 @@ function RegisterItem() {
       rows: 1,
       placeholder: "Name",
       multiline: false,
+      error: authorError,
     },
     {
       name: "Title",
@@ -138,6 +151,7 @@ function RegisterItem() {
       rows: 1,
       placeholder: "item title",
       multiline: false,
+      error: titleError,
     },
     {
       name: "Description",
@@ -146,6 +160,7 @@ function RegisterItem() {
       rows: 4,
       placeholder: "item description",
       multiline: true,
+      error: descriptionError,
     },
   ];
 
@@ -155,8 +170,18 @@ function RegisterItem() {
    * @des inputTexts의 값들을 뿌려주는 컴포넌트
    */
   const inputTextList = inputTexts.map((item, index) => (
-    <Box key={index} mb={3}>
-      <Typography variant="h5">{item.name}</Typography>
+    <FormControl
+      key={index}
+      sx={{ mb: 3 }}
+      required
+      error={item.error}
+      component="fieldset"
+      variant="standard"
+    >
+      <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <Typography variant="h5">{item.name}</Typography>
+        <FormLabel component="legend"></FormLabel>
+      </Box>
       <Paper
         sx={{
           display: "flex",
@@ -168,6 +193,7 @@ function RegisterItem() {
         }}
       >
         <InputBase
+          required
           onChange={item.set}
           value={item.data}
           multiline={item.multiline}
@@ -176,14 +202,13 @@ function RegisterItem() {
           placeholder={item.placeholder}
         />
       </Paper>
-    </Box>
+      <Box ml={1}>
+      {item.error && <FormHelperText>This is a required item</FormHelperText>}
+      {!item.error && <FormHelperText>Valid</FormHelperText>}
+      </Box>
+    </FormControl>
   ));
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name ButtonStyle
-   * @des create, cancel 버튼 css
-   */
   const ButtonStyle = styled(Button)((theme) => ({
     margin: "10px 10px",
     width: "100px",
@@ -209,7 +234,15 @@ function RegisterItem() {
    * @des create 버튼 클릭 시 실행
    */
   const onClickCreate = () => {
-    console.log("onClickCreate");
+    let isClear = true;
+    if (!uploadImg) {
+      setRequireImg("* required Image");
+      isClear = false;
+    }
+
+    if (isClear) {
+      console.log("onClickCreate");
+    }
   };
 
   /**
@@ -219,6 +252,7 @@ function RegisterItem() {
    */
   const onClickCancel = () => {
     console.log("onClickCancel");
+    navigate("/main");
   };
 
   /**
@@ -227,7 +261,7 @@ function RegisterItem() {
    * @des 파일 선택장에서 파일 선택 시 실행
    */
   const onImgChange = async (event) => {
-    setUproadImg(URL.createObjectURL(event.target.files[0]));
+    setUploadImg(URL.createObjectURL(event.target.files[0]));
   };
 
   /**
@@ -272,15 +306,15 @@ function RegisterItem() {
         <Box m={5} display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">
             <ImageStyle onClick={onClickImg}>
-              {uproadImg && (
+              {uploadImg && (
                 <Box
                   component="img"
-                  src={uproadImg}
+                  src={uploadImg}
                   sx={{ maxWidth: "400px", maxHeight: "400px" }}
                 />
               )}
 
-              {!uproadImg && (
+              {!uploadImg && (
                 <div>
                   <BackupIcon sx={{ fontSize: "50px", color: "#ababab" }} />
                   <Typography
@@ -295,6 +329,7 @@ function RegisterItem() {
                 </div>
               )}
             </ImageStyle>
+            <Typography color="#ff0000"> {requireImg} </Typography>
             <input
               ref={imgRef}
               type="file"
@@ -306,7 +341,9 @@ function RegisterItem() {
           </Box>
           <div style={ContentStyle}>
             {inputTextList}
-            <Typography variant="h5">category</Typography>
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
+              <Typography variant="h5">Category</Typography>
+            </Box>
             <Box m={0.5}>
               <FormControl fullWidth>
                 <NativeSelect
