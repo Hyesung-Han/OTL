@@ -197,31 +197,14 @@ function RegisterItem() {
     console.log(category);
 
     const formData = new FormData();
-    formData.append("image", img); 
+    formData.append("items", img); 
+    formData.append("user_address", "1234"); 
+    formData.append("author_name", author); 
+    formData.append("item_title", title); 
+    formData.append("item_description", description); 
+    formData.append("category_code", "bed"); 
 
-    Axios.post(serverUrlBase + `/items`, {
-      body: {
-        /**
-				 * HACK
-				 * user_address 임시로 1234로 지정해놓고 로그인 하고 나중에 테스트
-				 */
-        // user_address: user.user_address,
-        user_address: "1234",
-        author_name: author,
-        item_title: title,
-        item_description: description,
-        /**
-				 * HACK
-				 * category 임시로 bed로 지정해놓고 나중에 카테고리 완성 시 변경
-				 */
-        category_code: "bed",
-        // category_code: category,
-      },
-      // file: {
-      //   image: img,
-      // },
-      file:formData
-    })
+    Axios.post(serverUrlBase + `/items`, formData)
       .then((data) => {
         if (data.status === 200) {
           Swal.fire({
