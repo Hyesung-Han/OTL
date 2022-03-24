@@ -28,6 +28,8 @@ import logo from "../image/logo.png";
 /**
  * HSH | 2022.03.24 | ADD
  * @name RegisterItem
+ * @api {post} /items
+ * @api {patch} /items/:item_id
  * @des 아이템 저장하기
  */
 function RegisterItem() {
@@ -216,7 +218,7 @@ function RegisterItem() {
             icon: "success",
             title: "글이 성공적으로 등록되었습니다.",
           });
-          
+
           navigate("/main");
         } else {
           Swal.fire({
