@@ -1,0 +1,220 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+  - name: "items"
+    description: "Operations about items"
+    externalDocs:
+      description: "Find out more about our store"
+      url: "http://swagger.io"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /items:
+    post:
+      tags:
+        - "items"
+      summary: "upload item"
+      description: "upload item"
+      operationId: "upload item"
+      consumes:
+        - multipart/form-data
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: formData
+          name: items
+          type: file
+          description: The file to upload.
+          required: true
+        - name: "user_address"
+          in: "formData"
+          description: "user_address"
+          required: true
+          type: "string"
+        - name: "author_name"
+          in: "formData"
+          description: "author_name"
+          required: true
+          type: "string"
+        - name: "item_title"
+          in: "formData"
+          description: "item_title"
+          required: true
+          type: "string"
+        - name: "item_description"
+          in: "formData"
+          description: "item_description"
+          required: true
+          type: "string"
+        - name: "category_code"
+          in: "formData"
+          description: "category_code"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+    get:
+      tags:
+        - "items"
+      summary: "my item list"
+      description: "my item list"
+      operationId: "my item list"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "user_address"
+          in: "query"
+          description: "user_address"
+          required: true
+          type: "string"
+        - name: "page"
+          in: "query"
+          description: "page"
+          required: false
+          type: "integer"
+      responses:
+        default:
+          description: "successful operation"
+
+  /items/{item_id}:
+    patch:
+      tags:
+        - "items"
+      summary: "update NFT"
+      description: "update NFT"
+      operationId: "update NFT"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "item_id"
+          in: "path"
+          description: "item_id"
+          required: true
+          type: "string"
+        - name: "token_id"
+          in: "formData"
+          description: "token_id"
+          required: true
+          type: "integer"
+        - name: "owner_address"
+          in: "formData"
+          description: "owner_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+
+  /items/{token_id}:
+    get:
+      tags:
+        - "items"
+      summary: "item detail"
+      description: "item detail"
+      operationId: "item detail"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token_id"
+          in: "path"
+          description: "token_id"
+          required: true
+          type: "integer"
+      responses:
+        default:
+          description: "successful operation"
+
+  /items/list:
+    get:
+      tags:
+        - "items"
+      summary: "item list"
+      description: "item list"
+      operationId: "item list"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "category_code"
+          in: "query"
+          description: "category_code"
+          required: false
+          type: "string"
+        - name: "item_title"
+          in: "query"
+          description: "item_title"
+          required: false
+          type: "string"
+        - name: "page"
+          in: "query"
+          description: "page"
+          required: false
+          type: "integer"
+      responses:
+        default:
+          description: "successful operation"
+
+  /items/listCnt:
+    get:
+      tags:
+        - "items"
+      summary: "count item list"
+      description: "count item list"
+      operationId: "count item list"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "category_code"
+          in: "query"
+          description: "category_code"
+          required: false
+          type: "string"
+        - name: "item_title"
+          in: "query"
+          description: "item_title"
+          required: false
+          type: "string"
+        - name: "page"
+          in: "query"
+          description: "page"
+          required: false
+          type: "integer"
+      responses:
+        default:
+          description: "successful operation"
+          
+  /items/category:
+    get:
+      tags:
+        - "items"
+      summary: "get category"
+      description: "get all category"
+      operationId: "get category"
+      produces:
+        - "application/xml"
+        - "application/json"
+      responses:
+        default:
+          description: "successful operation"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
