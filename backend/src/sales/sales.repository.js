@@ -7,23 +7,81 @@ const connection = require('../../config/connection').promise();
 class SalesRepository {
 
 	async createSales(data) {
-		return true;
+		const sql = `
+			INSERT INTO sales_t(sale_contract_address, token_id, seller_address, completed_at)
+			VALUES(?, ?, ?, ?);
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [data.sale_contract_address, data.token_id, data.saller_address, data.completed_at])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
-	async getSalesByTokenId(tokenId) {
-		return null;
+	async getSalesByTokenId(token_id) {
+		const sql = `
+			SELECT sale_id, sale_contract_address, sale_yn, token_id, seller_address, buyer_address, created_at, completed_at
+			FROM sales_t
+			WHERE token_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, token_id)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
-	async getSales() {
-		return null;
+	async deleteSales(sale_id) {
+		const sql = `
+			DELETE FROM sales_t
+			WHERE sale_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, sale_id)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
-	async deleteSales(saleId) {
-		return null;
+	async completeSales(token_id, buyer_address) {
+		const sql = `
+			UPDATE sales_t
+			SET sale_yn = '0', buyer_address = ?
+			WHERE token_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [buyer_address, token_id])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 
-	async completeSales(tokenId, data) {
-		return null;
+	async deleteSalesUpdate(sale_id) {
+		const sql = `
+			UPDATE items_t
+			SET on_sale_yn = '0'
+			WHERE token_id = (SELECT token_id FROM sales_t WHERE sale_id = ?)
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, sale_id)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
 	}
 }
 
