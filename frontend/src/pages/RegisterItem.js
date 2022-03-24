@@ -207,10 +207,17 @@ function RegisterItem() {
     Axios.post(serverUrlBase + `/items`, formData)
       .then((data) => {
         if (data.status === 200) {
+          /**
+				  * TODO
+				  * NFT 생성하기
+				  */
+
           Swal.fire({
             icon: "success",
             title: "글이 성공적으로 등록되었습니다.",
           });
+          
+          navigate("/main");
         } else {
           Swal.fire({
             icon: "error",
