@@ -15,12 +15,13 @@ import { Link as RouterLink } from "react-router-dom";
 // import Logo from '../../components/Logo';
 
 import { useState, useEffect } from "react";
-import { setValue } from "../../redux/reducers/SearchReducer";
 import { nominalTypeHack } from "prop-types";
 
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { setInit } from "../../redux/reducers/UserReducer";
+import { setValue } from "../../redux/reducers/SearchReducer";
+import { setSearchinit } from "../../redux/reducers/SearchReducer";
 
 // Icons
 import HomeIcon from "@mui/icons-material/Home";
@@ -45,8 +46,29 @@ const SearchNavbar = () => {
   const open = Boolean(anchorEl);
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
-  const SearchData = useSelector((state) => state.Search.data);
-  const [inputValue, setInputValue] = useState(SearchData.searchValue);
+  const SearchData = useSelector((state) => state.Search.data.searchValue);
+  const [inputValue, setInputValue] = useState(SearchData);
+
+  const onChangeSerchValue = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  // useEffect(() => {
+  //   dispatch(setValue(""));
+  // });
+
+  // const onClickSearch = () => {
+  //   dispatch(setValue(inputValue));
+  // };
+
+  const onClickSearch = () => {
+    dispatch(setSearchinit());
+  };
+
+  useEffect(() => {
+    dispatch(setValue(inputValue));
+    console.log(inputValue);
+  }, [inputValue]);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -64,10 +86,6 @@ const SearchNavbar = () => {
     maxWidth: 1400,
     minWidth: 1400,
   }));
-
-  useEffect(() => {
-    dispatch(setValue(""));
-  });
 
   const LogoStyle = styled(Box)(() => ({
     color: "#111111",
@@ -132,25 +150,7 @@ const SearchNavbar = () => {
     width: "50px",
   };
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onChangeSerchValue
-   * @des 검색창 입력시 실행
-   */
-  const onChangeSerchValue = (e) => {
-    setInputValue(e.target.value);
-  };
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickSearch
-   * @des 검색 버튼 클릭시 실행
-   */
-  const onClickSearch = () => {
-    dispatch(setValue(inputValue));
-  };
-
   return (
-
     <AppBar sx={rootStyle}>
       <Toolbar sx={toolbarStyle}>
         <Box
@@ -263,20 +263,28 @@ const SearchNavbar = () => {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem to="#" component={RouterLink}>
-                  <ListItemIcon>
-                    <HomeIcon fontSize="small" />
-                  </ListItemIcon>
-                  <Typography textAlign="center" onClick={handleClose}>
-                    Profile
-                  </Typography>
-                </MenuItem>
+                {!user.user_nickname && (
+                  <MenuItem to="/createprofile" component={RouterLink}>
+                    <ListItemIcon>
+                      <HomeIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography>Profile</Typography>
+                  </MenuItem>
+                )}
+                {user.user_nickname && (
+                  <MenuItem to="/main" component={RouterLink}>
+                    <ListItemIcon>
+                      <HomeIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography>Profile</Typography>
+                  </MenuItem>
+                )}
                 <Divider />
                 <MenuItem onClick={onClickLogOut}>
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  <Typography textAlign="center">Log Out</Typography>
+                  <Typography>Log Out</Typography>
                 </MenuItem>
               </Menu>
             </div>

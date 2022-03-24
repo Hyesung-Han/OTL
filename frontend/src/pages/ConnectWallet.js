@@ -106,7 +106,12 @@ const ConnectWallet = () => {
             <Tooltip
               arrow
               placement="right"
-              title="A crypto wallet is an application or hardware device that allows individuals to store and retrieve digital items."
+              title={
+                <h2>
+                  A crypto wallet is an application or hardware device that
+                  allows individuals to store and retrieve digital items.
+                </h2>
+              }
             >
               <Typography variant="h4" sx={{ pb: 4 }}>
                 Connect with MetaMask or create a new one
@@ -114,7 +119,6 @@ const ConnectWallet = () => {
             </Tooltip>
             <Button
               fullWidth
-              to=""
               variant="contained"
               size="large"
               sx={{
@@ -122,8 +126,6 @@ const ConnectWallet = () => {
                 display: "flex",
                 justifyContent: "space-between",
               }}
-              // to="/main"
-              // component={RouterLink}
               onClick={handleConnect}
             >
               <Typography>
