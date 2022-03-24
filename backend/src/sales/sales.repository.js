@@ -67,6 +67,22 @@ class SalesRepository {
 				throw e;
 			});
 	}
+
+	async deleteSalesUpdate(sale_id) {
+		const sql = `
+			UPDATE items_t
+			SET on_sale_yn = '0'
+			WHERE token_id = (SELECT token_id FROM sales_t WHERE sale_id = ?)
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, sale_id)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = SalesRepository;

@@ -57,6 +57,7 @@ class SalesService {
 		try {
 			await connection.beginTransaction();
 
+			await salesRepository.deleteSalesUpdate(sale_id);
 			const data = await salesRepository.deleteSales(sale_id);
 			console.log(data);
 
