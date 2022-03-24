@@ -60,6 +60,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/search" replace /> },
         { path: "", element: <SearchResult /> },
+        { path: ":search_value", element: <SearchResult /> },
       ],
     },
 
