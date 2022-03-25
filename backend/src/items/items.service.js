@@ -8,82 +8,89 @@ const itemRepository = new ItemsRepository();
 
 class ItemsService {
 
-	/**
- 	 * PJT Ⅱ - 과제 1: Req.1-B1 작품 등록 (파일 업로드 포함)
-	 * 1. 이미지의 중복 여부를 판별합니다.
-	 * 2. 중복된 이미지가 없다면 정보를 DB에 추가합니다.
-	 * 3. 저장된 작품의 id를 responseBody에 추가하여 반환합니다.
-	 * 
-     */
-	async createItems(req) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				itemId: 0
+	async checkImage(file) {
+		let result;
+		try {
+			await getS3List().then(data => {
+				result = data.filter(items => items.ETag === file.etag);
+			});
+			if(result.length > 1) {
+				await deleteS3Object(file.key);
+				return true;
 			}
+		} catch(e) {
+			throw e;
 		}
 	}
 
-	/**
-	 * PJT Ⅱ - 과제 1: Req.1-B2 작품 정보 업데이트
-	 */
-	async updateItemTokenIdAndOwnerAddress(itemId, tokenId, ownerAddress) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success'
+	async insertItem(item) {
+		try {
+			const data = await itemRepository.insertItem(item);
+			if(data.length != 0) {
+				return {
+					statusCode: 201,
+					responseBody: {
+						result: 'success',
+						data: {item_id:data.insertId},
+					}
+				}
+			} else {
+				return {
+					statusCode: 403,
+					responseBody: {
+						result: 'fail',
+						error: error,
+					}
+				}
 			}
+		} catch(e) {
+			throw e;
 		}
 	}
 
-	/**
-	 * PJT Ⅱ 과제 2: 
-	 * Req.2-B1 작품 목록 조회 
-	 * Req.2-B2 주소가 보유한 작품 목록 조회
-	 *
-	 * PJT Ⅲ 과제 4: (판매 중인 작품만 반환하도록 수정합니다.)
-	 * Req.4-B1 작품 목록 조회
-	 * Req.4-B2 주소가 보유한 작품 목록 조회
-	 */
-	async getItems(address) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				data: []
+	async updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address) {
+		try {
+			const data = await itemRepository.updateItemTokenIdAndOwnerAddress(item_id, token_id, owner_address);
+			return {
+				statusCode: 201,
+				responseBody: {
+					result: 'success',
+				}
 			}
-		};
-	}
-
-	/*
-	 * PJT Ⅲ 과제 3: 
-	 * Req.4-B3 최근 등록 작품 조회
-	 */
-	async getRecentItems() {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				data: []
-			}
+		} catch(e) {
+			throw e;
 		}
 	}
 
-	/**
-	 * PJT Ⅱ 과제 2: 
-	 * Req.2-B3 작품 상세 조회 
-	 */
+	async getItemsByOwnerAddress(user_address, page) {
+		try {
+			const data = await itemRepository.getItemsByOwnerAddress(user_address, (page-1)*100);
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data,
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
+	}
+
 	async getItemByTokenId(tokenId) {
-		return {
-			statusCode: 200,
-			responseBody: {
-				result: 'success',
-				data: []
-			}
-		};
+		try {
+			const data = await itemRepository.getItemByTokenId(tokenId);
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data[0],
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
 	}
-
 
 	async updateItemOwnerAddress(tokenId, ownerAddress) {
 		if (await itemRepository.updateItemOwnerAddress(tokenId, ownerAddress)) {
@@ -96,6 +103,60 @@ class ItemsService {
 		}
 	}
 
+	async getCategory() {
+		const data = await itemRepository.getCategory();
+		return {
+			statusCode: 200,
+			responseBody: {
+				result: 'success',
+				data: data,
+			}
+		}
+	}
+
+	async getItemList(category_code, item_title, page) {
+		try {
+			let data;
+			if(category_code) {
+				data = await itemRepository.getItemsByCategory(category_code,  (page-1)*100);
+			} else if(item_title) {
+				data = await itemRepository.getItemsByItemTitle(item_title,  (page-1)*100);
+			} else {
+				data = await itemRepository.getItems( (page-1)*100);
+			}
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data,
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
+	}
+
+	async getItemListCnt(category_code, item_title, page) {
+		try {
+			let data;
+			if(category_code) {
+				data = await itemRepository.getItemsByCategoryCnt(category_code,  (page-1)*100);
+			} else if(item_title) {
+				data = await itemRepository.getItemsByItemTitleCnt(item_title,  (page-1)*100);
+			} else {
+				data = await itemRepository.getItemsCnt( (page-1)*100);
+			}
+			return {
+				statusCode: 200,
+				responseBody: {
+					result: 'success',
+					data: data[0],
+				}
+			};
+		} catch(e) {
+			throw e;
+		}
+	}
 }
 
 module.exports = ItemsService;

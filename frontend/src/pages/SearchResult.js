@@ -9,9 +9,9 @@ import COMMON_HEADER from '../common/HeaderType';
 import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
 import Page from '../components/Page';
-import ItemsList from '../components/Items/ItemsList';
-import ProfileList from '../components/Profile/ProfileList';
-import HorizonLine from '../utils/HorizonLine'
+import ItemsList from '../components/items/ItemsList';
+import ProfileList from '../components/profile/ProfileList';
+import HorizonLine from '../components/HorizonLine'
 
 /**
  * [검색결과] 화면
@@ -56,7 +56,7 @@ const SearchResult = () => {
     const resultList = [];
     const resultProfile = {
       id: 1,
-      image: "https://edu.ssafy.com/asset/images/logo.png",
+      image: "",
       nickname: "fake nickname"
     };
 
@@ -113,7 +113,7 @@ const SearchResult = () => {
         <>
           {isCollection === true ? (
             
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" sx={{my:3}}>
 
                 <HorizonLine text="Artist" />
                 <ProfileList sx={{ mt: 1 }} products={productsprofile} />
