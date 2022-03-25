@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import Page from "../components/Page";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Avatar, Button, Grid, TextField, Typography } from "@mui/material";
-import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import HorizonLine from "../components/HorizonLine";
 
 // Redux
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../redux/reducers/UserReducer";
 
 import { CommonContext } from "../context/CommonContext";
 
@@ -21,26 +21,48 @@ const regEma =
   /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
 /**
- * LDJ | 2022.03.24 | ADD
+ * LDJ | 2022.03.25 | v1.0
  * @name CreateProfile
- * @api {post} 진행중
- * @api {get} http://localhost:3000/api/user/checkNick?user_nickname={닉네임} : 닉네임 중복 확인
- * @des 로그인 된 유저가 자신의 프로필을 생성하는 곳! (유효성 검사 + 중복 검사 + 내용 입력/저장)
+ * @api {post} http://localhost:3000/api/user/login : 프로필 생성 요청 (성공/실패 여부만 반환 받음)
+ * @api {get} http://localhost:3000/api/user/checkNick?user_nickname={닉네임} : 닉네임 중복 확인 요청
+ * @api {get} http://localhost:3000/api/user/profile?user_address={내지갑주소} : DB에 저장된 Profile 관련 정보 가져오기 (헤더에 반영)
+ * @des 로그인 된 유저가 자신의 프로필을 생성하는 곳! (유효성 검사 + 중복 검사 + 내용 입력/저장 + 헤더의 프로필 적용을 위해서 Get Profile까지)
  */
 
 function CreateProfile() {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.User.user);
   const dispatch = useDispatch();
+
+  const [uploadImg, setUploadImg] = useState("");
+  const [uploadImgURL, setUploadImgURL] = useState("");
+  const imgRef = useRef();
+
+  const onClickImg = () => {
+    imgRef.current.click();
+  };
+
+  const onChangeImg = async (event) => {
+    console.log(event.target.files);
+    setUploadImg(event.target.files[0]);
+    setUploadImgURL(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const onClickDelImg = () => {
+    setUploadImg("");
+    setUploadImgURL("");
+  };
 
   const { serverUrlBase } = useContext(CommonContext);
 
   const [disabled, setDisabled] = useState(true);
 
   const [profileData, setProfileData] = useState({
+    address: user.user_address,
     nickname: "",
     email: "",
-    link: "",
     bio: "",
+    link: "",
   });
 
   const OnChangeHandler = (name) => (e) => {
@@ -53,26 +75,38 @@ function CreateProfile() {
   const [emailErrMsg, setEmailErrMsg] = useState();
 
   const onCreateHandler = async () => {
-    var { nickname, email, link, bio } = profileData;
-    /**
-     * TODO
-     * post api  이해해서 작성 더 해야함 (프로필 생성)
-     */
-    Axios.post(serverUrlBase + `/user/profile`, {
-      user_address: user.user_address,
-      user_nickname: nickname,
-      user_email: email,
-      user_link: link,
-      user_bio: bio,
-    })
-      .then((data) => {
+    var { address, nickname, email, bio, link } = profileData;
+
+    const formData = new FormData();
+    formData.append("profile", uploadImg);
+    formData.append("user_address", address);
+    formData.append("user_nickname", nickname);
+    formData.append("user_email", email);
+    formData.append("user_link", link);
+    formData.append("user_bio", bio);
+
+    await Axios.post(serverUrlBase + `/user/profile`, formData)
+      .then(async (data) => {
         console.log(data);
-        // const create_result = data.data.result;
-        // if (create_result == "success") {
-        //   console.log(data.data);
-        // } else {
-        //   console.log("실패");
-        // }
+        const create_result = data.data.result;
+        if (create_result == "success") {
+          await Axios.get(
+            serverUrlBase + `/user/profile?user_address=` + profileData.address
+          )
+            .then((data) => {
+              const connect_user = data.data.data;
+              dispatch(setUser(connect_user));
+              console.log(data);
+            })
+            .catch(function (error) {
+              console.log("프로필 정보 불러오기 오류 : " + error);
+            });
+
+          console.log("성공");
+          await navigate("/main");
+        } else {
+          console.log("실패");
+        }
       })
       .catch(function (error) {
         console.log("프로필 생성 오류 : " + error);
@@ -96,7 +130,6 @@ function CreateProfile() {
             profileData.nickname
         )
           .then((data) => {
-            // console.log(data);
             if (data.data.result === false) {
               setNicknameErr(true);
               setNicknameErrMsg("It's a registered ID that already exists!");
@@ -141,7 +174,6 @@ function CreateProfile() {
     ) {
       setDisabled(true);
     }
-    console.log(profileData);
   }, [profileData.nickname, profileData.email, nincknameErr, emailErr]);
 
   return (
@@ -174,10 +206,22 @@ function CreateProfile() {
           alignItems="flex-end"
         >
           <Grid>
-            <Avatar sx={{ width: 200, height: 200, m: 3 }}></Avatar>
+            <Avatar
+              alt="Avatar"
+              src={uploadImgURL}
+              sx={{ width: 200, height: 200, m: 3 }}
+              onClick={onClickImg}
+            ></Avatar>
+            <input
+              ref={imgRef}
+              type="file"
+              accept="image/*"
+              onChange={onChangeImg}
+              hidden
+            ></input>
           </Grid>
           <Grid>
-            <Button variant="contained" sx={{ m: 3 }}>
+            <Button onClick={onClickDelImg} variant="contained" sx={{ m: 3 }}>
               Delete Img
             </Button>
           </Grid>

@@ -1,5 +1,5 @@
 /**
- * LDJ | 2022.03.22 | v1.0
+ * LDJ | 2022.03.24 | v1.0
  * @name UserReducers
  * @api -
  * @des User관련 정보를 Store에 저장해서 사용하기 위한 코드 [매번 불러오기 비효율적이니까!]
@@ -10,6 +10,7 @@ const SET_USER = "setUser";
 const SET_NICKNAME = "setNickname";
 const SET_EMAIL = "setEmail";
 const SET_BIO = "setBio";
+const SET_LINK = "setLink";
 const SET_IMAGEURL = "setImageUrl";
 
 const UserInitialState = {
@@ -18,6 +19,7 @@ const UserInitialState = {
     user_nickname: "",
     user_email: "",
     user_bio: "",
+    user_link: "",
     user_image_url: "",
   },
 };
@@ -42,6 +44,11 @@ export const setEmail = (user_email) => ({
 });
 
 export const setBio = (user_bio) => ({
+  type: SET_LINK,
+  user_link,
+});
+
+export const setLink = (user_link) => ({
   type: SET_BIO,
   user_bio,
 });
@@ -74,6 +81,10 @@ export const UserReducer = (state = UserInitialState, action) => {
 
     case SET_BIO:
       state.user.user_bio = action.user_bio;
+      return { ...state };
+
+    case SET_LINK:
+      state.user.user_link = action.user_link;
       return { ...state };
 
     case SET_IMAGEURL:
