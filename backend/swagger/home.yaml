@@ -1,0 +1,88 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Petstore"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/v2"
+tags:
+  - name: "home"
+    description: "Operations about home"
+    externalDocs:
+      description: "Find out more about our store"
+      url: "http://swagger.io"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /home/{owner_address}:
+    get:
+      tags:
+        - "home"
+      summary: "used home item"
+      description: "used home item"
+      operationId: "used home item"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "owner_address"
+          in: "path"
+          description: "owner_address"
+          required: true
+          type: "string"
+      responses:
+        default:
+          description: "successful operation"
+  /home/{token_id}:
+    patch:
+      tags:
+        - "home"
+      summary: "update home item"
+      description: "update home item"
+      operationId: "update home item"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token_id"
+          in: "path"
+          description: "token_id"
+          required: true
+          type: "integer"
+        - name: "on_use_yn"
+          in: "formData"
+          description: "on_use_yn"
+          required: true
+          type: "integer"
+        - name: "x_index"
+          in: "formData"
+          description: "x_index"
+          required: true
+          type: "number"
+          format: "double"
+        - name: "y_index"
+          in: "formData"
+          description: "y_index"
+          required: true
+          type: "number"
+          format: "double"
+        - name: "z_index"
+          in: "formData"
+          description: "z_index"
+          required: true
+          type: "number"
+          format: "double"
+      responses:
+        default:
+          description: "successful operation"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
