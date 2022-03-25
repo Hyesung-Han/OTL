@@ -21,6 +21,20 @@ class HomeService {
 			throw e;
 		}
 	}
+
+	async updateHomeitem(token_id, on_use_yn, x_index, y_index, z_index) {
+		try {
+			const data = await homeRepository.updateHomeitem(token_id, on_use_yn, x_index, y_index, z_index);
+			return {
+				statusCode: 201,
+				responseBody: {
+					result: 'success',
+				}
+			}
+		} catch(e) {
+			throw e;
+		}
+	}
 }
 
 module.exports = HomeService;
