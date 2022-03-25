@@ -8,14 +8,14 @@ import React from "react";
 const HorizonLine = ({ text }) => {
   return (
     <div>
-        <span style={{ background: "#fff", padding: "0 10px",fontWeight:'bold' }}>{text}</span>
+        <span style={{ background: "#fff", padding: "0 5px",fontWeight:'bold' }}>{text}</span>
         <div
         style={{
             width: "100%",
             textAlign: "center",
             borderBottom: "1px solid #bcbcbc",
             lineHeight: "0.1em",
-            margin: "10px 0 20px",
+            margin: "5px 0 10px",
         }}
          >
         </div>

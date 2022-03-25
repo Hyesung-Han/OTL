@@ -12,32 +12,53 @@ import {
   Paper,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-// import Logo from '../../components/Logo';
+import { useNavigate } from "react-router-dom";
 
-import { useSelector } from "react-redux";
-import { useState } from "react";
-
-// 로그인 기능 구현 후 삭제 예정
-import { useDispatch } from "react-redux";
-import { setToken } from "../../redux/reducers/AuthReducer";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { nominalTypeHack } from "prop-types";
 
-//Icons
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { setInit } from "../../redux/reducers/UserReducer";
+
+// Icons
 import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
 
-// 헤더 화면 (상단 메뉴바)
+/**
+ * LDJ, HSH | 2022.03.22 | Update
+ * @name SearchNavbar
+ * @api -
+ * @des 상단 헤더 메뉴바, CSS[소현]
+ * @des Redux를 통한 로그인 유무 확인 / 우상단 로그인/프로필 아이콘 전환 [동준]
+ */
+
 const SearchNavbar = () => {
   const APPBAR_MOBILE = 64;
   const APPBAR_DESKTOP = 92;
-  const user = useSelector((state) => state.Auth.user);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.User.user);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
+
+  const navigate = useNavigate();
+
+  const [inputValue, setInputValue] = useState("");
+
+  const onChangeSerchValue = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const onClickSearch = () => {
+    navigate("/search/"+inputValue);
+  };
+
+  useEffect(() => {
+    
+  }, [inputValue]);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -56,11 +77,6 @@ const SearchNavbar = () => {
     minWidth: 1400,
   }));
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name LogoStyle
-   * @des 헤더에서 사용하는 LOGO CSS 정의
-   */
   const LogoStyle = styled(Box)(() => ({
     color: "#111111",
 
@@ -73,11 +89,6 @@ const SearchNavbar = () => {
     },
   }));
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name ButtonStyle
-   * @des 헤더에서 사용하는 버튼 CSS 정의
-   */
   const ButtonStyle = styled(Button)(() => ({
     color: "#111111",
 
@@ -86,96 +97,52 @@ const SearchNavbar = () => {
     },
   }));
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name onClickLogOut
-   * @des logOut 이벤트
-   */
   const onClickLogOut = () => {
-    /**
-     * HACK
-     * 임시 로그아웃 기능
-     */
-    dispatch(
-      setToken({
-        token: "",
-        user_id: "",
-        user_nickName: "",
-        status: "",
-        user_code: "",
-        code_name: "",
-      })
-    );
-
+    dispatch(setInit());
     setAnchorEl(null);
   };
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name handleClick
-   * @des 메뉴바 open
-   */
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name handleClose
-   * @des 메뉴바 close
-   */
   const handleClose = (event) => {
     setAnchorEl(null);
   };
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name rootStyle
-   * @des root css
-   */
   const rootStyle = {
+    background: "none",
+    boxShadow: "none",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(6px)",
+
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
   };
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name toolbarStyle
-   * @des toolbar css
-   */
   const toolbarStyle = {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
 
-    width:1400,
-    height:100,
+    width: 1400,
+    height: 100,
   };
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name UserNickNameStyle
-   * @des nickName css
-   */
   const UserNickNameStyle = styled(Typography)(() => ({
     color: "#111111",
     fontSize: 17,
     padding: "0 5px",
   }));
 
-  /**
-   * HSH | 2022.03.14 | v1.0
-   * @name UserNickNameStyle
-   * @des nickName css
-   */
   const UserBoxStyle = {
     width: "50px",
   };
 
   return (
-      <RootStyle>
-        <ToolbarStyle>
+    <AppBar sx={rootStyle}>
+      <Toolbar sx={toolbarStyle}>
         <Box
           sx={{
             px: 2.5,
@@ -198,7 +165,6 @@ const SearchNavbar = () => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-
           }}
         >
           <Paper
@@ -209,12 +175,21 @@ const SearchNavbar = () => {
               alignItems: "center",
               width: 600,
 
-              border: '2px solid #f1f1f1',
-              padding: '0 10px'
+              border: "2px solid #f1f1f1",
+              padding: "0 10px",
             }}
           >
-            <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search Item" />
-            <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+            <InputBase
+              value={inputValue}
+              onChange={onChangeSerchValue}
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Search Item"
+            />
+            <IconButton
+              onClick={onClickSearch}
+              sx={{ p: "10px" }}
+              aria-label="search"
+            >
               <SearchIcon />
             </IconButton>
           </Paper>
@@ -235,14 +210,14 @@ const SearchNavbar = () => {
             LIST
           </ButtonStyle>
           <ButtonStyle
-            to="/register"
+            to="/RegisterItem"
             size="large"
             sx={{ fontSize: 17 }}
             component={RouterLink}
           >
             CREATE
           </ButtonStyle>
-          {!user.user_id && (
+          {!user.user_address && (
             <div style={UserBoxStyle}>
               <ButtonStyle
                 to="/connectwallet"
@@ -254,16 +229,16 @@ const SearchNavbar = () => {
               </ButtonStyle>
             </div>
           )}
-          {user.user_id && (
+          {user.user_address && (
             <div style={UserBoxStyle}>
               <Tooltip title="Open User Menu">
                 <IconButton onClick={handleClick} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp">H</Avatar>
-                  <UserNickNameStyle>{user.user_nickName}</UserNickNameStyle>
+                  <Avatar src={user.user_image_url}></Avatar>
+                  <UserNickNameStyle>{user.user_nickname}</UserNickNameStyle>
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{mt: "50px", ml: "550px" }}
+                sx={{ mt: "50px", ml: "550px" }}
                 // anchorEl={anchorEl}
                 anchorOrigin={{
                   vertical: "top",
@@ -276,27 +251,35 @@ const SearchNavbar = () => {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem to="#" component={RouterLink}>
-                  <ListItemIcon>
-                    <HomeIcon fontSize="small" />
-                  </ListItemIcon>
-                  <Typography textAlign="center" onClick={handleClose}>
-                    Profile
-                  </Typography>
-                </MenuItem>
+                {!user.user_nickname && (
+                  <MenuItem to="/createprofile" component={RouterLink}>
+                    <ListItemIcon>
+                      <HomeIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography>Profile</Typography>
+                  </MenuItem>
+                )}
+                {user.user_nickname && (
+                  <MenuItem to="/main" component={RouterLink}>
+                    <ListItemIcon>
+                      <HomeIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography>Profile</Typography>
+                  </MenuItem>
+                )}
                 <Divider />
                 <MenuItem onClick={onClickLogOut}>
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>
-                  <Typography textAlign="center">Log Out</Typography>
+                  <Typography>Log Out</Typography>
                 </MenuItem>
               </Menu>
             </div>
           )}
         </Stack>
-    </ToolbarStyle>
-    </RootStyle>
+      </Toolbar>
+    </AppBar>
   );
 };
 
