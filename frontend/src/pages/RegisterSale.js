@@ -9,10 +9,20 @@ import {
   Divider,
   Paper,
   InputBase,
+  TextField,
+  FormControl,
+  FormLabel,
+  FormHelperText,
 } from "@mui/material";
+
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import MobileDatePicker from "@mui/lab/MobileDatePicker";
+
 import Page from "../components/Page";
 import { useState } from "react";
 
+import DateRangeIcon from '@mui/icons-material/DateRange';
 import logo from "../image/logo.png";
 
 /**
@@ -24,13 +34,21 @@ function RegisterSale() {
   const { item_id } = useParams();
   // console.log(item_id);
 
+  // 가격 유효성 검사 ()
+  const regPr = /^[0-9]{1,100}$/;
+
+  const curDate=new Date();
+
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const [buyNow, setBuyNow] = useState("");
   const [makeOffer, setMakeOffer] = useState("");
-  const [endDate, setendDate] = useState("");
+  const [endDate, setendDate] = useState(curDate);
+
+  const [buyNowError,setBuyNowError]=useState(true);
+  const [makeOfferError,setMakeOfferError]=useState(true);
 
   const itemSize = "320px";
 
@@ -64,11 +82,11 @@ function RegisterSale() {
     margin: 3,
   };
 
-  const ButtonGridStyle={
+  const ButtonGridStyle = {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-  }
+  };
 
   const ButtonStyle = styled(Button)((theme) => ({
     margin: "10px 10px",
@@ -109,21 +127,17 @@ function RegisterSale() {
   const saleData = [
     {
       name: "Buy Now",
-      unit: "ETH",
+      unit: "SSF",
       value: buyNow,
       func: onChangeBuyNow,
+      error: buyNowError,
     },
     {
       name: "Make Offer",
-      unit: "ETH",
+      unit: "SSF",
       value: makeOffer,
       func: onChangeMakeOffer,
-    },
-    {
-      name: "Duration",
-      unit: "DAY",
-      value: endDate,
-      func: onChangeEndDate,
+      error: makeOfferError,
     },
   ];
 
@@ -134,6 +148,15 @@ function RegisterSale() {
    */
   function onChangeBuyNow(e) {
     setBuyNow(e.target.value);
+
+    if(!regPr.test(e.target.value))
+    {
+      setBuyNowError(true);
+    }
+    else
+    {
+      setBuyNowError(false);
+    }
   }
 
   /**
@@ -143,6 +166,15 @@ function RegisterSale() {
    */
   function onChangeMakeOffer(e) {
     setMakeOffer(e.target.value);
+
+    if(!regPr.test(e.target.value))
+    {
+      setMakeOfferError(true);
+    }
+    else
+    {
+      setMakeOfferError(false);
+    }
   }
 
   /**
@@ -159,7 +191,7 @@ function RegisterSale() {
    * @name onClickCreate
    * @des create 버튼 클릭 시 실행
    */
-   const onClickCreate = () => {
+  const onClickCreate = () => {
     console.log("onClickCreate");
   };
 
@@ -168,10 +200,9 @@ function RegisterSale() {
    * @name onClickCancel
    * @des cancel 버튼 클릭 시 실행
    */
-   const onClickCancel = () => {
+  const onClickCancel = () => {
     console.log("onClickCancel");
   };
-
 
   return (
     <Page display="flex" justifyContent="center" title="SSAFY NFT">
@@ -224,8 +255,18 @@ function RegisterSale() {
         </Grid>
         <Grid sx={ItemSaleGridStyle}>
           {saleData.map((item, index) => (
-            <Box key={index} mb={3}>
+            <FormControl
+            key={index}
+            sx={{ mb: 3 }}
+            required
+            error={item.error}
+            component="fieldset"
+            variant="standard"
+            >
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
               <Typography variant="h5">{item.name}</Typography>
+              <FormLabel component="legend"></FormLabel>
+            </Box>
               <Paper
                 sx={{
                   display: "flex",
@@ -244,13 +285,30 @@ function RegisterSale() {
                 />
                 <Typography>{item.unit}</Typography>
               </Paper>
-            </Box>
+              <Box ml={1}>
+                {item.error && <FormHelperText>Please enter price only</FormHelperText>}
+                {!item.error && <FormHelperText>Valid</FormHelperText>}
+             </Box>
+            </FormControl>
           ))}
+          <Box mb={3}>
+            <Typography variant="h5">End Date</Typography>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <MobileDatePicker
+                value={endDate}
+                minDate={curDate}
+                onChange={(newValue) => {
+                  setendDate(newValue);
+                }}
+                renderInput={(params) => <TextField sx={{width: 900}} {...params}/>}
+              />
+            </LocalizationProvider>
+          </Box>
         </Grid>
-            <Box mt={3} display="flex" justifyContent="right">
-              <ButtonStyle onClick={onClickCreate}>CREATE</ButtonStyle>
-              <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
-            </Box>
+        <Box mt={3} display="flex" justifyContent="right">
+          <ButtonStyle onClick={onClickCreate}>CREATE</ButtonStyle>
+          <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
+        </Box>
       </Grid>
     </Page>
   );
