@@ -30,7 +30,7 @@ const ImgStyle = styled('img')({
  * 2. web3 컨트랙트에서 price, 판매날짜, 주소, 이미지url 받아오기
  */
 const ItemDetail = () => {
-    const symbol ="ETH";
+    const symbol ="SSF";
     const { serverUrlBase } = useContext(CommonContext);
     const {token_id} = useParams();
 
