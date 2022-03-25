@@ -12,7 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-// import Logo from '../../components/Logo';
+import { useNavigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 import { nominalTypeHack } from "prop-types";
@@ -20,8 +20,6 @@ import { nominalTypeHack } from "prop-types";
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { setInit } from "../../redux/reducers/UserReducer";
-import { setValue } from "../../redux/reducers/SearchReducer";
-import { setSearchinit } from "../../redux/reducers/SearchReducer";
 
 // Icons
 import HomeIcon from "@mui/icons-material/Home";
@@ -46,28 +44,20 @@ const SearchNavbar = () => {
   const open = Boolean(anchorEl);
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
-  const SearchData = useSelector((state) => state.Search.data.searchValue);
-  const [inputValue, setInputValue] = useState(SearchData);
+  const navigate = useNavigate();
+
+  const [inputValue, setInputValue] = useState("");
 
   const onChangeSerchValue = (e) => {
     setInputValue(e.target.value);
   };
 
-  // useEffect(() => {
-  //   dispatch(setValue(""));
-  // });
-
-  // const onClickSearch = () => {
-  //   dispatch(setValue(inputValue));
-  // };
-
   const onClickSearch = () => {
-    dispatch(setSearchinit());
+    navigate("/search/"+inputValue);
   };
 
   useEffect(() => {
-    dispatch(setValue(inputValue));
-    console.log(inputValue);
+    
   }, [inputValue]);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
@@ -199,8 +189,6 @@ const SearchNavbar = () => {
               onClick={onClickSearch}
               sx={{ p: "10px" }}
               aria-label="search"
-              to="/search"
-              component={RouterLink}
             >
               <SearchIcon />
             </IconButton>
