@@ -245,7 +245,7 @@ const SearchNavbar = () => {
             <div style={UserBoxStyle}>
               <Tooltip title="Open User Menu">
                 <IconButton onClick={handleClick} sx={{ p: 0 }}>
-                  <Avatar src="{user.user_image_url}"></Avatar>
+                  <Avatar src={user.user_image_url}></Avatar>
                   <UserNickNameStyle>{user.user_nickname}</UserNickNameStyle>
                 </IconButton>
               </Tooltip>
