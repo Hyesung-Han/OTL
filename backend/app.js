@@ -8,6 +8,7 @@ const cors = require('cors');
 const itemsRouter = require('./src/items/items.controller');
 const salesRouter = require('./src/sales/sales.controller');
 const userRouter = require('./src/user/user.controller');
+const homeRouter = require('./src/home/home.controller');
 
 const { swaggerUi, specs } = require("./swagger");
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 router.use('/items', itemsRouter);
 router.use('/sales', salesRouter);
 router.use('/user', userRouter);
+router.use('/home', homeRouter);
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use("/api", router);

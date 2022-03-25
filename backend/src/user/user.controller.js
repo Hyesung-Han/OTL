@@ -84,20 +84,24 @@ router.get("/profile", async function (req, res){
 });
 
 /**
- * LJA | 2022.03.16 | v1.0
+ * OYT | 2022.03.16 | v1.0.1
  * @name profile
  * @api {post} /user/profile
  * @des
  * 프로필 생성 시 필요한 데이터를 입력받아 DB에 저장.
  * 이미지의 경우 필드이름이 profile인 파일을 s3 서버에 저장 후 리턴된 url을 DB에 저장한다.
+ * 이미지를 설정하지 않는 경우 기본 이미지 적용을 위해 imageUrl null 저장.
  */
 router.post("/profile", upload.single('profile'), async function (req, res) {
 	if(!req.body) {
 		res.status(403).send({result:"fail", msg:"잘못된 파라미터입니다."});
 		return;
 	}
+	let imageUrl;
 
-	const imageUrl = `${process.env.AWS_S3_PATH}/${req.file.key}`;
+	if(req.file){
+		imageUrl = `${process.env.AWS_S3_PATH}/${req.file.key}`;
+	}
 	const user = {
 		user_address: req.body.user_address,
 		user_nickname: req.body.user_nickname,
