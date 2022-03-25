@@ -104,7 +104,6 @@ const ItemDetail = () => {
                     </CardContent>
                     <div style={{display :"flex", justifyContent:"center"}}>
                         <Button color="secondary" variant="contained" size="big" style={{width:"100%"}}>Buy now</Button>
-                        <Button color="secondary" variant="contained" size="big" style={{width:"100%"}}>Make offer</Button>
                     </div>
 
 
