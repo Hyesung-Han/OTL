@@ -23,7 +23,7 @@ class UserRepository {
 
 	async getUser(user_address) {
 		const sql = `
-			SELECT user_address, user_nickname, user_email, user_bio, user_image_url, created_at
+			SELECT user_address, user_nickname, user_email, user_bio, user_link, user_image_url, created_at
 			FROM user_t
 			WHERE user_address=?;
 		`;

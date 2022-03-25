@@ -43,8 +43,10 @@ module.exports = {
     // e.g., 가나슈 환경
     development: {
       host: "127.0.0.1", // Localhost (default: none)
-      port: 8545, // Standard Ethereum port (default: none)
+      port: 7545, // Standard Ethereum port (default: none)
       network_id: "*", // Any network (default: none)
+      // gas: 85,           // Gas sent with each transaction  (default: ~6700000)
+      // gasPrice: 200000,  // 20 gwei (in wei) (default: 100 gwei)
     },
     // Another network with more advanced options...
     // advanced: {

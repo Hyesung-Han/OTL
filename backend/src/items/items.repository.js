@@ -78,6 +78,22 @@ class ItemsRepository {
 			});
 	}
 
+	async updateItemOwnerAddress(token_id, owner_address) {
+		const sql = `
+			UPDATE items_t
+			SET on_sale_yn='0', on_use_yn = '0', owner_address=?, x_index = NULL, y_index = NULL, z_index = NULL
+			where token_id=?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [owner_address, token_id])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
+
 	async insertItem(item) {
 		const sql = `
 			INSERT INTO items_t(owner_address, author_name, item_title, item_description, category_code)
@@ -261,6 +277,7 @@ class ItemsRepository {
 				throw e;
 			});
 	}
+
 }
 
 module.exports = ItemsRepository;

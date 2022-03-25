@@ -136,7 +136,7 @@ paths:
           in: "path"
           description: "token_id"
           required: true
-          type: "string"
+          type: "integer"
       responses:
         default:
           description: "successful operation"
@@ -214,7 +214,6 @@ paths:
       responses:
         default:
           description: "successful operation"
-
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
