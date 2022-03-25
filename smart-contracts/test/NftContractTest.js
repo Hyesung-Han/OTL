@@ -1,39 +1,3 @@
-// /**
-//  * PJT Ⅰ - 과제 3 테스트 코드 작성
-//  * @dev NFT mint, transfer, and compare URI
-//  */
-
-// const NftCreator = artifacts.require("SsafyNFT");
-
-// // NFT를 주고받을 2개의 주소 존재
-// // SsfayNFT 컨트랙트 배포
-// // 주소 1이 배포된 컨트랙트의 create 함수를 호출하여 새로운 토큰 생성
-// // 주소 1이 주소 2에게 transferFrom 함수를 호출하여 토큰 전송
-
-// contract("NftCreator", (accounts) => {
-//   it("NFT mint, transfer, and compare URI", async () => {
-//     const instance = await NftCreator.deployed();
-//     const Nft = instance;
-//     const address1 = accounts[0];
-//     const address2 = accounts[1];
-//     const nft1 = await Nft.create(address1, "asdf");
-//     // console.log("nft1 tokenIds", nft1.tx);
-//     // console.log("nft1 owner", nft1.tx);
-//     const tokenId = nft1.logs[0].args.tokenId;
-
-//     await Nft.transferFrom(address1, address2, tokenId);
-
-//     // TODO
-//     // 다음이 반드시 테스트되어야 합니다.
-
-//     // 1. create 호출 후 주소 1 = 생성된 token의 owner
-//     // assert.equal(sender, owner, "NFT Mint Failed");
-//     // 2. transferFrom 호출 후 주소2 = token의 owner
-//     // assert.equal(receiver, owner, "NFT Transfer Failed.");
-//     // 3. 저장한 tokenURI == 해당 tokenId로 조회한 tokenURI 서로 일치
-//     // assert.equal(tokenURI, tokenURIFetched, "Wrong Token Id or URI.");
-//   });
-// });
 /**
  * PJT Ⅰ - 과제 3 테스트 코드 작성
  * @dev NFT mint, transfer, and compare URI
