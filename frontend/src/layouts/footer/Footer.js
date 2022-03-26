@@ -60,7 +60,7 @@ const Footer = () => {
         <CopyrightStyle>Copyright @2022 OTL All rights reserved.</CopyrightStyle>
         <LinkStyle>
           <Link href="#" underline="hover">Privacy Policy</Link>  &nbsp;| &nbsp;
-          <Link href="#" underline="hover">Team Of Us</Link>
+          <Link href="/TeamUs" underline="hover">Team Of Us</Link>
         </LinkStyle>
       </FooterStyle>
     </Wrapper>
