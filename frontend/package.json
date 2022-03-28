@@ -70,6 +70,7 @@
     "sweetalert2": "^11.4.6",
     "web-vitals": "^2.1.0",
     "web3": "^1.6.1",
+    "web3-utils": "^1.7.1",
     "yup": "^0.32.9"
   },
   "devDependencies": {
