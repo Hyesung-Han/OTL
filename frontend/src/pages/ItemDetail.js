@@ -31,7 +31,6 @@ const ImgStyle = styled('img')({
  * @api {get} /items/:token_id
  * TODO
  * 1. web3 컨트랙트에서 price, 판매날짜, 주소, 이미지url 받아오기
- * 2. 판매취소버튼 구현
  */
 const ItemDetail = () => {
     const symbol ="SSF";
