@@ -3,10 +3,9 @@ const swaggereJsdoc = require("swagger-jsdoc");
 
 const options = {
     swaggerDefinition: {
-      openapi: "3.0.0",
         info: {
             title: 'OTL API',
-            version: '1.0.0',
+            version: '1.0.3',
             description: 'OTL API with express',
         },
         securityDefinitions: {
@@ -19,14 +18,9 @@ const options = {
         security: [
             { jwt: [] }
         ],
-        servers: [
-          {
-            url: "https://j6a405.p.ssafy.io/api",
-          },
-          {
-            url: "http://localhost:3000/api",
-          },
-        ],
+        // host: 'localhost:3000',
+        host: 'j6a405.p.ssafy.io',
+        basePath: '/api'
   },
   apis: ["./routes/*.js", "./swagger/*"],
 };
