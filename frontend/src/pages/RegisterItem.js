@@ -30,6 +30,7 @@ import logo from "../image/logo.png";
  * @name RegisterItem
  * @api {post} /items
  * @api {patch} /items/:item_id
+ * @api {get} /items/category
  * @des 아이템 저장하기
  */
 function RegisterItem() {
@@ -44,7 +45,7 @@ function RegisterItem() {
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("0");
+  const [category, setCategory] = useState('');
 
   const [imgError, setImgError] = useState(true);
   const [authorError, setauthorError] = useState(true);
@@ -52,6 +53,7 @@ function RegisterItem() {
   const [descriptionError, setDescriptionError] = useState(true);
 
   const [isValid, setIsValid] = useState(false);
+  const [categoryList,setCategoryList]=useState();
 
   useEffect(() => {
     if (!imgError && !authorError && !titleError && !descriptionError) {
@@ -149,38 +151,32 @@ function RegisterItem() {
   ];
 
   /**
-   * HSH | 2022.03.21 | v1.0
-   * @name categoryList
-   * @des 카테고리 리스트
-   * HACK
-   * 카테고리 db에서 받아오기전까지는 임시로 사용하도록 만들어 놓음
+   * HSH | 2022.03.28 | v2.0
+   * @name getCategoryList
+   * @api {get} /items/category
+   * @des 카테고리 리스트 받아오는 함수
    */
-  const categoryList = [
-    {
-      id: "0",
-      name: "chair",
-    },
-    {
-      id: "1",
-      name: "table",
-    },
-    {
-      id: "2",
-      name: "wallpaper",
-    },
-    {
-      id: "3",
-      name: "floor",
-    },
-    {
-      id: "4",
-      name: "wall hanging",
-    },
-    {
-      id: "5",
-      name: "prop",
-    },
-  ];
+  function getCategoryList(){
+    Axios.get(serverUrlBase + `/items/category`)
+      .then((data) => {
+        setCategoryList(data.data.data);
+        setCategory(data.data.data[0].category_code);
+      })
+      .catch(function (error) {
+        console.log("get category error:" + error);
+
+        Swal.fire({
+          icon: "error",
+          title: "서버와 연동이 끊겼습니다. 다시 시도해주세요",
+        });
+
+        navigate("/main");
+      });
+  }
+
+  useEffect(()=>{
+    getCategoryList();
+  },[])
 
   /**
    * HSH | 2022.03.21 | v1.0
@@ -191,7 +187,7 @@ function RegisterItem() {
     imgRef.current.click();
   };
   /**
-   * HSH | 2022.03.21 | v1.0
+   * HSH | 2022.03.28 | v2.0
    * @name onClickCreate
    * @des create 버튼 클릭 시 실행
    */
@@ -208,11 +204,7 @@ function RegisterItem() {
     formData.append("author_name", author);
     formData.append("item_title", title);
     formData.append("item_description", description);
-    /**
-     * HACK
-     * 카테고리 연결 되면 이후에 추가
-     */
-    formData.append("category_code", "bed");
+    formData.append("category_code", category);
 
     Axios.post(serverUrlBase + `/items`, formData)
       .then((data) => {
@@ -427,9 +419,9 @@ function RegisterItem() {
                   }}
                   onChange={onChangeCategory}
                 >
-                  {categoryList.map((item, index) => (
-                    <option key={index} value={index}>
-                      {item.name}
+                  {categoryList && categoryList.map((item, index) => (
+                    <option key={index} value={item.category_code}>
+                      {item.category_code}
                     </option>
                   ))}
                 </NativeSelect>
