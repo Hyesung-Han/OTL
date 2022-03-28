@@ -108,7 +108,7 @@ const TeamUs = () => {
           <Grid item xs={4.5}>
             <Grid container display="flex" flexDirection="column" alignItems="end" spacing={2} >
               <Grid item sx={{height:"300px"}} component="img" src={homepage1}></Grid>
-              <Grid item sx={{height:"100px", width:"140px"}} component="img" src={OTL}></Grid>
+              <Grid item sx={{height:"130px", width:"170px"}} component="img" src={OTL}></Grid>
             </Grid>
           </Grid>
           <Grid item xs={7.5} component="img" src={design1}></Grid>
