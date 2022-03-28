@@ -21,7 +21,7 @@ const regEma =
   /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
 /**
- * LDJ | 2022.03.25 | v1.0
+ * LDJ | 2022.03.28 | v2.0
  * @name CreateProfile
  * @api {post} http://localhost:3000/api/user/login : 프로필 생성 요청 (성공/실패 여부만 반환 받음)
  * @api {get} http://localhost:3000/api/user/checkNick?user_nickname={닉네임} : 닉네임 중복 확인 요청
@@ -44,6 +44,9 @@ function CreateProfile() {
 
   const onChangeImg = async (event) => {
     console.log(event.target.files);
+
+    if (!event.target.files[0]) return;
+
     setUploadImg(event.target.files[0]);
     setUploadImgURL(URL.createObjectURL(event.target.files[0]));
   };
