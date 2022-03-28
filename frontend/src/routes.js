@@ -52,7 +52,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/items" replace /> },
         { path: "", element: <Items /> },
-        { path: "buy/:tokenId", element: <ItemPurchase /> },
+        { path: ":category", element: <Items /> },
       ],
     },
 

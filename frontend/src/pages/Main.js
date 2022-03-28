@@ -8,14 +8,10 @@ import {
   Divider,
   Typography,
   Slide,
+  Tab,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState, useRef } from "react";
-import Web3 from "web3";
-import COMMON_ABI from "../common/ABI";
-import COMMON_HEADER from "../common/HeaderType";
-import COMMON_CONTRACT from "../common/SaleInfoGetter";
-import { onResponse } from "../common/ErrorMessage";
 import { Link as RouterLink } from "react-router-dom";
 import { css, keyframes } from "@emotion/react";
 
@@ -30,6 +26,15 @@ import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import emoStyled from "@emotion/styled";
+
+//Image
+import Chair from "../image/chair.PNG";
+import Bed from "../image/bed.PNG";
+import Floor from "../image/floor.PNG";
+import Table from "../image/table.PNG";
+import Wallhanging from "../image/wallhanging.PNG";
+import Wallpaper from "../image/wallpaper.PNG";
+
 
 /**
  * HSH | 2022.03.23 | Add
@@ -147,34 +152,34 @@ const Main = () => {
    */
   const categoryItem = [
     {
-      img: "#ffcdd2",
+      img: Chair,
       name: "chair",
-      link: "#",
+      link: "/items/chair",
     },
     {
-      img: "#f47fb1",
+      img: Table,
       name: "table",
-      link: "#",
+      link: "/items/table",
     },
     {
-      img: "#99cccc",
+      img: Bed,
+      name: "bed",
+      link: "/items/bed",
+    },
+    {
+      img: Wallpaper,
       name: "wallpaper",
-      link: "#",
+      link: "/items/wallpaper",
     },
     {
-      img: "#3366cc",
+      img: Floor,
       name: "floor",
-      link: "#",
+      link: "/items/floor",
     },
     {
-      img: "#66cc00",
+      img: Wallhanging,
       name: "wall hanging",
-      link: "#",
-    },
-    {
-      img: "#ff1744",
-      name: "prop",
-      link: "#",
+      link: "/items/wall hanging",
     },
   ];
 
@@ -183,22 +188,33 @@ const Main = () => {
     borderRadius: "10px",
     width: "220px",
     height: "200px",
-
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "end",
-    alignItems: "center",
   }));
 
+  const CategoryImg=emoStyled.div`
+    width:100%;
+    height:100%;
+
+    border-radius: 10px;
+
+    background: url(${(props) => props.img});
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+  `
   const categoryItemList = categoryItem.map((item, index) => (
     <CategoryCard
       item
       key={index}
-      to={item.link}
       lg={3}
-      sx={{ backgroundColor: item.img, textDecoration: "none" }}
+      sx={{ textDecoration: "none" }}
+      to={item.link}
       component={RouterLink}
     >
+      <CategoryImg img={item.img}>
       <Grid
         display="flex"
         justifyContent="center"
@@ -214,6 +230,7 @@ const Main = () => {
           {item.name}
         </Box>
       </Grid>
+      </CategoryImg>
     </CategoryCard>
   ));
 
@@ -282,7 +299,7 @@ const Main = () => {
     100%{
       color:#ff3300;
     }
-`;
+  `;
 
   /**
    * HSH | 2022.03.17 | v1.0
@@ -363,7 +380,7 @@ const Main = () => {
         <Typography variant="h4">How to use</Typography>
         <Grid display="flex" flexDirection="row" alignItems="center">
           {howToUseList.map((item,index)=>(
-            <HowToUseCard>
+            <HowToUseCard key={index}>
               {item.icon}
               <Typography>{item.title}</Typography>
               <Typography>{item.content}</Typography>
@@ -468,13 +485,13 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/connectwallet" component={RouterLink} underline="hover">
                     log in
                   </FooterLinkStyle>
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/myHome" component={RouterLink} underline="hover">
                     my home
                   </FooterLinkStyle>
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/items" component={RouterLink} underline="hover">
                     item list
                   </FooterLinkStyle>
                 </Grid>
@@ -485,11 +502,8 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/registerItem" component={RouterLink} underline="hover">
                     create item
-                  </FooterLinkStyle>
-                  <FooterLinkStyle href="#" underline="hover">
-                    sell item
                   </FooterLinkStyle>
                 </Grid>
               </Grid>
