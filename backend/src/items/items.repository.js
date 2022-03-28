@@ -101,7 +101,7 @@ class ItemsRepository {
 		`;
 		console.debug(sql);
 
-		return await connection.query(sql, [item.ownerAddress, item.author_name, item.item_title, item.item_description, item.category_code])
+		return await connection.query(sql, [item.owner_address, item.author_name, item.item_title, item.item_description, item.category_code])
 			.then(data => data[0])
 			.catch((e) => {
 				console.error(e);
