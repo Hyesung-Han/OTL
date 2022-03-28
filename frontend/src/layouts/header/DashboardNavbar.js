@@ -27,11 +27,11 @@ import Logout from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
 
 /**
- * LDJ, HSH | 2022.03.22 | Update
+ * LDJ, HSH | 2022.03.28 | v2.0
  * @name SearchNavbar
  * @api -
  * @des 상단 헤더 메뉴바, CSS[소현]
- * @des Redux를 통한 로그인 유무 확인 / 우상단 로그인/프로필 아이콘 전환 [동준]
+ * @des Redux를 통한 로그인 유무 확인 / 우상단 로그인/프로필 아이콘 전환 / 연동시에만 Create 버튼 활성화 [동준]
  */
 
 const SearchNavbar = () => {
