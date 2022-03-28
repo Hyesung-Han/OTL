@@ -69,7 +69,7 @@ const ItemDetail = () => {
     }
 
     const onClickSaleRegi = () => {
-        navigate("/registerSale"+ token_id);
+        navigate("/registerSale/"+ token_id);
       };
 
       
@@ -132,15 +132,15 @@ const ItemDetail = () => {
             <Grid item xs={7}>
                 <ItemHistory></ItemHistory>
             </Grid>
-            <Grid item xs={7} >
+            <Grid item xs={8} >
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
                 <div style={{display :"flex", justifyContent:"center"}}>
-                    {user.user_address== owner && !onsale && (
-                        <Button color="secondary" variant="contained" size="big" style={{width:"100%"}} onClick={onClickSaleRegi} >판매등록</Button>
-                    )}
-                    {user.user_address== owner && onsale && (
-                        <Button color="secondary" variant="contained" size="big" style={{width:"100%"}}>판매취소</Button>
+                    {user.user_address=== owner && !onsale ? (
+                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleRegi} >판매등록</Button>
+                    ):
+                    (
+                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}}>판매취소</Button>
                     )}
                 </div>
             </Grid>
