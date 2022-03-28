@@ -260,7 +260,7 @@ const SearchNavbar = () => {
                   </MenuItem>
                 )}
                 {user.user_nickname && (
-                  <MenuItem to="/main" component={RouterLink}>
+                  <MenuItem to="/myhome" component={RouterLink}>
                     <ListItemIcon>
                       <HomeIcon fontSize="small" />
                     </ListItemIcon>
