@@ -23,9 +23,9 @@ const regEma =
 /**
  * LDJ | 2022.03.28 | v2.0
  * @name CreateProfile
- * @api {post} http://localhost:3000/api/user/login : 프로필 생성 요청 (성공/실패 여부만 반환 받음)
- * @api {get} http://localhost:3000/api/user/checkNick?user_nickname={닉네임} : 닉네임 중복 확인 요청
- * @api {get} http://localhost:3000/api/user/profile?user_address={내지갑주소} : DB에 저장된 Profile 관련 정보 가져오기 (헤더에 반영)
+ * @api {post} HOST/user/login : 프로필 생성 요청 (성공/실패 여부만 반환 받음)
+ * @api {get} HOST/user/checkNick?user_nickname={닉네임} : 닉네임 중복 확인 요청
+ * @api {get} HOST/user/profile?user_address={내지갑주소} : DB에 저장된 Profile 관련 정보 가져오기 (헤더에 반영)
  * @des 로그인 된 유저가 자신의 프로필을 생성하는 곳! (유효성 검사 + 중복 검사 + 내용 입력/저장 + 헤더의 프로필 적용을 위해서 Get Profile까지)
  */
 
