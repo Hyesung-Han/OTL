@@ -14,8 +14,8 @@ import GlobalStyles from "./theme/globalStyles";
 import { CommonContext } from "./context/CommonContext";
 
 //const HOST = "localhost:3000/api";
-const HOST = "j6a405.p.ssafy.io:3000/api";
-const serverUrlBase = `http://${HOST}`;
+const HOST = "j6a405.p.ssafy.io/api";
+const serverUrlBase = `https://${HOST}`;
 
 
 export default function App() {
