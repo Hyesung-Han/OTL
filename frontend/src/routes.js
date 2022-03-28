@@ -13,7 +13,7 @@ import NotFound from "./pages/Page404";
 import WhosArt from "./pages/WhosArt";
 import ItemRegistration from "./pages/ItemRegistration";
 import SaleRegistration from "./pages/SaleRegistration";
-import TeamUs from"./pages/TeamUs";
+import AboutUs from"./pages/AboutUs";
 import Policy from"./pages/Policy";
 
 // 순서대로 (메인, MM연동, 프로필생성, 판매리스트, 검색리스트, 아이템상세, 작품등록, 판매등록, 밑에 주석 아닌 2개는 잔챙이임)
@@ -104,11 +104,11 @@ export default function Router() {
       ],
     },
     {
-      path: "/TeamUs",
+      path: "/AboutUs",
       element: <MainLayout />,
       children: [
-        { element: <Navigate to="/TeamUs" replace /> },
-        { path: "", element: <TeamUs/> },
+        { element: <Navigate to="/AboutUs" replace /> },
+        { path: "", element: <AboutUs/> },
       ],
     },
     {
