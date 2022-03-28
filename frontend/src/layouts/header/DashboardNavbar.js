@@ -17,6 +17,10 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { nominalTypeHack } from "prop-types";
 
+// Web3
+import Web3 from "web3";
+import { useWeb3React } from "@web3-react/core";
+
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { setInit } from "../../redux/reducers/UserReducer";
@@ -35,6 +39,12 @@ import SearchIcon from "@mui/icons-material/Search";
  */
 
 const SearchNavbar = () => {
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)
+  );
+
+  const { active, deactivate } = useWeb3React();
+
   const APPBAR_MOBILE = 64;
   const APPBAR_DESKTOP = 92;
   const dispatch = useDispatch();
@@ -102,9 +112,12 @@ const SearchNavbar = () => {
     },
   }));
 
-  const onClickLogOut = () => {
-    dispatch(setInit());
-    setAnchorEl(null);
+  const onClickLogOut = async () => {
+    if (active) {
+      deactivate();
+    }
+    await dispatch(setInit());
+    await setAnchorEl(null);
   };
 
   const handleClick = (event) => {
