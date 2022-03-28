@@ -45,6 +45,7 @@ const ItemDetail = () => {
     const [nickname, setNickname] = useState('');
     const [onsale, setOnsale ] = useState(0); 
     const [owner, setOwner] = useState('');
+    const [saleId, setSaleId] = useState('');
 
     const user = useSelector((state)=> state.User.user);
     const navigate = useNavigate();
@@ -61,10 +62,24 @@ const ItemDetail = () => {
             setOnsale(data.on_sale_yn);
             setOwner(data.owner_address);
 
-            console.log(data);
             
         } catch (e) {
             console.log('getItemDetail error' +  e);
+        }
+    }
+    const getSaleId = async()=>{
+        try {
+            const res = await Axios.get(serverUrlBase + `/sales/`,{
+                params:{token_id:token_id}
+            });
+            const data = res.data.data;
+
+            setSaleId(data.sale_id);
+
+            console.log(data);
+            
+        } catch (e) {
+            console.log('getSaleId error' +  e);
         }
     }
 
@@ -72,9 +87,20 @@ const ItemDetail = () => {
         navigate("/registerSale/"+ token_id);
       };
 
+    const onClickSaleCancel = () => {
+        try {
+            Axios.delete(serverUrlBase+ `/sales/`+saleId)
+            navigate("/itemdetail/"+ token_id);
+            
+        } catch (e) {
+            console.log('ItemSaleRegi Cancle error' +  e);
+        }
+    };
+
       
     useEffect(()=>{
         getItemDetail();
+        getSaleId();
     }, []);
 
 
@@ -140,7 +166,7 @@ const ItemDetail = () => {
                         <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleRegi} >판매등록</Button>
                     ):
                     (
-                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}}>판매취소</Button>
+                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleCancel}>판매취소</Button>
                     )}
                 </div>
             </Grid>
