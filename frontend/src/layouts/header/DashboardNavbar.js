@@ -41,6 +41,7 @@ const SearchNavbar = () => {
   const user = useSelector((state) => state.User.user);
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [disabled, setDisabled] = useState(true);
   const open = Boolean(anchorEl);
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
@@ -53,12 +54,16 @@ const SearchNavbar = () => {
   };
 
   const onClickSearch = () => {
-    navigate("/search/"+inputValue);
+    navigate("/search/" + inputValue);
   };
 
   useEffect(() => {
-    
-  }, [inputValue]);
+    if (user.user_address) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [disabled, inputValue, anchorEl]);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -210,9 +215,10 @@ const SearchNavbar = () => {
             LIST
           </ButtonStyle>
           <ButtonStyle
-            to="/RegisterItem"
+            disabled={disabled}
             size="large"
             sx={{ fontSize: 17 }}
+            to="/RegisterItem"
             component={RouterLink}
           >
             CREATE
