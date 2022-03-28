@@ -31,7 +31,7 @@ import logo from "../image/logo.png";
  * @des Register Sale 페이지. 판매 등록
  */
 function RegisterSale() {
-  const { item_id } = useParams();
+  const { token_id } = useParams();
   // console.log(item_id);
 
   // 가격 유효성 검사 ()
