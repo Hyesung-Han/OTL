@@ -10,7 +10,7 @@ import {
   Slide,
   Tab,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { alpha,styled } from "@mui/material/styles";
 import { useEffect, useState, useRef } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { css, keyframes } from "@emotion/react";
@@ -38,6 +38,7 @@ import Wallpaper from "../image/wallpaper.PNG";
 import Wallet from "../image/wallet.png";
 import Buy from "../image/buy.png";
 import Homepage from "../image/homepage.png";
+import Nft from "../image/nft.png";
 
 
 /**
@@ -50,23 +51,40 @@ const Main = () => {
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const RootStyle = styled(Grid)(({ theme }) => ({
-    // backgroundColor: alpha(theme.palette.background.default, 0.72),
+    backgroundColor: alpha(theme.palette.background.default, 0.72),
 
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    alignItems:"center",
   }));
+
+  const MainBackground=emoStyled.div`
+    background: url(${Nft});
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom ;
+
+    width:1200px;
+    height:600px;
+
+    display: flex,
+    flex-direction: column,
+    justify-content: center,
+    align-items:center,
+  `
 
   const MainTopStyle = styled(Grid)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
 
-    height: windowHeight - 100,
-    paddingBottom: 100,
+    width:"1000px",
+    // height: windowHeight-100,
+
+    padding:"30px",
   }));
 
   const CategoryStyle = styled(Grid)(({ theme }) => ({
@@ -86,6 +104,8 @@ const Main = () => {
     padding: "30px 0px",
 
     backgroundColor: "#444444",
+
+    width:"100%",
     height: "400px",
   }));
 
@@ -311,9 +331,11 @@ const Main = () => {
    * @des 메인 Top에 있는 Typography. 글자 색 바뀌지 않는 부분
    */
   const NonChangeTextStyle = emoStyled.p`
-    font-size: 50px;
+    font-size: 60px;
     font-weight: bold;
     color:"#000000";
+
+    text-shadow: 3px 3px 1px #fff;
 
     animation-fill-mode: forwards;
     animation-name: ${floating};
@@ -327,17 +349,17 @@ const Main = () => {
    * @des 메인 Top에 있는 Typography CSS. 글자 색 바뀌는 부분
    */
   const ChangeTextStyle = emoStyled.p`
-   font-size: 50px;
+   font-size: 60px;
    font-weight: bold;
    color:"#000000";
+
+   text-shadow: 3px 3px 1px #fff;
 
    animation-fill-mode: forwards;
    animation-name: ${floating}, ${colorChange};
    animation-delay: 0s, 1s;
    animation-duration: ${(props) => props.time}s, 1s;
  `;
-
-  const MainTitle = "One can Take Limited item";
 
   /**
    * HSH | 2022.03.17 | v1.0
@@ -374,12 +396,20 @@ const Main = () => {
 
   return (
     <RootStyle>
+      <MainBackground>
       <MainTopStyle>
-        <Grid display="flex" flexDirection="row" alignItems="center">
-          <TypograpyStr str={MainTitle} />
+        <Grid display="flex" flexDirection="row">
+          <TypograpyStr str="One can" />
+        </Grid>
+        <Grid display="flex" flexDirection="row">
+          <TypograpyStr str="Take" />
+        </Grid>
+        <Grid display="flex" flexDirection="row">
+          <TypograpyStr str="Limited item" />
         </Grid>
       </MainTopStyle>
-      <Divider />
+      </MainBackground>
+      <Divider sx={{width:"1200px"}}/>
       <HowToUseStyle>
         <Typography variant="h4">How to use</Typography>
         <Grid display="flex" flexDirection="row" alignItems="center">
@@ -392,7 +422,7 @@ const Main = () => {
           ))}
         </Grid>
       </HowToUseStyle>
-      <Divider />
+      <Divider sx={{width:"1200px"}}/>
       <CategoryStyle>
         <Grid
           sx={{
