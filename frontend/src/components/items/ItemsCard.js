@@ -34,7 +34,7 @@ ItemsCard.propTypes = {
 export default function ItemsCard({ product }) {
   // 이미지, 제목, 가격, 토큰 ID, 심볼
   const { image, title, price, tokenId } = product;
-  const symbol = 'ETH';
+  const symbol = 'SSF';
 
   return (
     <CardStyle>
