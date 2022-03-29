@@ -161,12 +161,12 @@ const ItemDetail = () => {
             </Grid>
             <Grid item xs={2}>
                 <div style={{display :"flex", justifyContent:"center"}}>
-                    {user.user_address=== owner && !onsale ? (
+                    {user.user_address=== owner ? ( !onsale ? (
                         <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleRegi} >판매등록</Button>
                     ):
                     (
                         <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleCancel}>판매취소</Button>
-                    )}
+                    )):<div/>}
                 </div>
             </Grid>
         </Grid>
