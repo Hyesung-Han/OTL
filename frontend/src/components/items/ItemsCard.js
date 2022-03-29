@@ -39,7 +39,7 @@ export default function ItemsCard({ product }) {
   return (
     <CardStyle>
       <Link
-          to={`/items/detail/${tokenId}`}
+          to={`/itemdetail/${tokenId}`}
           color="inherit"
           underline='hover'
           component={RouterLink}
