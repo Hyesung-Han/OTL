@@ -13,6 +13,7 @@ import NotFound from "./pages/Page404";
 import WhosArt from "./pages/WhosArt";
 import ItemRegistration from "./pages/ItemRegistration";
 import SaleRegistration from "./pages/SaleRegistration";
+import MyHome from "./pages/MyHome";
 import AboutUs from"./pages/AboutUs";
 import Policy from"./pages/Policy";
 
@@ -121,6 +122,14 @@ export default function Router() {
     },
 
     { path: "*", element: <Navigate to="/404" replace /> },
+    {
+      path: "/myhome",
+      element: <MainLayout />,
+      children: [
+        { element: <Navigate to="/myhome" replace /> },
+        { path: "", element: <MyHome /> },
+      ],
+    },
 
     // {
     //   path: "/whosart",
