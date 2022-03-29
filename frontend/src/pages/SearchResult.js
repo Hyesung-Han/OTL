@@ -60,22 +60,21 @@ const SearchResult = () => {
     setLoading(true);
     
     try {
-      const resultList = [];
       const res = await Axios.get(serverUrlBase + `/user/list/`,{
         params:{user_nickname:search_value}
       });
       const data = res.data.data;
-
+      
 
       console.log(data);
+      setProfile(data);
+      setLoading(false);
+      setIsCollection(true);
       
   } catch (e) {
       console.log('getProfile error' +  e);
   }
 
-    // setProfile(resultList);
-    setLoading(false);
-    setIsCollection(true);
   };
 
   const getItem = async () => {
@@ -113,8 +112,9 @@ const SearchResult = () => {
   });
   const productsprofile = [...Array(profile.length)].map((_, index) => {
     return {
-      image: profile[index].image,
-      nickname: profile[index].nickname
+      address: profile[index].user_address,
+      image: profile[index].user_image_url,
+      nickname: profile[index].user_nickname
     };
   });
 
