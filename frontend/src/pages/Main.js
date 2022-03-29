@@ -13,7 +13,12 @@ import {
 import { alpha,styled } from "@mui/material/styles";
 import { useEffect, useState, useRef } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { css, keyframes } from "@emotion/react";
+import { keyframes } from "@emotion/react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import emoStyled from "@emotion/styled";
+import Swal from "sweetalert2";
 
 //Icons
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
@@ -21,11 +26,6 @@ import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import notion from "../image/notion.png";
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import HomeIcon from "@mui/icons-material/Home";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
-import emoStyled from "@emotion/styled";
 
 //Image
 import Chair from "../image/chair.PNG";
@@ -40,7 +40,6 @@ import Buy from "../image/buy.png";
 import Homepage from "../image/homepage.png";
 import Nft from "../image/nft.png";
 
-
 /**
  * HSH | 2022.03.29 | v2.0.0
  * @name Main
@@ -49,7 +48,8 @@ import Nft from "../image/nft.png";
 const Main = () => {
   // Web3
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
-
+  const user = useSelector((state) => state.User.user);
+  const navigate = useNavigate();
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -407,6 +407,36 @@ const Main = () => {
     return arr;
   };
 
+  function onClickMyhome(){
+    if(user.user_address) navigate('/MyHome');
+    else{
+      Swal.fire({
+        icon: "warning",
+        title: "로그인이 필요합니다",
+      });
+    }
+  }
+
+  function onClickCreate(){
+    if(user.user_address) navigate('/registerItem');
+    else{
+      Swal.fire({
+        icon: "warning",
+        title: "로그인이 필요합니다",
+      });
+    }
+  }
+
+  function onClickLogin(){
+    if(!user.user_address) navigate('/connectwallet');
+    else{
+      Swal.fire({
+        icon: "warning",
+        title: "이미 로그인이 되어있습니다",
+      });
+    }
+  }
+
   return (
     <RootStyle>
       <MainBackground>
@@ -532,10 +562,10 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle  to="/connectwallet" component={RouterLink} underline="hover">
+                  <FooterLinkStyle  onClick={onClickLogin} sx={{cursor:"pointer"}}underline="hover">
                     log in
                   </FooterLinkStyle>
-                  <FooterLinkStyle  to="/MyHome" component={RouterLink} underline="hover">
+                  <FooterLinkStyle onClick={onClickMyhome} sx={{cursor:"pointer"}} underline="hover">
                     my home
                   </FooterLinkStyle>
                   <FooterLinkStyle  to="/items" component={RouterLink} underline="hover">
@@ -549,7 +579,7 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle  to="/registerItem" component={RouterLink} underline="hover">
+                  <FooterLinkStyle  onClick={onClickCreate} sx={{cursor:"pointer"}} underline="hover">
                     create item
                   </FooterLinkStyle>
                 </Grid>
