@@ -120,7 +120,7 @@ const SearchResult = () => {
             <Container maxWidth="xl" sx={{my:3}}>
 
                 <HorizonLine text="Artist" />
-                <ProfileList sx={{ mt: 1 }} products={productsprofile} onClick={onClickItem}/>
+                <ProfileList sx={{ mt: 1 }} products={productsprofile} />
 
                 <HorizonLine text="Items" />
                 <ItemsList sx={{ mt: 1 }} products={productsitem} />
