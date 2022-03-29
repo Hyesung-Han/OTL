@@ -13,6 +13,9 @@ import axios from 'axios';
  * DB에서 카테고리 불러와서 화면에 나타내기
  * 카테고리 CSS
  */
+ Category.propTypes = {
+    product: PropTypes.object
+  };
 
 export default function Category() {
     return (

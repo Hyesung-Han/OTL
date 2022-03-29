@@ -22,6 +22,7 @@ const Items = () => {
   const [item, setItem] = useState([]);
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState([]);
 
   // Web3
   const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
@@ -32,6 +33,7 @@ const Items = () => {
    */
   useEffect(() => {
     getItem();
+    getCategory();
   }, []);
 
 
@@ -53,8 +55,27 @@ const Items = () => {
       const data = res.data.data;
       
 
-      console.log(data);
       setItem(data);
+      setLoading(false);
+      setIsCollection(true);
+      
+  } catch (e) {
+      console.log('getItem error' +  e);
+  }
+
+  };
+
+  const getCategory = async () => {
+
+    setLoading(true);
+    
+    try {
+      const res = await Axios.get(serverUrlBase + `/items/category/`);
+      const data = res.data.data;
+      
+
+      console.log(data);
+      setCategory(data);
       setLoading(false);
       setIsCollection(true);
       
@@ -73,6 +94,13 @@ const Items = () => {
     };
   });
 
+  const productsCategory = [...Array(category.length)].map((_, index) => {
+    return {
+      code: category[index].category_code,
+      name: category[index].category_name,
+    };
+  });
+
   return (
     <Page title="SSAFY NFT" maxWidth="100%" minHeight="100%" alignItems="center" display="flex">
       {loading === false ? (
@@ -81,7 +109,7 @@ const Items = () => {
             
             <Container maxWidth="xl" sx={{my:3}}>
               <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
-                <Category sx={{ mt: 1 }} />
+                <Category sx={{ mt: 1 }} products={productsCategory}/>
               </Box>
               <ItemsList sx={{ mt: 1 }} products={productsitem} />
             </Container>
