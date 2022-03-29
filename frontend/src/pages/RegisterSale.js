@@ -20,7 +20,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 
 import Page from "../components/Page";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import logo from "../image/logo.png";
@@ -50,7 +50,17 @@ function RegisterSale() {
   const [buyNowError,setBuyNowError]=useState(true);
   const [makeOfferError,setMakeOfferError]=useState(true);
 
+  const [isValid, setIsValid] = useState(false);
+
   const itemSize = "320px";
+
+  useEffect(() => {
+    if (!buyNowError && !makeOfferError) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+  }, [buyNowError, makeOfferError]);
 
   const ItemDetailGridStyle = {
     display: "flex",
@@ -306,7 +316,7 @@ function RegisterSale() {
           </Box>
         </Grid>
         <Box mt={3} display="flex" justifyContent="right">
-          <ButtonStyle onClick={onClickCreate}>CREATE</ButtonStyle>
+          <ButtonStyle disabled={!isValid} onClick={onClickCreate}>CREATE</ButtonStyle>
           <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
         </Box>
       </Grid>
