@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState, useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import Web3 from "web3";
 import Page from "../components/Page";
@@ -12,6 +13,8 @@ import ItemHistory from "../components/items/ItemHistory"
 import HorizonLine from "../components/HorizonLine";
 import {CommonContext} from "../context/CommonContext"
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+
 
 
 const ImgStyle = styled('img')({
@@ -22,15 +25,15 @@ const ImgStyle = styled('img')({
   });
 
 /**
- * CSW | 2022.03.22 | UPDATE
+ * CSW | 2022.03.28 | UPDATE
  * @name ItemDetail
  * @des ItemDetail P
  * @api {get} /items/:token_id
  * TODO
- * 2. web3 컨트랙트에서 price, 판매날짜, 주소, 이미지url 받아오기
+ * 1. web3 컨트랙트에서 price, 판매날짜, 주소, 이미지url 받아오기
  */
 const ItemDetail = () => {
-    const symbol ="ETH";
+    const symbol ="SSF";
     const { serverUrlBase } = useContext(CommonContext);
     const {token_id} = useParams();
 
@@ -39,8 +42,12 @@ const ItemDetail = () => {
     const [author, setAuthor] = useState('');
     const [category, setCategory] = useState('');
     const [nickname, setNickname] = useState('');
+    const [onsale, setOnsale ] = useState(0); 
+    const [owner, setOwner] = useState('');
+    const [saleId, setSaleId] = useState('');
 
-
+    const user = useSelector((state)=> state.User.user);
+    const navigate = useNavigate();
     const getItemDetail= async()=>{
         try {
             const res = await Axios.get(serverUrlBase + `/items/`+ token_id);
@@ -51,16 +58,48 @@ const ItemDetail = () => {
             setAuthor(data.author_name);
             setCategory(data.category_code);
             setNickname(data.author_name);
+            setOnsale(data.on_sale_yn);
+            setOwner(data.owner_address);
 
-            console.log(data);
             
         } catch (e) {
             console.log('getItemDetail error' +  e);
         }
     }
+    const getSaleId = async()=>{
+        try {
+            const res = await Axios.get(serverUrlBase + `/sales/`,{
+                params:{token_id:token_id}
+            });
+            const data = res.data.data;
 
+            setSaleId(data.sale_id);
+
+            console.log(data);
+            
+        } catch (e) {
+            console.log('getSaleId error' +  e);
+        }
+    }
+
+    const onClickSaleRegi = () => {
+        navigate("/registerSale/"+ token_id);
+      };
+
+    const onClickSaleCancel = () => {
+        try {
+            Axios.delete(serverUrlBase+ `/sales/`+saleId)
+            navigate("/itemdetail/"+ token_id);
+            
+        } catch (e) {
+            console.log('ItemSaleRegi Cancle error' +  e);
+        }
+    };
+
+      
     useEffect(()=>{
         getItemDetail();
+        getSaleId();
     }, []);
 
 
@@ -104,7 +143,6 @@ const ItemDetail = () => {
                     </CardContent>
                     <div style={{display :"flex", justifyContent:"center"}}>
                         <Button color="secondary" variant="contained" size="big" style={{width:"100%"}}>Buy now</Button>
-                        <Button color="secondary" variant="contained" size="big" style={{width:"100%"}}>Make offer</Button>
                     </div>
 
 
@@ -118,6 +156,18 @@ const ItemDetail = () => {
             </Grid>
             <Grid item xs={7}>
                 <ItemHistory></ItemHistory>
+            </Grid>
+            <Grid item xs={8} >
+            </Grid>
+            <Grid item xs={2}>
+                <div style={{display :"flex", justifyContent:"center"}}>
+                    {user.user_address=== owner ? ( !onsale ? (
+                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleRegi} >판매등록</Button>
+                    ):
+                    (
+                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleCancel}>판매취소</Button>
+                    )):<div/>}
+                </div>
             </Grid>
         </Grid>
 

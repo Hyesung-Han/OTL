@@ -8,14 +8,10 @@ import {
   Divider,
   Typography,
   Slide,
+  Tab,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { alpha,styled } from "@mui/material/styles";
 import { useEffect, useState, useRef } from "react";
-import Web3 from "web3";
-import COMMON_ABI from "../common/ABI";
-import COMMON_HEADER from "../common/HeaderType";
-import COMMON_CONTRACT from "../common/SaleInfoGetter";
-import { onResponse } from "../common/ErrorMessage";
 import { Link as RouterLink } from "react-router-dom";
 import { css, keyframes } from "@emotion/react";
 
@@ -31,6 +27,20 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import emoStyled from "@emotion/styled";
 
+//Image
+import Chair from "../image/chair.PNG";
+import Bed from "../image/bed.PNG";
+import Floor from "../image/floor.PNG";
+import Table from "../image/table.PNG";
+import Wallhanging from "../image/wallhanging.PNG";
+import Wallpaper from "../image/wallpaper.PNG";
+
+import Wallet from "../image/wallet.png";
+import Buy from "../image/buy.png";
+import Homepage from "../image/homepage.png";
+import Nft from "../image/nft.png";
+
+
 /**
  * HSH | 2022.03.23 | Add
  * @name Main
@@ -41,23 +51,41 @@ const Main = () => {
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const RootStyle = styled(Grid)(({ theme }) => ({
-    // backgroundColor: alpha(theme.palette.background.default, 0.72),
+    backgroundColor: alpha(theme.palette.background.default, 0.72),
 
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    alignItems:"center",
   }));
+
+  const MainBackground=emoStyled.div`
+    background: url(${Nft});
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom ;
+
+    width:1200px;
+    height:600px;
+
+    display: flex,
+    flex-direction: column,
+    justify-content: center,
+    align-items:center,
+
+  `
 
   const MainTopStyle = styled(Grid)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
 
-    height: windowHeight - 100,
-    paddingBottom: 100,
+    width:"1000px",
+    // height: windowHeight-100,
+
+    padding:"30px",
   }));
 
   const CategoryStyle = styled(Grid)(({ theme }) => ({
@@ -77,6 +105,8 @@ const Main = () => {
     padding: "30px 0px",
 
     backgroundColor: "#444444",
+
+    width:"100%",
     height: "400px",
   }));
 
@@ -147,34 +177,34 @@ const Main = () => {
    */
   const categoryItem = [
     {
-      img: "#ffcdd2",
+      img: Chair,
       name: "chair",
-      link: "#",
+      link: "/items/chair",
     },
     {
-      img: "#f47fb1",
+      img: Table,
       name: "table",
-      link: "#",
+      link: "/items/table",
     },
     {
-      img: "#99cccc",
+      img: Bed,
+      name: "bed",
+      link: "/items/bed",
+    },
+    {
+      img: Wallpaper,
       name: "wallpaper",
-      link: "#",
+      link: "/items/wallpaper",
     },
     {
-      img: "#3366cc",
+      img: Floor,
       name: "floor",
-      link: "#",
+      link: "/items/floor",
     },
     {
-      img: "#66cc00",
+      img: Wallhanging,
       name: "wall hanging",
-      link: "#",
-    },
-    {
-      img: "#ff1744",
-      name: "prop",
-      link: "#",
+      link: "/items/wall hanging",
     },
   ];
 
@@ -183,22 +213,33 @@ const Main = () => {
     borderRadius: "10px",
     width: "220px",
     height: "200px",
-
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "end",
-    alignItems: "center",
   }));
 
+  const CategoryImg=emoStyled.div`
+    width:100%;
+    height:100%;
+
+    border-radius: 10px;
+
+    background: url(${(props) => props.img});
+    background-size: cover;
+    background-position: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+  `
   const categoryItemList = categoryItem.map((item, index) => (
     <CategoryCard
       item
       key={index}
-      to={item.link}
       lg={3}
-      sx={{ backgroundColor: item.img, textDecoration: "none" }}
+      sx={{ textDecoration: "none" }}
+      to={item.link}
       component={RouterLink}
     >
+      <CategoryImg img={item.img}>
       <Grid
         display="flex"
         justifyContent="center"
@@ -214,6 +255,7 @@ const Main = () => {
           {item.name}
         </Box>
       </Grid>
+      </CategoryImg>
     </CategoryCard>
   ));
 
@@ -228,13 +270,13 @@ const Main = () => {
   }));
 
   const HowToUseCard = styled(Grid)(() => ({
-    border: "1px solid #afafaf",
-    borderRadius: "10px",
+    // border: "1px solid #afafaf",
+    // borderRadius: "10px",
 
-    width: "300px",
+    width: "250px",
     height: "300px",
 
-    margin: "30px",
+    margin: "30px 50px",
     padding:"10px",
 
     display: "flex",
@@ -245,19 +287,19 @@ const Main = () => {
 
   const howToUseList=[
     {
-      icon:<AccountBalanceWalletIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      icon:Wallet,
       title:"Set up your wallet",
-      content:"NFT를 거래하기 위해서는 지갑이 필요합니다. Metamask 지갑을 생성하고 LOGIN에서 지갑을 연동해 주세요."
+      content:"I need a wallet to deal with NFT. Create a Metamask wallet and link it with LOGIN."
     },
     {
-      icon:<HomeIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      icon:Homepage,
       title:"Create your home",
-      content:"소유하고 있는 NFT를 이용해 마이홈을 구성할 수 있습니다. 나만의 아이템으로 개성있는 나만의 페이지를 만드세요."
+      content:"You can configure MyHome using your NFT. Create your own unique page with your own items."
     },
     {
-      icon:<ShoppingCartIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      icon:Buy,
       title:"Buy and sell NFT",
-      content:"원하는 NFT 작품을 살 수 있고, 당신이 소유하고 있는 NFT를 팔아 수익을 창출할 수 있습니다."
+      content:"You can configure MyHome using your NFT. Create your own unique page with your own items."
     },
   ]
 
@@ -282,7 +324,7 @@ const Main = () => {
     100%{
       color:#ff3300;
     }
-`;
+  `;
 
   /**
    * HSH | 2022.03.17 | v1.0
@@ -290,9 +332,11 @@ const Main = () => {
    * @des 메인 Top에 있는 Typography. 글자 색 바뀌지 않는 부분
    */
   const NonChangeTextStyle = emoStyled.p`
-    font-size: 50px;
+    font-size: 60px;
     font-weight: bold;
     color:"#000000";
+
+    text-shadow: 3px 3px 1px #fff;
 
     animation-fill-mode: forwards;
     animation-name: ${floating};
@@ -306,17 +350,17 @@ const Main = () => {
    * @des 메인 Top에 있는 Typography CSS. 글자 색 바뀌는 부분
    */
   const ChangeTextStyle = emoStyled.p`
-   font-size: 50px;
+   font-size: 60px;
    font-weight: bold;
    color:"#000000";
+
+   text-shadow: 3px 3px 1px #fff;
 
    animation-fill-mode: forwards;
    animation-name: ${floating}, ${colorChange};
    animation-delay: 0s, 1s;
    animation-duration: ${(props) => props.time}s, 1s;
  `;
-
-  const MainTitle = "One can Take Limited item";
 
   /**
    * HSH | 2022.03.17 | v1.0
@@ -353,25 +397,33 @@ const Main = () => {
 
   return (
     <RootStyle>
+      <MainBackground>
       <MainTopStyle>
-        <Grid display="flex" flexDirection="row" alignItems="center">
-          <TypograpyStr str={MainTitle} />
+        <Grid display="flex" flexDirection="row">
+          <TypograpyStr str="One can" />
+        </Grid>
+        <Grid display="flex" flexDirection="row">
+          <TypograpyStr str="Take" />
+        </Grid>
+        <Grid display="flex" flexDirection="row">
+          <TypograpyStr str="Limited item" />
         </Grid>
       </MainTopStyle>
-      <Divider />
+      </MainBackground>
+      <Divider sx={{width:"1200px"}}/>
       <HowToUseStyle>
         <Typography variant="h4">How to use</Typography>
         <Grid display="flex" flexDirection="row" alignItems="center">
           {howToUseList.map((item,index)=>(
-            <HowToUseCard>
-              {item.icon}
-              <Typography>{item.title}</Typography>
-              <Typography>{item.content}</Typography>
+            <HowToUseCard key={index}>
+              <Box component="img" src={item.icon} sx={{width:"200px", height:"150px"}} />
+              <Typography variant="h5" >{item.title}</Typography>
+              <Typography align="center" >{item.content}</Typography>
             </HowToUseCard>
           ))}
         </Grid>
       </HowToUseStyle>
-      <Divider />
+      <Divider sx={{width:"1200px"}}/>
       <CategoryStyle>
         <Grid
           sx={{
@@ -381,7 +433,7 @@ const Main = () => {
           }}
         >
           <Typography variant="h4">Browse by category</Typography>
-          <Grid container justifyContent={"center"} sx={{ margin: "30px 0" }}>
+          <Grid container justifyContent={"center"} sx={{ margin: "30px" }}>
             {categoryItemList}
           </Grid>
         </Grid>
@@ -468,13 +520,13 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/connectwallet" component={RouterLink} underline="hover">
                     log in
                   </FooterLinkStyle>
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/myHome" component={RouterLink} underline="hover">
                     my home
                   </FooterLinkStyle>
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/items" component={RouterLink} underline="hover">
                     item list
                   </FooterLinkStyle>
                 </Grid>
@@ -485,11 +537,8 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle href="#" underline="hover">
+                  <FooterLinkStyle  to="/registerItem" component={RouterLink} underline="hover">
                     create item
-                  </FooterLinkStyle>
-                  <FooterLinkStyle href="#" underline="hover">
-                    sell item
                   </FooterLinkStyle>
                 </Grid>
               </Grid>
