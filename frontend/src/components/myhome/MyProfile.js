@@ -1,8 +1,6 @@
-import PropTypes from 'prop-types';
 import { Grid, Avatar, Stack, Typography } from '@mui/material';
-import Axios from "axios";
 // Redux
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 /**
  * LJA | 2022.03.28 | ADD
@@ -11,15 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
  */
 
 export default function MyProfile() {
-
   const user = useSelector((state) => state.User.user);
   
   return (
     <Grid sx={{textAlign: '-webkit-center'}}>
       <Avatar
-        alt="Remy Sharp"
+        alt="profile image"
         src={user.user_image_url}
-        sx={{ mt:3, width: 200, height: 200}}
+        sx={{ mt:5, width: 200, height: 200}}
       />
       <Stack spacing={1} sx={{mt:1}}>
           <Typography variant="h4" textAlign="center" noWrap>

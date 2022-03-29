@@ -30,59 +30,97 @@ import MyProfile from "../components/myhome/MyProfile";
 import MyRoom from "../components/myhome/MyRoom";
 import HorizonLine from "../components/HorizonLine";
 
+/**
+ * LJA | 2022.03.28 | ADD
+ * @name MyHome
+ * @des MyHome 컴포넌트
+ * MyHome 페이지의 최상위 컴포넌트로 프로필, 마이룸, 마이 아이템 컴포넌트가 포함되어있음
+ * 마이룸, 마이 아이템에 사용되는 데이터를 호출
+ */
 function MyHome() {
-  const user = useSelector((state) => state.User.user);
+
   const { serverUrlBase } = useContext(CommonContext);
+  const user = useSelector((state) => state.User.user);
+  const [items, setItems] = useState();
 
-  const [img, setImg] = useState("");
-  const [uploadImg, setUploadImg] = useState("");
-  const imgRef = useRef();
-  let navigate = useNavigate();
-
-  const [imgError, setImgError] = useState(true);
-
-  const [isValid, setIsValid] = useState(false);
-
-  useEffect(() => {
-    if (!imgError ) {
-      setIsValid(true);
-    } else {
-      setIsValid(false);
+  const getItems = async() => {
+    try {
+      const {data} = await Axios.get(serverUrlBase + `/items?user_address=`+user.user_address)
+      setItems(data.data);
+      data.data.forEach((row) => {
+        if(row.category_code === 'wallpaper') {
+          row.src = "/static/furniture/wallpaper.png";
+        } else if(row.category_code === 'chair') {
+          row.src = "/static/furniture/couch.png";
+        } else if(row.category_code === 'bed') {
+          row.src = "/static/furniture/bunk-bed.png";
+        } else if(row.category_code === 'closet') {
+          row.src = "/static/furniture/cupboard.png";
+        }
+      });
+    } catch(e) {
+      console.log("나의 모든 아이템 가져오기 오류 : " + e)
     }
-  }, [imgError]);
+  }
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickImg
-   * @des 이미지 클릭 시 실행되는 함수
-   */
-  const onClickImg = () => {
-    imgRef.current.click();
-  };
+  const [myItems, setMyItems] = useState();
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickCancel
-   * @des cancel 버튼 클릭 시 실행
-   */
-  const onClickCancel = () => {
-    console.log("onClickCancel");
-    navigate("/main");
-  };
+  const getMyItems = async() => {
+    try {
+      const {data} = await Axios.get(serverUrlBase + `/home/`+user.user_address)
+      setMyItems(data.data);
+      data.data.forEach((row) => {
+        if(row.category_code === 'wallpaper') {
+          row.src = "/static/furniture/wallpaper.png";
+        } else if(row.category_code === 'chair') {
+          row.src = "/static/furniture/couch.png";
+        } else if(row.category_code === 'bed') {
+          row.src = "/static/furniture/bunk-bed.png";
+        } else if(row.category_code === 'closet') {
+          row.src = "/static/furniture/cupboard.png";
+        }
+      });
+    } catch(e) {
+      console.log("나의 사용중인 아이템 가져오기 오류 : " + e)
+    }
+  }
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onImgChange
-   * @des 파일 선택장에서 파일 선택 시 실행
-   */
-  const onImgChange = async (event) => {
-    if (!event.target.files[0]) return;
+  const removeItem = async(token_id) => {
+      try {
+        const {data} = await Axios.patch(serverUrlBase + `/home/`+token_id, {
+            on_use_yn: 0,
+            x_index:0,
+            y_index:0,
+            z_index:0,
+        })
+        await getItems();
+      } catch(e) {
+        console.log("아이템 제거하기 에러: " + e)
+      }
+    }
+    
+  const addItem = async(token_id) => {
+    try {
+      const {data} = await Axios.patch(serverUrlBase + `/home/`+token_id, {
+          on_use_yn: 1,
+          x_index:0,
+          y_index:0,
+          z_index:0,
+      })
+      await getItems();
+    } catch(e) {
+      console.log("아이템 추가하기 에러: " + e)
+    }
+  }
 
-    setImg(event.target.files[0]);
-    setUploadImg(URL.createObjectURL(event.target.files[0]));
+  useEffect(()=>{
+    getItems();
+    getMyItems();
+  }, []);
 
-    setImgError(false);
-  };
+  useEffect(()=>{
+    getMyItems();
+  }, [items]);
 
   const RootStyle = {
     width: "100%",
@@ -112,6 +150,7 @@ function MyHome() {
     borderRadius: "20px",
   }));
 
+  if(!items) return <>로딩</>;
   return (
     <div style={RootStyle}>
       <div style={BodyStyle}>
@@ -124,20 +163,15 @@ function MyHome() {
               height: 450,
             }}
           >
-          <MyProfile sx={{ mt: 1 }} />
+          <MyProfile/>
           </Box>
           <Box
             sx={{
               width: 700,
               height: 450,
-              bgcolor: '#000000',
-              '&:hover': {
-                backgroundColor: 'primary.dark',
-                opacity: [0.9, 0.8, 0.7],
-              },
             }}
           >
-          <MyRoom sx={{ mt: 1 }} />
+          <MyRoom sx={{ mt: 1 }} myItems={myItems}/>
           </Box>
         </Box>
         <Box display="flex" flexDirection="row">
@@ -145,15 +179,13 @@ function MyHome() {
             sx={{
               width: '100%',
               height: 300,
-              bgcolor: '#eeeeee',
-              '&:hover': {
-                backgroundColor: 'primary.dark',
-                opacity: [0.9, 0.8, 0.7],
-              },
             }}
           >
             <HorizonLine text="my items" />
-            <MyItemList sx={{ mt: 1 }} />
+            <MyItemList sx={{ mt: 1 }}
+              products={items}
+              removeItem={removeItem}
+              addItem={addItem} />
           </Box>
         </Box>
       </div>

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
+import Canvas from './Canvas';
 
 /**
  * LJA | 2022.03.28 | ADD
@@ -7,17 +7,15 @@ import { Grid } from '@mui/material';
  * @des MyRoom 컴포넌트
  */
 
-export default function MyRoom({ products, ...other }) {
+const MyRoom = ({myItems}) => {
+
+  if(!myItems) return <>로딩</>;
   return (
     <Grid>
       <h2>마이룸</h2>
+      <Canvas items={myItems}></Canvas>
     </Grid>
-    // <Grid container spacing={6} {...other}>
-    //   {products.map((product) => (
-    //     <Grid sx={{ mb: 6 }} key={product.nickname} item xs={12} sm={6} md={2.4}>
-    //       <ProfileCard product={product} />
-    //     </Grid>
-    //   ))}
-    // </Grid>
   );
 }
+
+export default MyRoom;
