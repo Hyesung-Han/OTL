@@ -42,7 +42,7 @@ import Nft from "../image/nft.png";
 
 
 /**
- * HSH | 2022.03.23 | Add
+ * HSH | 2022.03.29 | v2.0.0
  * @name Main
  * @des Main page
  */
@@ -213,6 +213,8 @@ const Main = () => {
     borderRadius: "10px",
     width: "220px",
     height: "200px",
+
+    overflow: "hidden",
   }));
 
   const CategoryImg=emoStyled.div`
@@ -229,17 +231,23 @@ const Main = () => {
     flex-direction: column;
     justify-content: end;
     align-items: center;
+
+    transition:.3s;
+
+    &:hover{
+      transform: scale(1.2);
+    }
   `
   const categoryItemList = categoryItem.map((item, index) => (
     <CategoryCard
       item
       key={index}
       lg={3}
-      sx={{ textDecoration: "none" }}
+      sx={{ textDecoration: "none", position: "relative" }}
       to={item.link}
       component={RouterLink}
     >
-      <CategoryImg img={item.img}>
+      <CategoryImg img={item.img}/>
       <Grid
         display="flex"
         justifyContent="center"
@@ -249,13 +257,15 @@ const Main = () => {
           width: "100%",
           backgroundColor: "#ffffff",
           opacity: "0.8",
+
+          position: "absolute",
+          bottom:"0px",
         }}
       >
         <Box sx={{ color: "#303030", font: "1.2em", fontWeight: 600 }}>
           {item.name}
         </Box>
       </Grid>
-      </CategoryImg>
     </CategoryCard>
   ));
 
