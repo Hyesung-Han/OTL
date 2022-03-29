@@ -21,7 +21,10 @@ import { CommonContext } from "../context/CommonContext";
 import { useState, useRef, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-
+import Web3 from 'web3';
+import COMMON_ABI from '../common/ABI';
+import COMMON_HEADER from '../common/HeaderType';
+import sendTransaction from "../utils/TxSender";
 import BackupIcon from "@mui/icons-material/Backup";
 import logo from "../image/logo.png";
 
@@ -52,6 +55,22 @@ function RegisterItem() {
   const [descriptionError, setDescriptionError] = useState(true);
 
   const [isValid, setIsValid] = useState(false);
+
+  // Web3
+  var web3;
+  if (typeof web3 !== 'undefined') { 
+    web3 = new Web3(web3.currentProvider); 
+  }else { 
+    // set the provider you want from Web3.providers 
+    web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)); 
+  }
+
+  // nft contract
+  const NFT_CA = process.env.REACT_APP_NFT_CA;
+  const nftInstance = new web3.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
+    NFT_CA
+  );
 
   useEffect(() => {
     if (!imgError && !authorError && !titleError && !descriptionError) {
@@ -195,7 +214,7 @@ function RegisterItem() {
    * @name onClickCreate
    * @des create 버튼 클릭 시 실행
    */
-  const onClickCreate = () => {
+  const onClickCreate = async () => {
     console.log(category);
 
     const formData = new FormData();
@@ -204,7 +223,7 @@ function RegisterItem() {
      * HACK
      * 로그인 되면 이후에 해보기
      */
-    formData.append("user_address", "1234");
+    formData.append("user_address", user.user_address);
     formData.append("author_name", author);
     formData.append("item_title", title);
     formData.append("item_description", description);
@@ -214,41 +233,111 @@ function RegisterItem() {
      */
     formData.append("category_code", "bed");
 
-    Axios.post(serverUrlBase + `/items`, formData)
-      .then((data) => {
-        console.log(data);
-        if (data.status === 201) {
-          /**
-           * TODO
-           * NFT 생성하기
-           */
-          Swal.fire({
-            icon: "success",
-            title: "글이 성공적으로 등록되었습니다.",
-          });
-          navigate("/main");
-        } else if (data.status === 200) {
-            Swal.fire({
-              icon: "warning",
-              title: data.data.msg,
-            });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "아이템이 정상적으로 등록되지 않았습니다",
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log("Item register error:" + error);
+    try{
+      const data = await Axios.post(serverUrlBase + `/items`, formData);
+      console.log(data);
+      if (data.status === 201) {
+        /**
+         * TODO
+         * NFT 생성하기
+         */
+        const itemId = await nftInstance.methods.create(user.user_address, data.data.data.item_image).send({from:user.user_address});
+        console.log(itemId);
+        const contractEncodedMethod = itemId.encodeABI();
+        const gasEstimate = await itemId.estimateGas({ from: user.user_address });
+        
+        const data2 = {
+          gas : gasEstimate,
+          contractEncodedMethod : contractEncodedMethod,
+        };
+        console.log(data2);
 
+        const temp = sendTransaction(
+            user.user_address,
+            "8bf34c0302e863e6d36228f56d244b979f725d63297a35e7537aed84ddb83445",
+            NFT_CA,
+            data2,
+        );
+
+        Swal.fire({
+          icon: "success",
+          title: "글이 성공적으로 등록되었습니다.",
+        });
+        navigate("/main");
+      } else if (data.status === 200) {
+          Swal.fire({
+            icon: "warning",
+            title: data.data.msg,
+          });
+      } else {
         Swal.fire({
           icon: "error",
           title: "아이템이 정상적으로 등록되지 않았습니다",
         });
-      });
+      }
+    }catch(e){
+      console.log("Item register error:" + error);
 
-    console.log("onClickCreate");
+      Swal.fire({
+        icon: "error",
+        title: "아이템이 정상적으로 등록되지 않았습니다",
+      });
+    }
+
+  //   await Axios.post(serverUrlBase + `/items`, formData)
+  //   .then((data) => {
+  //     console.log(data);
+  //     if (data.status === 201) {
+  //       /**
+  //        * TODO
+  //        * NFT 생성하기
+  //        */
+  //       const itemId = nftInstance.methods.create(user.user_address, data.data.data.item_image);
+  //       console.log(itemId);
+  //       const contractEncodedMethod = itemId.encodeABI();
+  //       const gasEstimate = itemId.estimateGas({ from: user.user_address });
+        
+  //       const data2 = {
+  //         gas : gasEstimate,
+  //         contractEncodedMethod : contractEncodedMethod,
+  //       };
+  //       console.log(data2);
+
+  //       const temp = sendTransaction(
+  //           user.user_address,
+  //           "8bf34c0302e863e6d36228f56d244b979f725d63297a35e7537aed84ddb83445",
+  //           NFT_CA,
+  //           data2,
+  //       );
+        
+
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "글이 성공적으로 등록되었습니다.",
+  //       });
+  //       navigate("/main");
+  //     } else if (data.status === 200) {
+  //         Swal.fire({
+  //           icon: "warning",
+  //           title: data.data.msg,
+  //         });
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "아이템이 정상적으로 등록되지 않았습니다",
+  //       });
+  //     }
+  //   })
+  //   .catch(function (error) {
+  //     console.log("Item register error:" + error);
+
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "아이템이 정상적으로 등록되지 않았습니다",
+  //     });
+  //   });
+
+  // console.log("onClickCreate");
   };
 
   /**

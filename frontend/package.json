@@ -75,6 +75,5 @@
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "prettier": "^2.4.1"
-  },
-  "proxy": "http://localhost:3000"
+  }
 }
