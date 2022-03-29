@@ -110,7 +110,9 @@ const Main = () => {
     height: "400px",
   }));
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    window.scrollTo(0,0);
+  }, []);
 
   /**
    * HSH | 2022.03.16 | v1.0
