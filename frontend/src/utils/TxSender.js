@@ -5,11 +5,8 @@ import CONTRACT_ABI from '../common/ABI';
 // 네트워크 기본 설정
 const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
-const { abi: contractABI } = {};
-
 export default async function sendTransaction(fromAddr, privKey, toAddr, data) {
     try {
-        
         const walletAccount = web3.eth.accounts.privateKeyToAccount(privKey);
         console.log(data.gas);
         const rawTx = {
@@ -35,14 +32,9 @@ export default async function sendTransaction(fromAddr, privKey, toAddr, data) {
                         tran.off('confirmation');
                         throw new Error("ConfirmCompletedException");
                     }
-
                     console.log("Confirm #" + confirmationNumber);
-                    // console.log("Confirm Receipt: " + receipt);
 
-                    // const Name = await contractInstance.methods.Nickname(fromAddr).call();
-                    // const TokenURI = await contractInstance.methods.tokenURI(fromAddr).call();
 
-                    // console.log(Name, TokenURI);
                 } catch (err) {
                     if (err instanceof TypeError) console.error('예외: 타입 에러', err);
                     if (err instanceof Error) {
