@@ -13,15 +13,13 @@ import GlobalStyles from "./theme/globalStyles";
 // hook
 import { CommonContext } from "./context/CommonContext";
 
-const HOST = "localhost:3000/api";
-const serverUrlBase = `http://${HOST}`;
-
+const HOST = "j6a405.p.ssafy.io/api";
+const serverUrlBase = `https://${HOST}`;
 
 export default function App() {
   return (
     <CommonContext.Provider
       value={{
-
         serverUrlBase,
       }}
     >
@@ -29,9 +27,6 @@ export default function App() {
         <GlobalStyles />
         <Router />
       </ThemeConfig>
-
     </CommonContext.Provider>
-
-
   );
 }
