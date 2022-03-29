@@ -75,6 +75,7 @@ const Main = () => {
     flex-direction: column,
     justify-content: center,
     align-items:center,
+
   `
 
   const MainTopStyle = styled(Grid)(({ theme }) => ({
@@ -275,7 +276,7 @@ const Main = () => {
     width: "250px",
     height: "300px",
 
-    margin: "30px",
+    margin: "30px 50px",
     padding:"10px",
 
     display: "flex",
@@ -288,17 +289,17 @@ const Main = () => {
     {
       icon:Wallet,
       title:"Set up your wallet",
-      content:"NFT를 거래하기 위해서는 지갑이 필요합니다. Metamask 지갑을 생성하고 LOGIN에서 지갑을 연동해 주세요."
+      content:"I need a wallet to deal with NFT. Create a Metamask wallet and link it with LOGIN."
     },
     {
       icon:Homepage,
       title:"Create your home",
-      content:"소유하고 있는 NFT를 이용해 마이홈을 구성할 수 있습니다. 나만의 아이템으로 개성있는 나만의 페이지를 만드세요."
+      content:"You can configure MyHome using your NFT. Create your own unique page with your own items."
     },
     {
       icon:Buy,
       title:"Buy and sell NFT",
-      content:"원하는 NFT 작품을 살 수 있고, 당신이 소유하고 있는 NFT를 팔아 수익을 창출할 수 있습니다."
+      content:"You can configure MyHome using your NFT. Create your own unique page with your own items."
     },
   ]
 
@@ -432,7 +433,7 @@ const Main = () => {
           }}
         >
           <Typography variant="h4">Browse by category</Typography>
-          <Grid container justifyContent={"center"} sx={{ margin: "30px 0" }}>
+          <Grid container justifyContent={"center"} sx={{ margin: "30px" }}>
             {categoryItemList}
           </Grid>
         </Grid>
