@@ -14,7 +14,7 @@ import ProfileList from '../components/profile/ProfileList';
 import HorizonLine from '../components/HorizonLine'
 import {CommonContext} from "../context/CommonContext"
 import { useParams } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+
 /**
  * CSW | 2022.03.29 | UPDATE
  * @name SearchResult
@@ -29,7 +29,6 @@ const SearchResult = () => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
   const {search_value} = useParams();
-  const navigate = useNavigate();
   // Web3
   const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
@@ -41,6 +40,8 @@ const SearchResult = () => {
     getProfile();
     getItem();
   }, []);
+
+
 
   /**
    * PJT Ⅲ - 과제 4: 조회
@@ -119,7 +120,7 @@ const SearchResult = () => {
             <Container maxWidth="xl" sx={{my:3}}>
 
                 <HorizonLine text="Artist" />
-                <ProfileList sx={{ mt: 1 }} products={productsprofile} />
+                <ProfileList sx={{ mt: 1 }} products={productsprofile} onClick={onClickItem}/>
 
                 <HorizonLine text="Items" />
                 <ItemsList sx={{ mt: 1 }} products={productsitem} />
