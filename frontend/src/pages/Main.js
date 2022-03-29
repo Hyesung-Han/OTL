@@ -533,7 +533,7 @@ const Main = () => {
                   <FooterLinkStyle  to="/connectwallet" component={RouterLink} underline="hover">
                     log in
                   </FooterLinkStyle>
-                  <FooterLinkStyle  to="/myHome" component={RouterLink} underline="hover">
+                  <FooterLinkStyle  to="/MyHome" component={RouterLink} underline="hover">
                     my home
                   </FooterLinkStyle>
                   <FooterLinkStyle  to="/items" component={RouterLink} underline="hover">
