@@ -34,7 +34,6 @@ import BackupIcon from "@mui/icons-material/Backup";
 function RegisterItem() {
   const RootStyle = {
     width: "100%",
-
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -48,7 +47,6 @@ function RegisterItem() {
     display: "flex",
     alignItems: "left",
     flexDirection: "column",
-
     padding: "0 50px",
   };
 
@@ -57,12 +55,9 @@ function RegisterItem() {
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
-
     padding: "10px",
-
     width: "400px",
     height: "400px",
-
     border: "dashed #ababab",
     borderRadius: "20px",
   }));
@@ -156,7 +151,7 @@ function RegisterItem() {
       error: titleError,
     },
     {
-      name: "description",
+      name: "Description",
       data: description,
       set: onChangedes,
       rows: 4,
