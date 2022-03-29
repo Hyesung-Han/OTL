@@ -35,6 +35,10 @@ import Table from "../image/table.PNG";
 import Wallhanging from "../image/wallhanging.PNG";
 import Wallpaper from "../image/wallpaper.PNG";
 
+import Wallet from "../image/wallet.png";
+import Buy from "../image/buy.png";
+import Homepage from "../image/homepage.png";
+
 
 /**
  * HSH | 2022.03.23 | Add
@@ -245,10 +249,10 @@ const Main = () => {
   }));
 
   const HowToUseCard = styled(Grid)(() => ({
-    border: "1px solid #afafaf",
-    borderRadius: "10px",
+    // border: "1px solid #afafaf",
+    // borderRadius: "10px",
 
-    width: "300px",
+    width: "250px",
     height: "300px",
 
     margin: "30px",
@@ -262,17 +266,17 @@ const Main = () => {
 
   const howToUseList=[
     {
-      icon:<AccountBalanceWalletIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      icon:Wallet,
       title:"Set up your wallet",
       content:"NFT를 거래하기 위해서는 지갑이 필요합니다. Metamask 지갑을 생성하고 LOGIN에서 지갑을 연동해 주세요."
     },
     {
-      icon:<HomeIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      icon:Homepage,
       title:"Create your home",
       content:"소유하고 있는 NFT를 이용해 마이홈을 구성할 수 있습니다. 나만의 아이템으로 개성있는 나만의 페이지를 만드세요."
     },
     {
-      icon:<ShoppingCartIcon sx={{ fontSize: "45px" }} color="#000000" />,
+      icon:Buy,
       title:"Buy and sell NFT",
       content:"원하는 NFT 작품을 살 수 있고, 당신이 소유하고 있는 NFT를 팔아 수익을 창출할 수 있습니다."
     },
@@ -381,9 +385,9 @@ const Main = () => {
         <Grid display="flex" flexDirection="row" alignItems="center">
           {howToUseList.map((item,index)=>(
             <HowToUseCard key={index}>
-              {item.icon}
-              <Typography>{item.title}</Typography>
-              <Typography>{item.content}</Typography>
+              <Box component="img" src={item.icon} sx={{width:"200px", height:"150px"}} />
+              <Typography variant="h5" >{item.title}</Typography>
+              <Typography align="center" >{item.content}</Typography>
             </HowToUseCard>
           ))}
         </Grid>

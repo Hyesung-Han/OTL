@@ -5,6 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 //icon
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import CloseIcon from '@mui/icons-material/Close';
 
 //img
 import YT from "../image/오윤택.PNG";
@@ -107,15 +108,16 @@ const TeamUs = () => {
         <Grid mt={2} container spacing={2} >
           <Grid item xs={4.5}>
             <Grid container display="flex" flexDirection="column" alignItems="end" spacing={2} >
-              <Grid item sx={{height:"300px"}} component="img" src={homepage1}></Grid>
-              <Grid item sx={{height:"130px", width:"170px"}} component="img" src={OTL}></Grid>
+              <Grid item sx={{height:"300px"}} component="img" src={homepage1}/>
             </Grid>
           </Grid>
           <Grid item xs={7.5} component="img" src={design1}></Grid>
         </Grid>
         <Grid container mt={10} display="flex" flexDirection="row">
-          <Grid item mt={2} xs={4} display="flex">
+          <Grid sx={{position: "relative"}} item mt={2} xs={4} display="flex" flexDirection="column">
             <Typography variant="h5">WHAT TO DO</Typography>
+            <Grid item mt={4} sx={{width:"230px", height:"150px"}} component="img" src={OTL}/>
+            <CloseIcon sx={{ position:"absolute", bottom:"40px", right:"60px", color:"#ff0000", fontSize:"100px"}} />
           </Grid>
           <Grid item xs={8} display="flex" flexDirection="column" alignItems="center" justifyContent="space-around">
             <Typography variant="h3">OTL (One can Take Limited item)</Typography>
