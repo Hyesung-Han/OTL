@@ -13,13 +13,22 @@ const connection = require('../../config/connection').promise();
 class SalesService {
 
 	async createSales(data) {
-		await salesRepository.createSales(data);
-		return {
-			statusCode: 201,
-			responseBody: {
-				result: 'success'
-			}
-		};
+		try {
+			await connection.beginTransaction();
+			await salesRepository.createSales(data);
+			await salesRepository.createSalesItems(data.token_id);
+
+			await connection.commit();
+			return {
+				statusCode: 201,
+				responseBody: {
+					result: 'success'
+				}
+			};
+		} catch(e) {
+			await connection.rollback();
+			throw e;
+		}
 	}
 
 	async getSales(token_id) {

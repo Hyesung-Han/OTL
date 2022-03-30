@@ -7,10 +7,11 @@ const SalesService = require('./sales.service');
 const salesService = new SalesService();
 
 /**
- * LJA | 2022.03.22 | v1.0
+ * LJA | 2022.03.30 | v2.0
  * @name sales
  * @api {post} /sales
  * @des 아이템 판매 등록
+ * sales_t에 data insert 및 items_t on_sale_yn 1로 업데이트
  */
 router.post('/', async function (req, res) {
 	try {
