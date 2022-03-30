@@ -13,7 +13,12 @@ import {
 import { alpha,styled } from "@mui/material/styles";
 import { useEffect, useState, useRef } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { css, keyframes } from "@emotion/react";
+import { keyframes } from "@emotion/react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+import emoStyled from "@emotion/styled";
+import Swal from "sweetalert2";
 
 //Icons
 import FmdGoodIcon from "@mui/icons-material/FmdGood";
@@ -21,11 +26,6 @@ import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import notion from "../image/notion.png";
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import HomeIcon from "@mui/icons-material/Home";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-
-import emoStyled from "@emotion/styled";
 
 //Image
 import Chair from "../image/chair.PNG";
@@ -40,16 +40,16 @@ import Buy from "../image/buy.png";
 import Homepage from "../image/homepage.png";
 import Nft from "../image/nft.png";
 
-
 /**
- * HSH | 2022.03.23 | Add
+ * HSH | 2022.03.29 | v2.0.0
  * @name Main
  * @des Main page
  */
 const Main = () => {
   // Web3
   // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
-
+  const user = useSelector((state) => state.User.user);
+  const navigate = useNavigate();
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -110,7 +110,9 @@ const Main = () => {
     height: "400px",
   }));
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    window.scrollTo(0,0);
+  }, []);
 
   /**
    * HSH | 2022.03.16 | v1.0
@@ -213,6 +215,8 @@ const Main = () => {
     borderRadius: "10px",
     width: "220px",
     height: "200px",
+
+    overflow: "hidden",
   }));
 
   const CategoryImg=emoStyled.div`
@@ -229,17 +233,23 @@ const Main = () => {
     flex-direction: column;
     justify-content: end;
     align-items: center;
+
+    transition:.3s;
+
+    &:hover{
+      transform: scale(1.2);
+    }
   `
   const categoryItemList = categoryItem.map((item, index) => (
     <CategoryCard
       item
       key={index}
       lg={3}
-      sx={{ textDecoration: "none" }}
+      sx={{ textDecoration: "none", position: "relative" }}
       to={item.link}
       component={RouterLink}
     >
-      <CategoryImg img={item.img}>
+      <CategoryImg img={item.img}/>
       <Grid
         display="flex"
         justifyContent="center"
@@ -249,13 +259,15 @@ const Main = () => {
           width: "100%",
           backgroundColor: "#ffffff",
           opacity: "0.8",
+
+          position: "absolute",
+          bottom:"0px",
         }}
       >
         <Box sx={{ color: "#303030", font: "1.2em", fontWeight: 600 }}>
           {item.name}
         </Box>
       </Grid>
-      </CategoryImg>
     </CategoryCard>
   ));
 
@@ -395,6 +407,36 @@ const Main = () => {
     return arr;
   };
 
+  function onClickMyhome(){
+    if(user.user_address) navigate('/MyHome');
+    else{
+      Swal.fire({
+        icon: "warning",
+        title: "로그인이 필요합니다",
+      });
+    }
+  }
+
+  function onClickCreate(){
+    if(user.user_address) navigate('/registerItem');
+    else{
+      Swal.fire({
+        icon: "warning",
+        title: "로그인이 필요합니다",
+      });
+    }
+  }
+
+  function onClickLogin(){
+    if(!user.user_address) navigate('/connectwallet');
+    else{
+      Swal.fire({
+        icon: "warning",
+        title: "이미 로그인이 되어있습니다",
+      });
+    }
+  }
+
   return (
     <RootStyle>
       <MainBackground>
@@ -520,10 +562,10 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle  to="/connectwallet" component={RouterLink} underline="hover">
+                  <FooterLinkStyle  onClick={onClickLogin} sx={{cursor:"pointer"}}underline="hover">
                     log in
                   </FooterLinkStyle>
-                  <FooterLinkStyle  to="/myHome" component={RouterLink} underline="hover">
+                  <FooterLinkStyle onClick={onClickMyhome} sx={{cursor:"pointer"}} underline="hover">
                     my home
                   </FooterLinkStyle>
                   <FooterLinkStyle  to="/items" component={RouterLink} underline="hover">
@@ -537,7 +579,7 @@ const Main = () => {
                     width: "200px",
                   }}
                 >
-                  <FooterLinkStyle  to="/registerItem" component={RouterLink} underline="hover">
+                  <FooterLinkStyle  onClick={onClickCreate} sx={{cursor:"pointer"}} underline="hover">
                     create item
                   </FooterLinkStyle>
                 </Grid>
