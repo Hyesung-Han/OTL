@@ -38,7 +38,7 @@ router.post('/', upload.single('items'), async function (req, res) {
 		const { statusCode, responseBody } = await itemService.insertItem(item);
 
 		if (statusCode === 201) {
-			responseBody.data['item_image'] = `${process.env.AWS_CDN_PATH}/${req.file.key}`;
+			responseBody.data['item_image'] = `${process.env.AWS_S3_PATH}/${req.file.key}`;
 		}
 		res.statusCode = statusCode;
 		res.send(responseBody);
