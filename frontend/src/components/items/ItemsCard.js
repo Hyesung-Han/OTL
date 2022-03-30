@@ -4,6 +4,7 @@ import { Box, Card, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { convertToAccountingFormat } from '../../utils/NumberFormatter';
 
+
 // 이미지 스타일
 const ImgStyle = styled('img')({
   top: 0,
@@ -22,7 +23,7 @@ const CardStyle = styled(Card)({
 
 
 ItemsCard.propTypes = {
-  product: PropTypes.object
+  product: PropTypes.object,
 };
 
 // 구매하기 카드 형태
@@ -33,23 +34,23 @@ ItemsCard.propTypes = {
  */
 export default function ItemsCard({ product }) {
   // 이미지, 제목, 가격, 토큰 ID, 심볼
-  const { image, title, price, tokenId } = product;
+  const { item_title, price, token_id, img_src } = product;
   const symbol = 'SSF';
 
   return (
     <CardStyle>
       <Link
-          to={`/itemdetail/${tokenId}`}
+          to={`/itemdetail/${token_id}`}
           color="inherit"
           underline='hover'
           component={RouterLink}
         >
         <Box sx={{ pt: '100%', position: 'relative'}}>
-          <ImgStyle src={image} />
+          <ImgStyle src={img_src} />
         </Box>
         <Stack spacing={2} sx={{ p: 3 }}>
             <Typography variant="subtitle1" noWrap>
-              {title}
+              {item_title}
             </Typography>
           <Typography variant="subtitle1" textAlign="right" sx={{ fontSize: 15 }}>
             {convertToAccountingFormat(price)} {symbol}
