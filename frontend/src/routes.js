@@ -53,7 +53,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/items" replace /> },
         { path: "", element: <Items /> },
-        { path: ":category", element: <Items /> },
+        { path: ":category_code", element: <Items /> },
       ],
     },
 

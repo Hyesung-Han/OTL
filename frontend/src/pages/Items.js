@@ -13,7 +13,6 @@ import Category from '../components/category/Category';
 import {CommonContext} from "../context/CommonContext"
 import COMMON_ABI from '../common/ABI';
 import { Web3Client } from "../common/web3Client";
-import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 /**
  * [구매하기] 화면
@@ -27,6 +26,7 @@ const Items = () => {
   const [category, setCategory] = useState([]);
   const {category_code} = useParams();
   const [saleId,setSaleId] = useState([]);
+
 
   // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
