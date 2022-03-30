@@ -24,7 +24,6 @@ const Items = () => {
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState([]);
-  const [itemImgUrl, setitemImgUrl] = useState('');
   const [price, setPrice] = useState('');
 
   // nft contract
@@ -49,6 +48,11 @@ const Items = () => {
     getCategory();
   }, []);
 
+  useEffect(()=>{
+    getNFT();
+  },[item]);
+
+
 
   /**
    * PJT Ⅲ - 과제 4: 조회
@@ -66,18 +70,35 @@ const Items = () => {
     try {
       const res = await Axios.get(serverUrlBase + `/items/list/`);
       const data = res.data.data;
-      //const token = res.data.data.token_id;
-      //const nftURL = await nftInstance.methods.tokenURI(token).call();
       
-      console.log(data);
+  
       setItem(data);
-      //setitemImgUrl(nftURL);
-      //console.log(token);
       setLoading(false);
       setIsCollection(true);
       
   } catch (e) {
       console.log('getItem error' +  e);
+  }
+
+  };
+
+  const getNFT = () => {
+
+    setLoading(true);
+    
+    try {
+      item.map( async(row)=>{
+        console.log(row.token_id);
+        const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
+        row.img_src = nftURL;
+      });
+
+
+      setLoading(false);
+      
+
+  } catch (e) {
+      console.log('getNFT error' +  e);
   }
 
   };
@@ -90,33 +111,21 @@ const Items = () => {
       const res = await Axios.get(serverUrlBase + `/items/category/`);
       const data = res.data.data;
       
-
-      console.log(data);
       setCategory(data);
       setLoading(false);
       setIsCollection(true);
       
   } catch (e) {
-      console.log('getItem error' +  e);
+      console.log('getCategory error' +  e);
   }
 
   };
 
-  // 카드 화면 생성을 위한 데이터 전달
-  const productsitem = [...Array(item.length)].map((_, index) => {
-    return {
-      title: item[index].item_title,
-      tokenId: item[index].token_id,
-      hash: item[index].item_hash
-    };
-  });
+  const concatArray = () =>{
+    console.log("1", item);
+  }
 
-  const productsCategory = [...Array(category.length)].map((_, index) => {
-    return {
-      code: category[index].category_code,
-      name: category[index].category_name,
-    };
-  });
+
 
   return (
     <Page title="SSAFY NFT" maxWidth="100%" minHeight="100%" alignItems="center" display="flex">
@@ -126,9 +135,9 @@ const Items = () => {
             
             <Container maxWidth="xl" sx={{my:3}}>
               <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
-                <Category sx={{ mt: 1 }} products={productsCategory}/>
+                <Category sx={{ mt: 1 }} products={category} />
               </Box>
-              <ItemsList sx={{ mt: 1 }} products={productsitem} />
+              <ItemsList sx={{ mt: 1 }} products={item}/>
             </Container>
           ) : (
             <Container>
