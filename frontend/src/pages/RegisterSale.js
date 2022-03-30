@@ -31,6 +31,9 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 
+import COMMON_ABI from "../common/ABI";
+import { Web3Client } from "../common/web3Client";
+
 /**
  * HSH | 2022.03.29 | UPDATE
  * @name RegisterSale
@@ -42,6 +45,20 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 const regPr = /^[0-9]{1,100}$/;
 
 function RegisterSale() {
+  // nft contract
+  const NFT_CA = process.env.REACT_APP_NFT_CA;
+  const nftInstance = new Web3Client.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI,
+    NFT_CA
+  );
+
+  // saleFactory contract
+  const SALE_FACTORY_CA = process.env.REACT_APP_SALE_FACTORY_CA;
+  const saleFactoryInstance = new Web3Client.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.SALE_FACTORY_ABI,
+    SALE_FACTORY_CA
+  );
+
   const { serverUrlBase } = useContext(CommonContext);
   const { token_id } = useParams();
 
@@ -56,6 +73,11 @@ function RegisterSale() {
       .then(async (data) => {
         if (data.data.result === "success") {
           console.log(data.data.data);
+
+          const nftURL = await nftInstance.methods.tokenURI(token_id).call();
+          console.log(nftURL);
+          setImgURL(nftURL);
+
           const res = data.data.data;
           setAuthor(res.author_name);
           setTitle(res.item_title);
@@ -110,33 +132,31 @@ function RegisterSale() {
       name: "Author",
       data: author,
       rows: 1,
-      placeholder: "작가 이름 오고",
       multiline: false,
     },
     {
       name: "Title",
       data: title,
       rows: 1,
-      placeholder: "작품 제목 오고",
       multiline: false,
     },
     {
       name: "Description",
       data: description,
       rows: 4,
-      placeholder: "설명 오고",
       multiline: true,
     },
     {
       name: "Category",
       data: category,
       rows: 1,
-      placeholder: "카테고리 오고",
       multiline: false,
     },
   ];
 
-  const curDate = new Date();
+  const date = new Date().toISOString().split("T");
+  const curDate = date[0] + " " + date[1].split(".")[0];
+  // const curDate = new Date();
   const [price, setPrice] = useState("");
   const [endDate, setendDate] = useState(curDate);
   const [priceError, setPriceError] = useState(false);
@@ -168,51 +188,74 @@ function RegisterSale() {
 
   useEffect(() => {
     getItemDetail();
+    console.log(endDate);
   }, []);
 
   const onClickCreate = async () => {
-    /**
-     * HACK
-     * NFT 판매 등록 -> DB에 판매 등록
-     */
-    console.log(category);
-    console.log(endDate);
+    // console.log(price);
+    // const date = new Date(endDate);
+    // const endSeconds = Math.floor(date.getTime() / 1000);
+    // const ERC20 = process.env.REACT_APP_ERC20_CA;
+    // const NFTAddress = process.env.REACT_APP_NFT_CA;
+
+    // const saleInstance = await saleFactoryInstance.methods
+    //   .createSale(
+    //     token_id,
+    //     1,
+    //     price,
+    //     Math.floor(Date.now() / 1000),
+    //     endSeconds,
+    //     ERC20,
+    //     NFTAddress
+    //   )
+    //   .send({ from: user.user_address });
+    // // 반환 값에서 주소 찾기필요
+    // const returnAddress =
+    //   saleInstance.events.NewSale.returnValues._saleContract;
+    // // 반환된 주소로 deploy 필요
+    // const Sale = new Web3Client.eth.Contract(
+    //   COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+    //   returnAddress
+    // );
 
     const formData = new FormData();
-    formData.append("items", imgURL);
-    formData.append("user_address", user.user_address);
-    formData.append("author_name", author);
-    formData.append("item_title", title);
-    formData.append("item_description", description);
-    formData.append("category_code", category);
-
-    await Axios.post(serverUrlBase + `/items`, formData)
+    formData.append("token_id", token_id);
+    formData.append("seller_address", user.user_address);
+    formData.append("completed_at", endDate);
+    formData.append("sale_contract_address", user.user_address);
+    console.log(formData);
+    await Axios.post(serverUrlBase + `/sales`, formData)
       .then(async (data) => {
         console.log(data);
         if (data.status === 201) {
+          // 소유자가 sale contract에게 권한 부여 및 소유권 변경
+          // await nftInstance.methods
+          //   .setApprovalForAll(returnAddress, true)
+          //   .send({ from: user.user_address });
+
+          // await nftInstance.methods
+          //   .transferFrom(user.user_address, returnAddress, token_id)
+          //   .send({ from: user.user_address });
+
           await Swal.fire({
             icon: "success",
-            title: "작품 등록은 성공적",
+            title: "판매 등록 완료",
           });
+
           await navigate("/main");
-        } else if (data.status === 200) {
-          Swal.fire({
-            icon: "warning",
-            title: data.data.msg,
-          });
         } else {
           Swal.fire({
             icon: "error",
-            title: "작품 등록 실패?",
+            title: "판매 등록 실패",
           });
         }
       })
       .catch(function (error) {
-        console.log("아이템 등록 오류 : " + error);
+        console.log("판매 등록 오류 : " + error);
 
         Swal.fire({
           icon: "error",
-          title: "아이템 등록 오류",
+          title: "판매 등록 오류",
         });
       });
   };
@@ -244,7 +287,6 @@ function RegisterSale() {
           multiline={item.multiline}
           rows={item.rows}
           sx={{ width: "95%" }}
-          placeholder={item.placeholder}
           readOnly
         />
       </Paper>
