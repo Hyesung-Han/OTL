@@ -46,11 +46,6 @@ const ConnectWallet = () => {
   );
 
   const handleConnect = async () => {
-    // if (active) {
-    //   deactivate();
-    //   return;
-    // }
-
     await activate(injected, (error) => {
       if ("/No Ethereum provider was found on window.ethereum/".test(error)) {
         window.open("https://metamask.io/download.html");

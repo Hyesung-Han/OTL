@@ -1,316 +1,340 @@
 import { Link as RouterLink } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
-  Grid,
   Box,
   Button,
   Typography,
   Divider,
-  Paper,
   InputBase,
-  TextField,
+  Paper,
+  Grid,
+  NativeSelect,
   FormControl,
   FormLabel,
   FormHelperText,
+  TextField,
 } from "@mui/material";
+import Page from "../components/Page";
+import Axios from "axios";
+
+import InputAdornment from "@mui/material/InputAdornment";
+
+import { CommonContext } from "../context/CommonContext";
+import { useState, useRef, useEffect, useContext } from "react";
+import { useSelector } from "react-redux";
+
+import Swal from "sweetalert2";
 
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
-
-import Page from "../components/Page";
-import { useState } from "react";
-
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import logo from "../image/logo.png";
+import DateRangeIcon from "@mui/icons-material/DateRange";
 
 /**
- * HSH | 2022.03.22 | ADD
+ * HSH | 2022.03.29 | UPDATE
  * @name RegisterSale
- * @des Register Sale 페이지. 판매 등록
+ * @api 이제 할겁니다~
+ * @des NFT화 된 작품을 판매 등록함
  */
+
+// 가격 유효성 검사 (숫자만, 100자까지)
+const regPr = /^[0-9]{1,100}$/;
+
 function RegisterSale() {
-  const { item_id } = useParams();
-  // console.log(item_id);
+  const { serverUrlBase } = useContext(CommonContext);
+  const { token_id } = useParams();
 
-  // 가격 유효성 검사 ()
-  const regPr = /^[0-9]{1,100}$/;
-
-  const curDate=new Date();
-
+  const [imgURL, setImgURL] = useState("");
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
 
-  const [buyNow, setBuyNow] = useState("");
-  const [makeOffer, setMakeOffer] = useState("");
-  const [endDate, setendDate] = useState(curDate);
-
-  const [buyNowError,setBuyNowError]=useState(true);
-  const [makeOfferError,setMakeOfferError]=useState(true);
-
-  const itemSize = "320px";
-
-  const ItemDetailGridStyle = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+  const getItemDetail = async () => {
+    await Axios.get(serverUrlBase + "/items/" + token_id)
+      .then(async (data) => {
+        if (data.data.result === "success") {
+          console.log(data.data.data);
+          const res = data.data.data;
+          setAuthor(res.author_name);
+          setTitle(res.item_title);
+          setDescription(res.item_description);
+          setCategory(res.category_code);
+        } else {
+          console.log("불러오기 실패");
+        }
+      })
+      .catch(function (error) {
+        console.log("아이템 불러오기 오류 : " + error);
+      });
   };
 
-  const ItemSaleGridStyle = {
+  const RootStyle = {
+    width: "100%",
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around",
     alignItems: "center",
-  };
-
-  const DetailImgGridStyle = {
-    width: itemSize,
-    height: itemSize,
-
-    display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-
-    border: "solid #ababab",
-    borderRadius: "20px",
   };
 
-  const DetailGridStyle = {
-    margin: 3,
+  const BodyStyle = {
+    width: 1000,
   };
 
-  const ButtonGridStyle = {
+  const ContentStyle = {
     display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: "left",
+    flexDirection: "column",
+    padding: "0 50px",
   };
 
   const ButtonStyle = styled(Button)((theme) => ({
     margin: "10px 10px",
     width: "100px",
     font: "1em Fira Sans",
-
+    fontWeight: "bold",
     border: "2px solid #ababab",
     borderRadius: "10px",
     color: "#404040",
-
     "&:hover": {
-      /**
-       * HACK
-       * 테마 적용하고 싶은데 에러나서 그냥 테마 값 가져다 씀
-       */
       color: "#00AB55",
     },
   }));
 
-  const itemDetailList = [
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.User.user);
+  const [disabled, setDisabled] = useState(true);
+
+  const inputTexts = [
     {
       name: "Author",
-      value: author,
+      data: author,
       rows: 1,
+      placeholder: "작가 이름 오고",
+      multiline: false,
     },
     {
       name: "Title",
-      value: title,
+      data: title,
       rows: 1,
+      placeholder: "작품 제목 오고",
+      multiline: false,
     },
     {
       name: "Description",
-      value: description,
+      data: description,
       rows: 4,
+      placeholder: "설명 오고",
+      multiline: true,
+    },
+    {
+      name: "Category",
+      data: category,
+      rows: 1,
+      placeholder: "카테고리 오고",
+      multiline: false,
     },
   ];
 
-  const saleData = [
-    {
-      name: "Buy Now",
-      unit: "SSF",
-      value: buyNow,
-      func: onChangeBuyNow,
-      error: buyNowError,
-    },
-    {
-      name: "Make Offer",
-      unit: "SSF",
-      value: makeOffer,
-      func: onChangeMakeOffer,
-      error: makeOfferError,
-    },
-  ];
+  const curDate = new Date();
+  const [price, setPrice] = useState("");
+  const [endDate, setendDate] = useState(curDate);
+  const [priceError, setPriceError] = useState(false);
 
-  /**
-   * HSH | 2022.03.22 | v1.0
-   * @name onChangeBuyNow
-   * @des buy now 값 변경 시 실행
-   */
-  function onChangeBuyNow(e) {
-    setBuyNow(e.target.value);
-
-    if(!regPr.test(e.target.value))
-    {
-      setBuyNowError(true);
-    }
-    else
-    {
-      setBuyNowError(false);
-    }
+  function onChangePrice(e) {
+    const value = e.target.value;
+    setPrice(value);
   }
 
-  /**
-   * HSH | 2022.03.22 | v1.0
-   * @name onChangeMakeOffer
-   * @des make offer 값 변경 시 실행
-   */
-  function onChangeMakeOffer(e) {
-    setMakeOffer(e.target.value);
-
-    if(!regPr.test(e.target.value))
-    {
-      setMakeOfferError(true);
+  useEffect(() => {
+    if (price.length === 0) {
+      setPriceError(false);
+    } else {
+      if (!regPr.test(price)) {
+        setPriceError(true);
+      } else {
+        setPriceError(false);
+      }
     }
-    else
-    {
-      setMakeOfferError(false);
+
+    if (price !== "" && priceError === false) {
+      setDisabled(false);
     }
-  }
 
-  /**
-   * HSH | 2022.03.22 | v1.0
-   * @name onChangeEndDate
-   * @des end date 값 변경 시 실행
-   */
-  function onChangeEndDate(e) {
-    setendDate(e.target.value);
-  }
+    if (price === "" || priceError === true) {
+      setDisabled(true);
+    }
+  }, [price, priceError]);
 
-  /**
-   * HSH | 2022.03.22 | v1.0
-   * @name onClickCreate
-   * @des create 버튼 클릭 시 실행
-   */
-  const onClickCreate = () => {
-    console.log("onClickCreate");
+  useEffect(() => {
+    getItemDetail();
+  }, []);
+
+  const onClickCreate = async () => {
+    /**
+     * HACK
+     * NFT 판매 등록 -> DB에 판매 등록
+     */
+    console.log(category);
+    console.log(endDate);
+
+    const formData = new FormData();
+    formData.append("items", imgURL);
+    formData.append("user_address", user.user_address);
+    formData.append("author_name", author);
+    formData.append("item_title", title);
+    formData.append("item_description", description);
+    formData.append("category_code", category);
+
+    await Axios.post(serverUrlBase + `/items`, formData)
+      .then(async (data) => {
+        console.log(data);
+        if (data.status === 201) {
+          await Swal.fire({
+            icon: "success",
+            title: "작품 등록은 성공적",
+          });
+          await navigate("/main");
+        } else if (data.status === 200) {
+          Swal.fire({
+            icon: "warning",
+            title: data.data.msg,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "작품 등록 실패?",
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log("아이템 등록 오류 : " + error);
+
+        Swal.fire({
+          icon: "error",
+          title: "아이템 등록 오류",
+        });
+      });
   };
 
-  /**
-   * HSH | 2022.03.22 | v1.0
-   * @name onClickCancel
-   * @des cancel 버튼 클릭 시 실행
-   */
-  const onClickCancel = () => {
-    console.log("onClickCancel");
-  };
+  const inputTextList = inputTexts.map((item, index) => (
+    <FormControl
+      key={index}
+      sx={{ mb: 2 }}
+      required
+      component="fieldset"
+      variant="standard"
+    >
+      <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          {item.name}
+        </Typography>
+      </Box>
+      <Paper
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          p: "2px 4px",
+          width: 500,
+          border: "2px solid #cbcbcb",
+        }}
+      >
+        <InputBase
+          value={item.data}
+          multiline={item.multiline}
+          rows={item.rows}
+          sx={{ width: "95%" }}
+          placeholder={item.placeholder}
+          readOnly
+        />
+      </Paper>
+    </FormControl>
+  ));
 
   return (
-    <Page display="flex" justifyContent="center" title="SSAFY NFT">
-      <Grid
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        sx={{ width: 1000, mb: 10 }}
-      >
-        <Typography variant="h4">Sales Registration</Typography>
+    <div style={RootStyle}>
+      <div style={BodyStyle}>
+        <Typography variant="h4" sx={{ mb: 1 }}>
+          Sale Your Item
+        </Typography>
         <Divider />
-        <Grid sx={ItemDetailGridStyle}>
-          {/**
-           * HACK
-           * 이미지 임시로 logo 이미지로 넣어둠
-           */}
-          <Grid sx={DetailImgGridStyle}>
+        <Box m={5} display="flex" flexDirection="row">
+          <Box display="flex" flexDirection="column">
             <Box
-              component="img"
-              sx={{ maxWidth: itemSize, maxHeight: itemSize }}
-              src={logo}
-            />
-          </Grid>
-          <Grid sx={DetailGridStyle}>
-            {itemDetailList.map((item, index) => (
-              <Box key={index} mb={3}>
-                <Typography variant="h5">{item.name}</Typography>
-                <Paper
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-
-                    p: "2px 4px",
-                    width: 500,
-                    border: "2px solid #cbcbcb",
-                    backgroundColor: "#dfdfdf",
-                  }}
-                >
-                  <InputBase
-                    value={item.value}
-                    multiline={item.rows === 1 ? false : true}
-                    rows={item.rows}
-                    sx={{ width: "95%" }}
-                    readOnly
-                  />
-                </Paper>
-              </Box>
-            ))}
-          </Grid>
-        </Grid>
-        <Grid sx={ItemSaleGridStyle}>
-          {saleData.map((item, index) => (
-            <FormControl
-            key={index}
-            sx={{ mb: 3 }}
-            required
-            error={item.error}
-            component="fieldset"
-            variant="standard"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                p: 10,
+                width: 400,
+                height: 400,
+                border: "dashed #ababab",
+                borderRadius: 2,
+                mb: 3,
+              }}
             >
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
-              <Typography variant="h5">{item.name}</Typography>
-              <FormLabel component="legend"></FormLabel>
-            </Box>
-              <Paper
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-
-                  p: "2px 5px",
-                  border: "2px solid #cbcbcb",
-                  width: 900,
-                }}
-              >
-                <InputBase
-                  onChange={item.func}
-                  value={item.value}
-                  sx={{ width: "95%" }}
-                />
-                <Typography>{item.unit}</Typography>
-              </Paper>
-              <Box ml={1}>
-                {item.error && <FormHelperText>Please enter price only</FormHelperText>}
-                {!item.error && <FormHelperText>Valid</FormHelperText>}
-             </Box>
-            </FormControl>
-          ))}
-          <Box mb={3}>
-            <Typography variant="h5">End Date</Typography>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <MobileDatePicker
-                value={endDate}
-                minDate={curDate}
-                onChange={(newValue) => {
-                  setendDate(newValue);
-                }}
-                renderInput={(params) => <TextField sx={{width: 900}} {...params}/>}
+              <Box
+                component="img"
+                src={imgURL}
+                sx={{ maxWidth: "400px", maxHeight: "400px" }}
               />
-            </LocalizationProvider>
+            </Box>
+            <Box
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Grid item xs={7}>
+                <Typography variant="h5" sx={{ mb: 1 }}>
+                  Price
+                </Typography>
+                <TextField
+                  required
+                  error={priceError}
+                  fullWidth
+                  label="Enter purchase price"
+                  onChange={onChangePrice}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">SSF</InputAdornment>
+                    ),
+                  }}
+                ></TextField>
+              </Grid>
+              <Grid item xs={1}></Grid>
+              <Grid item xs={4}>
+                <Typography variant="h5" sx={{ mb: 1 }}>
+                  End Date
+                </Typography>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <MobileDatePicker
+                    value={endDate}
+                    minDate={curDate}
+                    onChange={(newValue) => {
+                      setendDate(newValue);
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            </Box>
           </Box>
-        </Grid>
-        <Box mt={3} display="flex" justifyContent="right">
-          <ButtonStyle onClick={onClickCreate}>CREATE</ButtonStyle>
-          <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
+          <div style={ContentStyle}>
+            {inputTextList}
+            <Box mt={3} display="flex" justifyContent="right">
+              <ButtonStyle disabled={disabled} onClick={onClickCreate}>
+                CREATE
+              </ButtonStyle>
+              <ButtonStyle to="/main" component={RouterLink}>
+                CANCEL
+              </ButtonStyle>
+            </Box>
+          </div>
         </Box>
-      </Grid>
-    </Page>
+      </div>
+    </div>
   );
 }
 
