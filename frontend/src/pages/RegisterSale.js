@@ -35,10 +35,10 @@ import COMMON_ABI from "../common/ABI";
 import { Web3Client } from "../common/web3Client";
 
 /**
- * HSH | 2022.03.29 | UPDATE
+ * HSH | 2022.03.30 | v2.0
  * @name RegisterSale
- * @api 이제 할겁니다~
- * @des NFT화 된 작품을 판매 등록함
+ * @api [post] /sales : NFT 판매 등록 후, DB로 저장
+ * @des 클릭 : 해당 NFT에 대한 Smart Contract 생성 -> 관련 정보 DB 저장(api) -> 성공 후, 계약 권한 부여 및 소유권 변경
  */
 
 // 가격 유효성 검사 (숫자만, 100자까지)
@@ -154,9 +154,7 @@ function RegisterSale() {
     },
   ];
 
-  const date = new Date().toISOString().split("T");
-  const curDate = date[0] + " " + date[1].split(".")[0];
-  // const curDate = new Date();
+  const curDate = new Date();
   const [price, setPrice] = useState("");
   const [endDate, setendDate] = useState(curDate);
   const [priceError, setPriceError] = useState(false);
@@ -192,50 +190,52 @@ function RegisterSale() {
   }, []);
 
   const onClickCreate = async () => {
-    // console.log(price);
-    // const date = new Date(endDate);
-    // const endSeconds = Math.floor(date.getTime() / 1000);
-    // const ERC20 = process.env.REACT_APP_ERC20_CA;
-    // const NFTAddress = process.env.REACT_APP_NFT_CA;
+    console.log(price);
+    const date = new Date(endDate);
+    const endSeconds = Math.floor(date.getTime() / 1000);
+    const ERC20 = process.env.REACT_APP_ERC20_CA;
+    const NFTAddress = process.env.REACT_APP_NFT_CA;
 
-    // const saleInstance = await saleFactoryInstance.methods
-    //   .createSale(
-    //     token_id,
-    //     1,
-    //     price,
-    //     Math.floor(Date.now() / 1000),
-    //     endSeconds,
-    //     ERC20,
-    //     NFTAddress
-    //   )
-    //   .send({ from: user.user_address });
-    // // 반환 값에서 주소 찾기필요
-    // const returnAddress =
-    //   saleInstance.events.NewSale.returnValues._saleContract;
-    // // 반환된 주소로 deploy 필요
-    // const Sale = new Web3Client.eth.Contract(
-    //   COMMON_ABI.CONTRACT_ABI.SALE_ABI,
-    //   returnAddress
-    // );
+    const saleInstance = await saleFactoryInstance.methods
+      .createSale(
+        token_id,
+        1,
+        price,
+        Math.floor(Date.now() / 1000),
+        endSeconds,
+        ERC20,
+        NFTAddress
+      )
+      .send({ from: user.user_address });
+    // 반환 값에서 주소 찾기필요
+    const returnAddress =
+      saleInstance.events.NewSale.returnValues._saleContract;
+    // 반환된 주소로 deploy 필요
+    const Sale = new Web3Client.eth.Contract(
+      COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+      returnAddress
+    );
 
-    const formData = new FormData();
-    formData.append("token_id", token_id);
-    formData.append("seller_address", user.user_address);
-    formData.append("completed_at", endDate);
-    formData.append("sale_contract_address", user.user_address);
-    console.log(formData);
-    await Axios.post(serverUrlBase + `/sales`, formData)
+    const realEndDate = endDate.toISOString().split("T");
+    const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+
+    await Axios.post(serverUrlBase + `/sales`, {
+      token_id: token_id,
+      seller_address: user.user_address,
+      completed_at: rrealEndDate,
+      sale_contract_address: returnAddress,
+    })
       .then(async (data) => {
         console.log(data);
         if (data.status === 201) {
           // 소유자가 sale contract에게 권한 부여 및 소유권 변경
-          // await nftInstance.methods
-          //   .setApprovalForAll(returnAddress, true)
-          //   .send({ from: user.user_address });
+          await nftInstance.methods
+            .setApprovalForAll(returnAddress, true)
+            .send({ from: user.user_address });
 
-          // await nftInstance.methods
-          //   .transferFrom(user.user_address, returnAddress, token_id)
-          //   .send({ from: user.user_address });
+          await nftInstance.methods
+            .transferFrom(user.user_address, returnAddress, token_id)
+            .send({ from: user.user_address });
 
           await Swal.fire({
             icon: "success",
