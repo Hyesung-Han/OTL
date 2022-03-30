@@ -83,6 +83,22 @@ class SalesRepository {
 				throw e;
 			});
 	}
+
+	async createSalesItems(token_id) {
+		const sql = `
+			UPDATE items_t
+			SET on_sale_yn = '1'
+			WHERE token_id = ?
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, [token_id])
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}
 }
 
 module.exports = SalesRepository;
