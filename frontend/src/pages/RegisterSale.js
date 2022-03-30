@@ -30,7 +30,6 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import DateRangeIcon from "@mui/icons-material/DateRange";
-import logo from "../image/logo.png";
 
 /**
  * HSH | 2022.03.29 | UPDATE
@@ -43,6 +42,34 @@ import logo from "../image/logo.png";
 const regPr = /^[0-9]{1,100}$/;
 
 function RegisterSale() {
+  const { serverUrlBase } = useContext(CommonContext);
+  const { token_id } = useParams();
+
+  const [imgURL, setImgURL] = useState("");
+  const [author, setAuthor] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+
+  const getItemDetail = async () => {
+    await Axios.get(serverUrlBase + "/items/" + token_id)
+      .then(async (data) => {
+        if (data.data.result === "success") {
+          console.log(data.data.data);
+          const res = data.data.data;
+          setAuthor(res.author_name);
+          setTitle(res.item_title);
+          setDescription(res.item_description);
+          setCategory(res.category_code);
+        } else {
+          console.log("불러오기 실패");
+        }
+      })
+      .catch(function (error) {
+        console.log("아이템 불러오기 오류 : " + error);
+      });
+  };
+
   const RootStyle = {
     width: "100%",
     display: "flex",
@@ -74,20 +101,8 @@ function RegisterSale() {
     },
   }));
 
-  // url parameter로 받아옴 (작품 상세보기에서)
-  const { token_id } = useParams();
-
   const navigate = useNavigate();
-  const { serverUrlBase } = useContext(CommonContext);
   const user = useSelector((state) => state.User.user);
-
-  const [uploadImg, setUploadImg] = useState("");
-  const [uploadImgURL, setUploadImgURL] = useState("");
-
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
   const [disabled, setDisabled] = useState(true);
 
   const inputTexts = [
@@ -121,24 +136,55 @@ function RegisterSale() {
     },
   ];
 
+  const curDate = new Date();
+  const [price, setPrice] = useState("");
+  const [endDate, setendDate] = useState(curDate);
+  const [priceError, setPriceError] = useState(false);
+
+  function onChangePrice(e) {
+    const value = e.target.value;
+    setPrice(value);
+  }
+
+  useEffect(() => {
+    if (price.length === 0) {
+      setPriceError(false);
+    } else {
+      if (!regPr.test(price)) {
+        setPriceError(true);
+      } else {
+        setPriceError(false);
+      }
+    }
+
+    if (price !== "" && priceError === false) {
+      setDisabled(false);
+    }
+
+    if (price === "" || priceError === true) {
+      setDisabled(true);
+    }
+  }, [price, priceError]);
+
+  useEffect(() => {
+    getItemDetail();
+  }, []);
+
   const onClickCreate = async () => {
     /**
      * HACK
-     * Merge 전에 임시 코드 입니다 [onClikcCreate]
+     * NFT 판매 등록 -> DB에 판매 등록
      */
     console.log(category);
+    console.log(endDate);
 
     const formData = new FormData();
-    formData.append("items", uploadImg);
+    formData.append("items", imgURL);
     formData.append("user_address", user.user_address);
     formData.append("author_name", author);
     formData.append("item_title", title);
     formData.append("item_description", description);
-    /**
-     * HACK
-     * 카테고리 연결 되면 이후에 추가
-     */
-    formData.append("category_code", "bed");
+    formData.append("category_code", category);
 
     await Axios.post(serverUrlBase + `/items`, formData)
       .then(async (data) => {
@@ -199,41 +245,11 @@ function RegisterSale() {
           rows={item.rows}
           sx={{ width: "95%" }}
           placeholder={item.placeholder}
+          readOnly
         />
       </Paper>
     </FormControl>
   ));
-
-  const curDate = new Date();
-  const [price, setPrice] = useState("");
-  const [endDate, setendDate] = useState(curDate);
-  const [priceError, setPriceError] = useState(false);
-
-  function onChangePrice(e) {
-    const value = e.target.value;
-    setPrice(value);
-  }
-
-  useEffect(() => {
-    if (price.length === 0) {
-      setPriceError(false);
-    } else {
-      if (!regPr.test(price)) {
-        setPriceError(true);
-      } else {
-        setPriceError(false);
-      }
-    }
-
-    if (price !== "" && priceError === false) {
-      setDisabled(false);
-    }
-
-    if (price === "" || priceError === true) {
-      setDisabled(true);
-    }
-    console.log(endDate);
-  }, [price, priceError, endDate]);
 
   return (
     <div style={RootStyle}>
@@ -260,7 +276,7 @@ function RegisterSale() {
             >
               <Box
                 component="img"
-                src={uploadImgURL}
+                src={imgURL}
                 sx={{ maxWidth: "400px", maxHeight: "400px" }}
               />
             </Box>
