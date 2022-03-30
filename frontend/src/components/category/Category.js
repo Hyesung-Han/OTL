@@ -42,8 +42,9 @@ export default function Category({products}) {
         color="inherit"
         underline='hover'
         component={RouterLink}
+        key={product.category_code}
       >      
-          <BoxStyle sx={{display: "flex", margin:'auto'}} key={product.category_code}>
+          <BoxStyle sx={{display: "flex", margin:'auto'}} >
               <Typography variant="subtitle1" noWrap>
                 {product.category_name}
               </Typography>

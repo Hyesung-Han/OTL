@@ -30,7 +30,7 @@ const SearchResult = () => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
   const {search_value} = useParams();
-
+  const [saleId,setSaleId] = useState([]);
     // nft contract
     const NFT_CA = process.env.REACT_APP_NFT_CA;
     const nftInstance = new Web3Client.eth.Contract(
@@ -51,9 +51,12 @@ const SearchResult = () => {
   }, []);
 
   useEffect(()=>{
-    getNFT();
+    getSaleId();
   },[item]);
 
+  useEffect(()=>{
+    getNFT();
+  },[saleId]);
 
   /**
    * PJT Ⅲ - 과제 4: 조회
@@ -84,15 +87,38 @@ const SearchResult = () => {
   }
 
   };
+  const getSaleId = ()=>{
+    try {
+      const testArray=[];
+      item.map( async(row)=>{
+        const res = await Axios.get(serverUrlBase + `/sales/`,{
+            params:{token_id: row.token_id}
+        });
+        const data = res.data.data;
+        row.saleCA = data.sale_contract_address;
+        testArray.push(data.sale_contract_address);
+      });
+      setSaleId(testArray);
+        
+    } catch (e) {
+        console.log('getSaleId error' +  e);
+    }
+}
   const getNFT = () => {
 
     setLoading(true);
     
     try {
       item.map( async(row)=>{
-        console.log(row.token_id);
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
+        const saleInstance = new Web3Client.eth.Contract(
+          COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+          row.saleCA
+        );      
+        const saleInfo = await saleInstance.methods.getSaleInfo().call();
         row.img_src = nftURL;
+        row.price = saleInfo[3];
+
       });
 
       
