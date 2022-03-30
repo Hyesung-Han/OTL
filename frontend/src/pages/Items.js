@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, tableRowClasses, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState, useContext } from "react";
 import { MotionContainer, varBounceIn } from '../components/animate';
@@ -14,7 +14,7 @@ import {CommonContext} from "../context/CommonContext"
 import COMMON_ABI from '../common/ABI';
 import { Web3Client } from "../common/web3Client";
 import { useNavigate } from "react-router-dom";
-
+import { useParams } from 'react-router-dom';
 /**
  * [구매하기] 화면
  */
@@ -25,7 +25,9 @@ const Items = () => {
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState([]);
-  
+  const {category_code} = useParams();
+  const [saleId,setSaleId] = useState([]);
+
   // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
@@ -33,10 +35,6 @@ const Items = () => {
     NFT_CA
   );
 
-
-
-  // Web3
-  const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
   /**
    * [초기 데이터 설정]
@@ -48,8 +46,12 @@ const Items = () => {
   }, []);
 
   useEffect(()=>{
-    getNFT();
+    getSaleId();
   },[item]);
+
+  useEffect(()=>{
+    getNFT();
+  },[saleId]);
 
 
   /**
@@ -66,9 +68,11 @@ const Items = () => {
     setLoading(true);
     
     try {
-      const res = await Axios.get(serverUrlBase + `/items/list/`);
+      const res = await Axios.get(serverUrlBase + `/items/list/`,{
+        params:{category_code: category_code}
+      });
       const data = res.data.data;
-      
+
   
       setItem(data);
       setLoading(false);
@@ -80,15 +84,38 @@ const Items = () => {
 
   };
 
+  const getSaleId = ()=>{
+    try {
+      const testArray=[];
+      item.map( async(row)=>{
+        const res = await Axios.get(serverUrlBase + `/sales/`,{
+            params:{token_id: row.token_id}
+        });
+        const data = res.data.data;
+        row.saleCA = data.sale_contract_address;
+        testArray.push(data.sale_contract_address);
+      });
+      setSaleId(testArray);
+        
+    } catch (e) {
+        console.log('getSaleId error' +  e);
+    }
+}
   const getNFT = () => {
 
     setLoading(true);
     
     try {
       item.map( async(row)=>{
-        console.log(row.token_id);
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
+        const saleInstance = new Web3Client.eth.Contract(
+          COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+          row.saleCA
+        );      
+        const saleInfo = await saleInstance.methods.getSaleInfo().call();
         row.img_src = nftURL;
+        row.price = saleInfo[3];
+
       });
 
       

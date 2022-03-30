@@ -14,7 +14,8 @@ import HorizonLine from "../components/HorizonLine";
 import {CommonContext} from "../context/CommonContext"
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-
+import COMMON_ABI from '../common/ABI';
+import { Web3Client } from "../common/web3Client";
 
 
 const ImgStyle = styled('img')({
@@ -45,6 +46,18 @@ const ItemDetail = () => {
     const [onsale, setOnsale ] = useState(0); 
     const [owner, setOwner] = useState('');
     const [saleId, setSaleId] = useState('');
+    const [saleCA, setSaleCA] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [price, setPrice] = useState('');
+    const [imgUrl, setImgUrl]= useState('');
+    const [date, setDate] = useState('');
+
+      // nft contract
+    const NFT_CA = process.env.REACT_APP_NFT_CA;
+      const nftInstance = new Web3Client.eth.Contract(
+        COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
+        NFT_CA
+    );
 
     const user = useSelector((state)=> state.User.user);
     const navigate = useNavigate();
@@ -52,7 +65,13 @@ const ItemDetail = () => {
         try {
             const res = await Axios.get(serverUrlBase + `/items/`+ token_id);
             const data = res.data.data;
-            
+            const row = await Axios.get(serverUrlBase + `/sales/`,{
+                params:{token_id: token_id}
+            });
+            const timedata = row.data.data.completed_at;
+            const realEndDate = timedata.split("T");
+            const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+            setDate(rrealEndDate);
             setTitle(data.item_title);
             setDescription(data.item_description);
             setAuthor(data.author_name);
@@ -72,10 +91,10 @@ const ItemDetail = () => {
                 params:{token_id:token_id}
             });
             const data = res.data.data;
+            console.log(data);
 
             setSaleId(data.sale_id);
-
-            console.log(data);
+            setSaleCA(data.sale_contract_address);
             
         } catch (e) {
             console.log('getSaleId error' +  e);
@@ -95,12 +114,35 @@ const ItemDetail = () => {
             console.log('ItemSaleRegi Cancle error' +  e);
         }
     };
+    const getNFT = async() => {
 
+        setLoading(true);
+        
+        try {
+            const nftURL = await nftInstance.methods.tokenURI(token_id).call();
+            const saleInstance = new Web3Client.eth.Contract(
+              COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+              saleCA
+            );      
+            const saleInfo = await saleInstance.methods.getSaleInfo().call();
+            setPrice(saleInfo[3]);
+            setImgUrl(nftURL); 
+          setLoading(false);
+
+      } catch (e) {
+          console.log('getNFT error' +  e);
+      }
+    
+      };
       
     useEffect(()=>{
         getItemDetail();
         getSaleId();
     }, []);
+
+    useEffect(()=>{
+        getNFT();
+    },[saleCA]);
 
 
   return (
@@ -117,7 +159,7 @@ const ItemDetail = () => {
             </Grid>
             <Grid item xs={3} style={{alignItems :"center", display :"flex", justifyContent:"center", paddingLeft:0, paddingBottom:24}}>
                 <div style={{width: 350, height:350}}>
-                    <ImgStyle src="" />
+                    <ImgStyle src={imgUrl} />
                 </div>
             </Grid>
             <Grid item xs={7}>
@@ -126,15 +168,15 @@ const ItemDetail = () => {
                 <Card sx={{ width:"70%", mt:3 }}>
                     <CardContent>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
-                            sale ends XXXX 11, 2022 at xx:xx:xx am KST
+                            sale ends {date}
                         </Typography>
                         <HorizonLine></HorizonLine>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
                             Current Price
                         </Typography>
                         <div style={{display :"flex", justifyContent:"right"}}>
-                            <Typography sx={{ fontSize: 20, textAlign:"center" }} color="text" >
-                                XX.XX
+                            <Typography sx={{ fontSize: 20, textAlign:"center", mx:3 }} color="text" >
+                                {price}
                             </Typography>
                             <Typography sx={{ fontSize: 20, textAlign:"right" }} color="text" >
                                 {symbol}
@@ -152,7 +194,7 @@ const ItemDetail = () => {
 
             </Grid>
             <Grid item xs={3} style={{alignItems :"center", display :"flex", justifyContent:"center", paddingLeft:0, paddingBottom:24}}>
-                 <Description description={description} author={author} category = {category}></Description>
+                 <Description description={description} author={author} category = {category} saleCA={saleCA}></Description>
             </Grid>
             <Grid item xs={7}>
                 <ItemHistory></ItemHistory>
