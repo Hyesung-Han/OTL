@@ -227,7 +227,7 @@ function RegisterItem() {
     formData.append("item_title", title);
     formData.append("item_description", description);
     formData.append("category_code", category);
-
+    console.log(formData);
     await Axios.post(serverUrlBase + `/items`, formData)
       .then(async (data) => {
         console.log(data.data.data.item_id);
@@ -265,16 +265,16 @@ function RegisterItem() {
         } else {
           Swal.fire({
             icon: "error",
-            title: "작품 등록 실패?",
+            title: "작품/NFT 등록 실패?",
           });
         }
       })
       .catch(function (error) {
-        console.log("아이템 등록 오류 : " + error);
+        console.log("작품/NFT 등록 오류 : " + error);
 
         Swal.fire({
           icon: "error",
-          title: "아이템 등록 오류",
+          title: "작품/NFT 등록 오류",
         });
       });
   };
