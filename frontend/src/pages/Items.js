@@ -4,7 +4,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { MotionContainer, varBounceIn } from '../components/animate';
 import Axios from 'axios';
 import Web3 from 'web3';
-import COMMON_ABI from '../common/ABI';
 import COMMON_HEADER from '../common/HeaderType';
 import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
@@ -12,6 +11,8 @@ import Page from '../components/Page';
 import ItemsList from '../components/items/ItemsList';
 import Category from '../components/category/Category';
 import {CommonContext} from "../context/CommonContext"
+import COMMON_ABI from '../common/ABI';
+import { Web3Client } from "../common/web3Client";
 
 /**
  * [구매하기] 화면
@@ -23,6 +24,18 @@ const Items = () => {
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState([]);
+  const [itemImgUrl, setitemImgUrl] = useState('');
+  const [price, setPrice] = useState('');
+
+  // nft contract
+  const NFT_CA = process.env.REACT_APP_NFT_CA;
+  const nftInstance = new Web3Client.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
+    NFT_CA
+  );
+
+
+
 
   // Web3
   const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
@@ -53,9 +66,13 @@ const Items = () => {
     try {
       const res = await Axios.get(serverUrlBase + `/items/list/`);
       const data = res.data.data;
+      //const token = res.data.data.token_id;
+      //const nftURL = await nftInstance.methods.tokenURI(token).call();
       
-
+      console.log(data);
       setItem(data);
+      //setitemImgUrl(nftURL);
+      //console.log(token);
       setLoading(false);
       setIsCollection(true);
       
