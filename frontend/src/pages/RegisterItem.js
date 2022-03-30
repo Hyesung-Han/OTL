@@ -31,61 +31,77 @@ import logo from "../image/logo.png";
 import useWeb3Manager from "web3-react/dist/manager";
 
 /**
- * HSH | 2022.03.24 | ADD
+ * HSH | 2022.03.29 | UPDATE
  * @name RegisterItem
- * @api {post} /items
- * @api {patch} /items/:item_id
- * @des 아이템 저장하기
+ * @api {post} HOST/items
+ * @api {patch} HOST/items/:item_id
+ * @des 작품 등록 -> DB저장 -> NFT 등록 -> DB저장
+ * @des Web3만 해결되면 일사천리~ (아직 하는중)
  */
 function RegisterItem() {
-  const user = useSelector((state) => state.User.user);
-  const { serverUrlBase } = useContext(CommonContext);
+  const RootStyle = {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  };
 
-  const [img, setImg] = useState("");
+  const BodyStyle = {
+    width: 1000,
+  };
+
+  const ContentStyle = {
+    display: "flex",
+    alignItems: "left",
+    flexDirection: "column",
+    padding: "0 50px",
+  };
+
+  const ImageStyle = styled(Button)((props) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    padding: "10px",
+    width: "400px",
+    height: "400px",
+    border: "dashed #ababab",
+    borderRadius: "20px",
+  }));
+
+  const ButtonStyle = styled(Button)((theme) => ({
+    margin: "10px 10px",
+    width: "100px",
+    font: "1em Fira Sans",
+    fontWeight: "bold",
+    border: "2px solid #ababab",
+    borderRadius: "10px",
+    color: "#404040",
+    "&:hover": {
+      color: "#00AB55",
+    },
+  }));
+
+  const navigate = useNavigate();
+  const { serverUrlBase } = useContext(CommonContext);
+  const user = useSelector((state) => state.User.user);
+
   const [uploadImg, setUploadImg] = useState("");
+  const [uploadImgURL, setUploadImgURL] = useState("");
   const imgRef = useRef();
-  let navigate = useNavigate();
 
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("0");
+  const [category, setCategory] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
 
   const [imgError, setImgError] = useState(true);
   const [authorError, setauthorError] = useState(true);
   const [titleError, setTitleError] = useState(true);
-  const [descriptionError, setDescriptionError] = useState(true);
+  const [desError, setDesError] = useState(true);
+  const [disabled, setDisabled] = useState(true);
 
-  const [isValid, setIsValid] = useState(false);
-
-
-  // const HTTP_PROVIDER = 'http://20.196.209.2:8545';
-  // const Web3Client = new Web3(
-  //   Web3.givenProvider || new Web3.providers.HttpProvider(HTTP_PROVIDER)
-  // );  
-  // Web3
-  // var web3;
-  // if (typeof web3 !== 'undefined') { 
-  //   web3 = new Web3(web3.currentProvider); 
-  // }else { 
-  //   // set the provider you want from Web3.providers 
-  //   web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)); 
-  // }
-
-
-  useEffect(() => {
-    if (!imgError && !authorError && !titleError && !descriptionError) {
-      setIsValid(true);
-    } else {
-      setIsValid(false);
-    }
-  }, [imgError, authorError, titleError, descriptionError]);
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onChangeAutor
-   * @des author 변경 시 실행
-   */
   const onChangeAutor = (e) => {
     const value = e.target.value;
     setAuthor(e.target.value);
@@ -97,11 +113,6 @@ function RegisterItem() {
     }
   };
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onChangeTitle
-   * @des title 변경 시 실행
-   */
   const onChangeTitle = (e) => {
     const value = e.target.value;
     setTitle(e.target.value);
@@ -113,19 +124,14 @@ function RegisterItem() {
     }
   };
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onChangedescription
-   * @des description 변경 시 실행
-   */
-  const onChangedescription = (e) => {
+  const onChangedes = (e) => {
     const value = e.target.value;
     setDescription(e.target.value);
 
     if (!value) {
-      setDescriptionError(true);
+      setDesError(true);
     } else {
-      setDescriptionError(false);
+      setDesError(false);
     }
   };
 
@@ -133,18 +139,13 @@ function RegisterItem() {
     setCategory(e.target.value);
   };
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name inputTexts
-   * @des author, title, description에 관한 정보 저장
-   */
   const inputTexts = [
     {
       name: "Author",
       data: author,
       set: onChangeAutor,
       rows: 1,
-      placeholder: "Name",
+      placeholder: "Please enter the author's name",
       multiline: false,
       error: authorError,
     },
@@ -153,56 +154,49 @@ function RegisterItem() {
       data: title,
       set: onChangeTitle,
       rows: 1,
-      placeholder: "item title",
+      placeholder: "Please enter the item's name",
       multiline: false,
       error: titleError,
     },
     {
-      name: "description",
+      name: "Description",
       data: description,
-      set: onChangedescription,
+      set: onChangedes,
       rows: 4,
-      placeholder: "item description",
+      placeholder: "Write down the description of the item",
       multiline: true,
-      error: descriptionError,
+      error: desError,
     },
   ];
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name categoryList
-   * @des 카테고리 리스트
-   * HACK
-   * 카테고리 db에서 받아오기전까지는 임시로 사용하도록 만들어 놓음
-   */
-  const categoryList = [
-    {
-      id: "0",
-      name: "chair",
-    },
-    {
-      id: "1",
-      name: "table",
-    },
-    {
-      id: "2",
-      name: "wallpaper",
-    },
-    {
-      id: "3",
-      name: "floor",
-    },
-    {
-      id: "4",
-      name: "wall hanging",
-    },
-    {
-      id: "5",
-      name: "prop",
-    },
-  ];
+  function getCategoryList() {
+    Axios.get(serverUrlBase + `/items/category`)
+      .then((data) => {
+        setCategory(data.data.data[0].category_code);
+        setCategoryList(data.data.data);
+      })
+      .catch(function (error) {
+        console.log("get category error:" + error);
 
-  // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)); 
+        Swal.fire({
+          icon: "error",
+          title: "서버와 연동이 끊겼습니다. 다시 시도해주세요",
+        });
+        navigate("/main");
+      });
+  }
+
+  useEffect(() => {
+    getCategoryList();
+  }, []);
+
+  useEffect(() => {
+    if (!imgError && !authorError && !titleError && !desError) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [imgError, authorError, titleError, desError]);
 
   // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
@@ -211,37 +205,29 @@ function RegisterItem() {
     NFT_CA
   );
 
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickImg
-   * @des 이미지 클릭 시 실행되는 함수
-   */
   const onClickImg = () => {
     imgRef.current.click();
   };
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickCreate
-   * @des create 버튼 클릭 시 실행
-   */
+
+  const onChangeImg = async (event) => {
+    if (!event.target.files[0]) return;
+
+    setUploadImg(event.target.files[0]);
+    setUploadImgURL(URL.createObjectURL(event.target.files[0]));
+
+    setImgError(false);
+  };
+
   const onClickCreate = async () => {
     console.log(category);
 
     const formData = new FormData();
-    formData.append("items", img);
-    /**
-     * HACK
-     * 로그인 되면 이후에 해보기
-     */
+    formData.append("items", uploadImg);
     formData.append("user_address", user.user_address);
     formData.append("author_name", author);
     formData.append("item_title", title);
     formData.append("item_description", description);
-    /**
-     * HACK
-     * 카테고리 연결 되면 이후에 추가
-     */
-    formData.append("category_code", "bed");
+    formData.append("category_code", category);
 
     try{
       const data = await Axios.post(serverUrlBase + `/items`, formData);
@@ -270,7 +256,7 @@ function RegisterItem() {
       } else  {
         Swal.fire({
           icon: "error",
-          title: "아이템이 정상적으로 등록되지 않았습니다",
+          title: "아이템 등록 오류",
         });
       }
     }catch(error){
@@ -281,93 +267,33 @@ function RegisterItem() {
         title: "아이템이 정상적으로 등록되지 않았습니다",
       });
     }
-  console.log("onClickCreate");
   };
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickCancel
-   * @des cancel 버튼 클릭 시 실행
-   */
-  const onClickCancel = () => {
-    console.log("onClickCancel");
-    navigate("/main");
-  };
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onImgChange
-   * @des 파일 선택장에서 파일 선택 시 실행
-   */
-  const onImgChange = async (event) => {
-    if (!event.target.files[0]) return;
-
-    setImg(event.target.files[0]);
-    setUploadImg(URL.createObjectURL(event.target.files[0]));
-
-    setImgError(false);
-  };
-
-  const RootStyle = {
-    width: "100%",
-
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  };
-
-  const BodyStyle = {
-    width: 1000,
-  };
-
-  const ContentStyle = {
-    display: "flex",
-    alignItems: "left",
-    flexDirection: "column",
-
-    padding: "0 50px",
-  };
-
-  const ImageStyle = styled(Button)((props) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-
-    padding: "10px",
-
-    width: "400px",
-    height: "400px",
-
-    border: "dashed #ababab",
-    borderRadius: "20px",
-  }));
 
   const inputTextList = inputTexts.map((item, index) => (
     <FormControl
       key={index}
-      sx={{ mb: 3 }}
+      sx={{ mb: 2 }}
       required
       error={item.error}
       component="fieldset"
       variant="standard"
     >
       <Box sx={{ display: "flex", flexDirection: "row" }}>
-        <Typography variant="h5">{item.name}</Typography>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          {item.name}
+        </Typography>
         <FormLabel component="legend"></FormLabel>
       </Box>
       <Paper
         sx={{
           display: "flex",
           justifyContent: "center",
-
           p: "2px 4px",
           width: 500,
           border: "2px solid #cbcbcb",
         }}
       >
         <InputBase
-          required
           onChange={item.set}
           value={item.data}
           multiline={item.multiline}
@@ -376,49 +302,37 @@ function RegisterItem() {
           placeholder={item.placeholder}
         />
       </Paper>
-      <Box ml={1}>
-        {item.error && <FormHelperText>This is a required item</FormHelperText>}
-        {!item.error && <FormHelperText>Valid</FormHelperText>}
-      </Box>
     </FormControl>
   ));
-
-  const ButtonStyle = styled(Button)((theme) => ({
-    margin: "10px 10px",
-    width: "100px",
-    font: "1em Fira Sans",
-    // fontWeight:'bold',
-
-    border: "2px solid #ababab",
-    borderRadius: "10px",
-    color: "#404040",
-
-    "&:hover": {
-      /**
-       * HACK
-       * 테마 적용하고 싶은데 에러나서 그냥 테마 값 가져다 씀
-       */
-      color: "#00AB55",
-    },
-  }));
 
   return (
     <div style={RootStyle}>
       <div style={BodyStyle}>
-        <Typography variant="h4">Create New Item</Typography>
+        <Typography variant="h4" sx={{ mb: 1 }}>
+          Create New Item
+        </Typography>
         <Divider />
         <Box m={5} display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">
+            {uploadImgURL && (
+              <Typography color="primary" sx={{ mb: 1 }}>
+                *required
+              </Typography>
+            )}
+            {!uploadImgURL && (
+              <Typography color="#ff0000" sx={{ mb: 1 }}>
+                *required
+              </Typography>
+            )}
             <ImageStyle onClick={onClickImg}>
-              {uploadImg && (
+              {uploadImgURL && (
                 <Box
                   component="img"
-                  src={uploadImg}
+                  src={uploadImgURL}
                   sx={{ maxWidth: "400px", maxHeight: "400px" }}
                 />
               )}
-
-              {!uploadImg && (
+              {!uploadImgURL && (
                 <div>
                   <BackupIcon sx={{ fontSize: "50px", color: "#ababab" }} />
                   <Typography
@@ -428,20 +342,16 @@ function RegisterItem() {
                       fontWeight: "bold",
                     }}
                   >
-                    Uproad Img
+                    Upload Img
                   </Typography>
                 </div>
               )}
             </ImageStyle>
-            {!uploadImg && (
-              <Typography color="#ff0000"> * required Image </Typography>
-            )}
             <input
               ref={imgRef}
               type="file"
-              id="file_input"
               accept="image/*"
-              onChange={onImgChange}
+              onChange={onChangeImg}
               hidden
             />
           </Box>
@@ -452,27 +362,21 @@ function RegisterItem() {
             </Box>
             <Box m={0.5}>
               <FormControl fullWidth>
-                <NativeSelect
-                  defaultValue={category}
-                  inputProps={{
-                    name: "category",
-                    id: "uncontrolled-native",
-                  }}
-                  onChange={onChangeCategory}
-                >
-                  {categoryList.map((item, index) => (
-                    <option key={index} value={index}>
-                      {item.name}
-                    </option>
-                  ))}
+                <NativeSelect onChange={onChangeCategory}>
+                  {categoryList &&
+                    categoryList.map((item, index) => (
+                      <option key={index}>{item.category_code}</option>
+                    ))}
                 </NativeSelect>
               </FormControl>
             </Box>
             <Box mt={3} display="flex" justifyContent="right">
-              <ButtonStyle disabled={!isValid} onClick={onClickCreate}>
+              <ButtonStyle disabled={disabled} onClick={onClickCreate}>
                 CREATE
               </ButtonStyle>
-              <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
+              <ButtonStyle to="/main" component={RouterLink}>
+                CANCEL
+              </ButtonStyle>
             </Box>
           </div>
         </Box>
@@ -480,5 +384,4 @@ function RegisterItem() {
     </div>
   );
 }
-
 export default RegisterItem;
