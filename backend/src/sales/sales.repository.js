@@ -13,7 +13,7 @@ class SalesRepository {
 		`;
 		console.debug(sql);
 
-		return await connection.query(sql, [data.sale_contract_address, data.token_id, data.saller_address, data.completed_at])
+		return await connection.query(sql, [data.sale_contract_address, data.token_id, data.seller_address, data.completed_at])
 			.then(data => data[0])
 			.catch((e) => {
 				console.error(e);
