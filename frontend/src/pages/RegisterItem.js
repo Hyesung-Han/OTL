@@ -21,22 +21,22 @@ import { CommonContext } from "../context/CommonContext";
 import { useState, useRef, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import Web3 from 'web3';
-import COMMON_ABI from '../common/ABI';
+import Web3 from "web3";
+import COMMON_ABI from "../common/ABI";
 import { Web3Client } from "../common/web3Client";
-import COMMON_HEADER from '../common/HeaderType';
+import COMMON_HEADER from "../common/HeaderType";
 import sendTransaction from "../utils/TxSender";
 import BackupIcon from "@mui/icons-material/Backup";
 import logo from "../image/logo.png";
 import useWeb3Manager from "web3-react/dist/manager";
 
 /**
- * HSH | 2022.03.29 | UPDATE
+ * HSH | 2022.03.30 | v2.0
  * @name RegisterItem
- * @api {post} HOST/items
- * @api {patch} HOST/items/:item_id
+ * @api {post} HOST/items : 작품 등록(DB)
+ * @web3 {token_id 반환} : Web3[MetaMaks]를 통한 NFT 등록
+ * @api {patch} HOST/items/:item_id : NFT 등록(DB)
  * @des 작품 등록 -> DB저장 -> NFT 등록 -> DB저장
- * @des Web3만 해결되면 일사천리~ (아직 하는중)
  */
 function RegisterItem() {
   const RootStyle = {
@@ -201,7 +201,7 @@ function RegisterItem() {
   // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
-    COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
 
@@ -229,44 +229,55 @@ function RegisterItem() {
     formData.append("item_description", description);
     formData.append("category_code", category);
 
-    try{
-      const data = await Axios.post(serverUrlBase + `/items`, formData);
-      console.log(data);
-      if (data.status === 200) {
-        Swal.fire({
-          icon: "warning",
-          title: data.data.msg,
-        });
-      } else if (data.status === 201) {
-        /**
-         * TODO
-         * NFT 생성하기
-         */
-        const nftMint = await nftInstance.methods.create(user.user_address, data.data.data.item_image).send({from:user.user_address});
-        const token = nftMint.events.Transfer.returnValues.tokenId;
-        console.log(token);
-        const nftURL = await nftInstance.methods.tokenURI(token).call();
-        console.log(nftURL);
+    await Axios.post(serverUrlBase + `/items`, formData)
+      .then(async (data) => {
+        console.log(data.data.data.item_id);
+        if (data.status === 201) {
+          await Swal.fire({
+            icon: "success",
+            title: "작품 등록은 성공적",
+          });
+          const item_id = await data.data.data.item_id;
 
-        Swal.fire({
-          icon: "success",
-          title: "글이 성공적으로 등록되었습니다.",
-        });
-        navigate("/main");
-      } else  {
+          const nftMint = await nftInstance.methods
+            .create(user.user_address, data.data.data.item_image)
+            .send({ from: user.user_address });
+          const token = await nftMint.events.Transfer.returnValues.tokenId;
+          console.log(token);
+          // const nftURL = await nftInstance.methods.tokenURI(token).call();
+          // console.log(nftURL);
+
+          await Axios.patch(serverUrlBase + `/items/` + item_id, {
+            token_id: token,
+            owner_address: user.user_address,
+          });
+
+          await Swal.fire({
+            icon: "success",
+            title: "NFT 등록도 성공적",
+          });
+
+          await navigate("/main");
+        } else if (data.status === 200) {
+          Swal.fire({
+            icon: "warning",
+            title: data.data.msg,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "작품 등록 실패?",
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log("아이템 등록 오류 : " + error);
+
         Swal.fire({
           icon: "error",
           title: "아이템 등록 오류",
         });
-      }
-    }catch(error){
-      console.log("Item register error:" + error);
-
-      Swal.fire({
-        icon: "error",
-        title: "아이템이 정상적으로 등록되지 않았습니다",
       });
-    }
   };
 
   const inputTextList = inputTexts.map((item, index) => (
