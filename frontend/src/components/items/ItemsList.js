@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import ItemsCard from './ItemsCard';
 
-ItemsCard.propTypes = {
+ItemsList.propTypes = {
   products: PropTypes.array
 
 };
