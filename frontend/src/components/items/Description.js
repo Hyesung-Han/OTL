@@ -79,8 +79,7 @@
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
            <Typography>
-             Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit
-             amet egestas eros, vitae egestas augue. Duis vel est augue.
+             {props.saleCA}
            </Typography>
          </AccordionDetails>
        </Accordion>
