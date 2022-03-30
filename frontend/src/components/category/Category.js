@@ -1,6 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import { Box, Container, Typography, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+
+const BoxStyle = styled(Box)({
+  borderRadius : 8,
+  width:150,
+  height:50,
+  justifyContent:'center',
+  alignItems:'center',
+  "&:hover":{
+    boxShadow: '2px 5px 5px 2px rgba(225, 223, 214, 1)'
+  }
+});
 
 /**
  * CSW | 2022.03.30 | UPDATE
@@ -10,21 +23,25 @@ import axios from 'axios';
 
 /**
  * TODO
- * DB에서 카테고리 불러와서 화면에 나타내기
  * 카테고리 CSS
  */
  Category.propTypes = {
-    product: PropTypes.object
+    products: PropTypes.array
   };
 
-export default function Category({product}) {
+export default function Category({products}) {
 
-    //const {code, name} = product;
 
     return (
         
-        <div className='Category'>
-        This is Category
-        </div>
+      <Grid container spacing={6} sx={{my:'auto'}} >
+      {products.map((product) => (
+          <BoxStyle sx={{display: "flex", margin:'auto'}} key={product.category_code}>
+              <Typography variant="subtitle1" noWrap>
+                {product.category_name}
+              </Typography>
+          </BoxStyle>
+      ))}
+    </Grid>
     );
   }
