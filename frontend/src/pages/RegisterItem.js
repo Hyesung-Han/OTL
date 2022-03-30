@@ -25,11 +25,12 @@ import Swal from "sweetalert2";
 import BackupIcon from "@mui/icons-material/Backup";
 
 /**
- * HSH | 2022.03.28 | UPDATE
+ * HSH | 2022.03.29 | UPDATE
  * @name RegisterItem
  * @api {post} HOST/items
  * @api {patch} HOST/items/:item_id
  * @des 작품 등록 -> DB저장 -> NFT 등록 -> DB저장
+ * @des Web3만 해결되면 일사천리~ (아직 하는중)
  */
 function RegisterItem() {
   const RootStyle = {
@@ -86,7 +87,8 @@ function RegisterItem() {
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
 
   const [imgError, setImgError] = useState(true);
   const [authorError, setauthorError] = useState(true);
@@ -161,17 +163,11 @@ function RegisterItem() {
     },
   ];
 
-  /**
-   * HSH | 2022.03.28 | v2.0
-   * @name getCategoryList
-   * @api {get} /items/category
-   * @des 카테고리 리스트 받아오는 함수
-   */
-  function getCategoryList(){
+  function getCategoryList() {
     Axios.get(serverUrlBase + `/items/category`)
       .then((data) => {
-        setCategoryList(data.data.data);
         setCategory(data.data.data[0].category_code);
+        setCategoryList(data.data.data);
       })
       .catch(function (error) {
         console.log("get category error:" + error);
@@ -180,14 +176,13 @@ function RegisterItem() {
           icon: "error",
           title: "서버와 연동이 끊겼습니다. 다시 시도해주세요",
         });
-
         navigate("/main");
       });
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getCategoryList();
-  },[])
+  }, []);
 
   useEffect(() => {
     if (!imgError && !authorError && !titleError && !desError) {
@@ -223,12 +218,13 @@ function RegisterItem() {
 
     await Axios.post(serverUrlBase + `/items`, formData)
       .then(async (data) => {
-        console.log(data);
+        // console.log(data);
         if (data.status === 201) {
+          console.log(data.data.data.item_id);
           /**
            * TODO
-           * NFT 생성하기
-           * axios patch
+           * NFT 생성하고 (Web3)
+           * NFT 등록 API하고 (PATCH)
            */
           await Swal.fire({
             icon: "success",
@@ -320,7 +316,6 @@ function RegisterItem() {
                   sx={{ maxWidth: "400px", maxHeight: "400px" }}
                 />
               )}
-
               {!uploadImgURL && (
                 <div>
                   <BackupIcon sx={{ fontSize: "50px", color: "#ababab" }} />
@@ -336,7 +331,6 @@ function RegisterItem() {
                 </div>
               )}
             </ImageStyle>
-
             <input
               ref={imgRef}
               type="file"
@@ -352,19 +346,11 @@ function RegisterItem() {
             </Box>
             <Box m={0.5}>
               <FormControl fullWidth>
-                <NativeSelect
-                  defaultValue={category}
-                  inputProps={{
-                    name: "category",
-                    id: "uncontrolled-native",
-                  }}
-                  onChange={onChangeCategory}
-                >
-                  {categoryList && categoryList.map((item, index) => (
-                    <option key={index} value={item.category_code}>
-                      {item.category_code}
-                    </option>
-                  ))}
+                <NativeSelect onChange={onChangeCategory}>
+                  {categoryList &&
+                    categoryList.map((item, index) => (
+                      <option key={index}>{item.category_code}</option>
+                    ))}
                 </NativeSelect>
               </FormControl>
             </Box>
@@ -382,5 +368,4 @@ function RegisterItem() {
     </div>
   );
 }
-
 export default RegisterItem;
