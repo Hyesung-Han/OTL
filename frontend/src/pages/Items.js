@@ -54,15 +54,6 @@ const Items = () => {
   },[saleId]);
 
 
-  /**
-   * PJT Ⅲ - 과제 4: 조회
-   * Req.4-F1 구매하기 화면 조회
-   * 
-   * 1. 구매하기 클릭 시 판매 작품을 조회 API를 호출합니다.  
-   * 2. 응답으로부터 받은 token id로 Sale 정보를 요청합니다.
-   * 3. sale 컨트랙트 주소로 즉시 구매가를 컨트랙트로부터 직접 조회합니다.
-   * 3. token id로 NFT 컨트랙트로부터 직접 tokenURI를 조회하여 화면에 표시합니다. 
-   */
    const getItem = async () => {
 
     setLoading(true);
