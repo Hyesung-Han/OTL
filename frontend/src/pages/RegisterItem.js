@@ -28,7 +28,6 @@ import COMMON_HEADER from "../common/HeaderType";
 import sendTransaction from "../utils/TxSender";
 import BackupIcon from "@mui/icons-material/Backup";
 import logo from "../image/logo.png";
-import useWeb3Manager from "web3-react/dist/manager";
 
 /**
  * HSH | 2022.03.30 | v2.0
