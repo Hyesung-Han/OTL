@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import ProfileCard from './ProfileCard';
 
-ProfileCard.propTypes = {
+ProfileList.propTypes = {
   products: PropTypes.array
 };
 

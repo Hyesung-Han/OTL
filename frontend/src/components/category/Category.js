@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Container, Typography, Grid } from '@mui/material';
+import { Box, Container, Typography, Grid, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
+import { Link as RouterLink } from 'react-router-dom';
 
 const BoxStyle = styled(Box)({
   borderRadius : 8,
@@ -11,9 +11,11 @@ const BoxStyle = styled(Box)({
   justifyContent:'center',
   alignItems:'center',
   "&:hover":{
-    boxShadow: '2px 5px 5px 2px rgba(225, 223, 214, 1)'
+    boxShadow: '2px 5px 5px 2px rgba(225, 223, 214, 1)',
+    border:'0.5px solid black',
   }
 });
+
 
 /**
  * CSW | 2022.03.30 | UPDATE
@@ -31,16 +33,22 @@ const BoxStyle = styled(Box)({
 
 export default function Category({products}) {
 
-
     return (
         
-      <Grid container spacing={6} sx={{my:'auto'}} >
+    <Grid container spacing={6} sx={{my:'auto'}} >
       {products.map((product) => (
+        <Link
+        to={`/items/${product.category_code}`}
+        color="inherit"
+        underline='hover'
+        component={RouterLink}
+      >      
           <BoxStyle sx={{display: "flex", margin:'auto'}} key={product.category_code}>
               <Typography variant="subtitle1" noWrap>
                 {product.category_name}
               </Typography>
           </BoxStyle>
+      </Link>
       ))}
     </Grid>
     );
