@@ -19,7 +19,7 @@ export default function ItemsList({ products, ...other }) {
 
     <Grid container spacing={6} {...other}>
       {products.map((product) => (
-        <Grid sx={{ mb: 6 }} key={product.hash} item xs={12} sm={6} md={2.4}>
+        <Grid sx={{ mb: 6 }} key={product.item_id} item xs={12} sm={6} md={2.4}>
           <ItemsCard product={product}  />
         </Grid>
       ))}

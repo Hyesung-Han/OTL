@@ -4,7 +4,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { MotionContainer, varBounceIn } from '../components/animate';
 import Axios from 'axios';
 import Web3 from 'web3';
-import COMMON_ABI from '../common/ABI';
 import COMMON_HEADER from '../common/HeaderType';
 import getSaleByTokenId from '../common/SaleInfoGetter';
 import { onResponse } from '../common/ErrorMessage';
@@ -14,6 +13,8 @@ import ProfileList from '../components/profile/ProfileList';
 import HorizonLine from '../components/HorizonLine'
 import {CommonContext} from "../context/CommonContext"
 import { useParams } from 'react-router-dom';
+import COMMON_ABI from '../common/ABI';
+import { Web3Client } from "../common/web3Client";
 
 /**
  * CSW | 2022.03.29 | UPDATE
@@ -29,6 +30,14 @@ const SearchResult = () => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
   const {search_value} = useParams();
+
+    // nft contract
+    const NFT_CA = process.env.REACT_APP_NFT_CA;
+    const nftInstance = new Web3Client.eth.Contract(
+      COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
+      NFT_CA
+    );
+  
   // Web3
   const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL));
 
@@ -41,6 +50,9 @@ const SearchResult = () => {
     getItem();
   }, []);
 
+  useEffect(()=>{
+    getNFT();
+  },[item]);
 
 
   /**
@@ -72,7 +84,26 @@ const SearchResult = () => {
   }
 
   };
+  const getNFT = () => {
 
+    setLoading(true);
+    
+    try {
+      item.map( async(row)=>{
+        console.log(row.token_id);
+        const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
+        row.img_src = nftURL;
+      });
+
+      
+      console.log("0", item);
+      setLoading(false);
+
+  } catch (e) {
+      console.log('getNFT error' +  e);
+  }
+
+  };
   const getItem = async () => {
 
     setLoading(true);
@@ -96,13 +127,6 @@ const SearchResult = () => {
   };
 
   // 카드 화면 생성을 위한 데이터 전달
-  const productsitem = [...Array(item.length)].map((_, index) => {
-    return {
-      title: item[index].item_title,
-      tokenId: item[index].token_id,
-      hash: item[index].item_hash
-    };
-  });
   const productsprofile = [...Array(profile.length)].map((_, index) => {
     return {
       address: profile[index].user_address,
@@ -123,7 +147,7 @@ const SearchResult = () => {
                 <ProfileList sx={{ mt: 1 }} products={productsprofile} />
 
                 <HorizonLine text="Items" />
-                <ItemsList sx={{ mt: 1 }} products={productsitem} />
+                <ItemsList sx={{ mt: 1 }} products={item} />
             </Container>
           ) : (
             <Container>

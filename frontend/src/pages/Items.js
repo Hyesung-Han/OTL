@@ -13,6 +13,7 @@ import Category from '../components/category/Category';
 import {CommonContext} from "../context/CommonContext"
 import COMMON_ABI from '../common/ABI';
 import { Web3Client } from "../common/web3Client";
+import { useNavigate } from "react-router-dom";
 
 /**
  * [구매하기] 화면
@@ -24,15 +25,13 @@ const Items = () => {
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState([]);
-  const [price, setPrice] = useState('');
-
+  
   // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
     NFT_CA
   );
-
 
 
 
@@ -51,7 +50,6 @@ const Items = () => {
   useEffect(()=>{
     getNFT();
   },[item]);
-
 
 
   /**
@@ -93,9 +91,9 @@ const Items = () => {
         row.img_src = nftURL;
       });
 
-
-      setLoading(false);
       
+      console.log("0", item);
+      setLoading(false);
 
   } catch (e) {
       console.log('getNFT error' +  e);
@@ -121,10 +119,6 @@ const Items = () => {
 
   };
 
-  const concatArray = () =>{
-    console.log("1", item);
-  }
-
 
 
   return (
@@ -134,7 +128,7 @@ const Items = () => {
           {isCollection === true ? (
             
             <Container maxWidth="xl" sx={{my:3}}>
-              <Box sx={{ maxWidth: 480, margin: 'auto', textAlign: 'center' }}>
+              <Box sx={{ width: "80%", margin: 'auto', textAlign: 'center' }}>
                 <Category sx={{ mt: 1 }} products={category} />
               </Box>
               <ItemsList sx={{ mt: 1 }} products={item}/>
