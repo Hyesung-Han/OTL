@@ -19,7 +19,7 @@ import axios from 'axios';
 
 export default function Category({product}) {
 
-    const {code, name} = product;
+    //const {code, name} = product;
 
     return (
         
