@@ -42,6 +42,17 @@ class SalesService {
 		};
 	}
 
+	async getSalesHistory(token_id) {
+		const data = await salesRepository.getSalesHistory(token_id);
+		return {
+			statusCode: 200,
+			responseBody: {
+				result: 'success',
+				data: data
+			}
+		};
+	}	
+
 	async completeSales(token_id, buyer_address) {
 		try {
 			await connection.beginTransaction();

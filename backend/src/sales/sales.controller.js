@@ -44,6 +44,25 @@ router.get('/', async function (req, res) {
 });
 
 /**
+ * OYT | 2022.03.31 | v1.1
+ * @name sales
+ * @api {get} /sales/history
+ * @des 판매 히스토리 상세보기
+ */
+ router.get('/history', async function (req, res) {
+	try {
+		const { statusCode, responseBody } = await salesService.getSalesHistory(req.query['token_id']);
+	
+		res.statusCode = statusCode;
+		res.send(responseBody);
+	} catch(e) {
+		console.error("getSales",e);
+		res.status(403).send({result:"fail", error:e});
+	}
+});
+
+
+/**
  * LJA | 2022.03.22 | v1.0
  * @name sales
  * @api {patch} /sales/:token_id/complete
