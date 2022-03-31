@@ -7,58 +7,61 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-
+import PropTypes from 'prop-types';
+import COMMON_ABI from '../../common/ABI';
+import { Web3Client } from "../../common/web3Client";
+import Axios from "axios";
+import { useEffect, useState, useContext } from "react";
 
 /**
- * CSW | 2022.03.21 | UPDATE
+ * CSW | 2022.03.30 | UPDATE
  * @name ItemHistory
  * @des itemDetail ItemHistory 컴포넌트
  * HACK 위치잡기위해서 임시로 넣어둔 표
  * TODO 표 정보 연결
  */
 
+ ColumnGroupingTable.propTypes = {
+  products: PropTypes.array
+
+};
 
 const columns = [
-  { id: 'Event', label: 'Event', minWidth: 100 },
   { id: 'UnitPrice', label: 'UnitPrice', minWidth: 100 },
-  {
-    id: 'Quantity',
-    label: 'Quantity',
-    minWidth: 100,
-    format: (value) => value.toLocaleString('en-US'),
-  },
+  { id: 'Quantity', label: 'Quantity', minWidth: 100 },
   { id: 'From', label: 'From', minWidth: 100 },
   { id: 'To', label: 'To', minWidth: 100 },
   { id: 'Date', label: 'Date', minWidth: 120 },
 ];
 
-function createData(Event, UnitPrice, Quantity, From, To, Date) {
+function createData( UnitPrice, Quantity, From, To, Date) {
 
-  return { Event, UnitPrice, Quantity, From, To, Date };
+  return {  UnitPrice, Quantity, From, To, Date };
 }
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-];
 
-export default function ColumnGroupingTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+
+export default function ColumnGroupingTable({products}) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+
+  const rows=[];
+  console.log(products);
+
+  products.map(async(row)=>{
+    const timedata = row.completed_at;
+    const realEndDate = timedata.split("T");
+    const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+
+    // const res = Axios.get()
+
+
+    rows.push(createData("SSF", row.price, row.seller_address, row.buyer_address, rrealEndDate));
+  });
+
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -67,6 +70,8 @@ export default function ColumnGroupingTable() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+
 
   return (
     <Paper sx={{ width: '70%', border:'1px solid rgba(0, 0, 0, 0.1)', boxShadow: '0 0 10px rgba(225, 223, 214, 1)' }}>
@@ -96,7 +101,7 @@ export default function ColumnGroupingTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.Event}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.Date}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
