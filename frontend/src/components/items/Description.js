@@ -78,7 +78,7 @@
            <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0, textAlign:'center' }}>Contract</Typography>
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
-           <Typography>
+           <Typography style={{ wordWrap: "break-word" }}>
              {props.saleCA}
            </Typography>
          </AccordionDetails>
