@@ -139,7 +139,6 @@ const ItemDetail = () => {
             });
             const data = res.data.data;
             console.log(data);
-
             setSaleId(data.sale_id);
             setSaleCA(data.sale_contract_address);
             
@@ -152,8 +151,14 @@ const ItemDetail = () => {
         navigate("/registerSale/"+ token_id);
       };
 
-    const onClickSaleCancel = () => {
+    const onClickSaleCancel = async() => {
         try {
+            const saleInstance = new Web3Client.eth.Contract(
+                COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+                saleCA
+              );   
+            await saleInstance.methods.cancelSales().send({from: user.user_address});
+            await nftInstance.methods.setApprovalForAll(saleCA, false).send({ from: user.user_address });
             Axios.delete(serverUrlBase+ `/sales/`+saleId)
             navigate("/itemdetail/"+ token_id);
             
@@ -225,7 +230,10 @@ const ItemDetail = () => {
                 <Card sx={{ width:"70%", mt:3 }}>
                     <CardContent>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
-                            sale ends {date}
+                            sale ends
+                        </Typography>
+                        <Typography sx={{ fontSize: 15, textAlign:"right" }} color="text.secondary" variant="h4">
+                            {date}
                         </Typography>
                         <HorizonLine></HorizonLine>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
@@ -248,7 +256,7 @@ const ItemDetail = () => {
                             <Button color="secondary" variant="contained" size="big" style={{width:"100%"}} onClick={onClickSaleCancel}>판매취소</Button>
                             )): <div></div>}
                         {user.user_address !== owner ? ( !onsale ? (
-                            <Button color="secondary" variant="contained" size="big" style={{width:"100%"} } > 판매중이 아닙니다. </Button>
+                            <Button disabled color="secondary" variant="contained" size="big" style={{width:"100%"} } > 판매중이 아닙니다. </Button>
                         ):
                         (
                             <Button color="secondary" variant="contained" size="big" style={{width:"100%"}} onClick={onClickBuyNow} > Buy now </Button>
