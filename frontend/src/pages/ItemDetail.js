@@ -97,11 +97,12 @@ const ItemDetail = () => {
         try {
             const res = await Axios.get(serverUrlBase + `/items/`+ token_id);
             const data = res.data.data;
+
             setTitle(data.item_title);
             setDescription(data.item_description);
             setAuthor(data.author_name);
             setCategory(data.category_code);
-            setNickname(data.author_name);
+            setNickname(data.owner_address);
             setOnsale(data.on_sale_yn);
             setOwner(data.owner_address);
             
@@ -265,7 +266,7 @@ const ItemDetail = () => {
             <Grid item xs={7}>
                 <Typography variant="h3"> {title} </Typography>
                 <div style={{display:"flex"}}>
-                    <Typography variant="subtitle2" color="text.secondary" sx={{mr:1}}> created by </Typography>
+                    <Typography variant="subtitle2" color="text.secondary" sx={{mr:1}}> Owned by </Typography>
 
                     <Typography variant="subtitle2" color="text.secondary" to={`/home/${owner}` } component={RouterLink}> {nickname} </Typography>
 
