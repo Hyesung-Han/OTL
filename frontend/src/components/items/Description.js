@@ -33,7 +33,7 @@
            </Typography>
          </AccordionSummary>
          <AccordionDetails sx={{backgroundColor: 'rgba(249, 249, 249, 1)'}}>
-           <Typography>
+           <Typography style={{ wordWrap: "break-word" }}>
               {props.description}
            </Typography>
          </AccordionDetails>
