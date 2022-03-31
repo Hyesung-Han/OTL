@@ -71,7 +71,7 @@ class SalesRepository {
 	async completeSales(token_id, buyer_address) {
 		const sql = `
 			UPDATE sales_t
-			SET sale_yn = '0', buyer_address = ?
+			SET sale_yn = '0', buyer_address = ?, completed_at = CURRENT_TIMESTAMP
 			WHERE token_id = ?
 		`;
 		console.debug(sql);
