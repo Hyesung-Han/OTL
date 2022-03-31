@@ -60,9 +60,6 @@ const SearchResult = () => {
     getNFT();
   },[saleId]);
 
-  useEffect(()=>{
-    console.log(itemarr);
-  },[itemarr]);
 
 
    const getProfile = async () => {

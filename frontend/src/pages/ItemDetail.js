@@ -52,7 +52,7 @@ const ItemDetail = () => {
     const [price, setPrice] = useState('');
     const [imgUrl, setImgUrl]= useState('');
     const [date, setDate] = useState('');
-
+    const [history, setHistory] = useState([]);
       // nft contract
     const NFT_CA = process.env.REACT_APP_NFT_CA;
       const nftInstance = new Web3Client.eth.Contract(
@@ -77,9 +77,10 @@ const ItemDetail = () => {
               );
             await tokenInstance.methods.approve(saleCA, price).send({from:user.user_address});
             await saleInstance.methods.purchase().send({from:user.user_address});
-            
+            const now = new Date();
             const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
-                buyer_address : user.user_address
+                buyer_address : user.user_address,
+                completed_at : now
             });
 
             
@@ -138,12 +139,43 @@ const ItemDetail = () => {
                 params:{token_id:token_id}
             });
             const data = res.data.data;
-            console.log(data);
             setSaleId(data.sale_id);
             setSaleCA(data.sale_contract_address);
+
             
         } catch (e) {
             console.log('getSaleId error' +  e);
+        }
+    }
+
+    const getSaleHistory = async()=>{
+        try {
+   
+            const reshistory = await Axios.get(serverUrlBase + `/sales/history/`,{
+                params:{token_id:token_id}
+            });
+            const datahistory = reshistory.data.data;
+            setHistory(datahistory);
+
+            
+        } catch (e) {
+            console.log('getSaleHistory error' +  e);
+        }
+    }
+    
+    const getPrice =()=>{
+        try {
+            history.map(async(row)=>{
+                
+                const saleInstance = new Web3Client.eth.Contract(
+                    COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+                    row.sale_contract_address
+                  );  
+                const saleInfo = await saleInstance.methods.getSaleInfo().call();
+                row.price = saleInfo[3];
+            });
+        } catch (e) {
+            console.log('getPrice error' +  e);
         }
     }
 
@@ -185,6 +217,7 @@ const ItemDetail = () => {
       
     useEffect(()=>{
         getItemDetail();
+        getSaleHistory();
     }, []);
 
     useEffect(()=>{
@@ -194,16 +227,19 @@ const ItemDetail = () => {
             getSaleId();
 
         }
+        
     },[onsale]);
 
     useEffect(()=>{
         if(onsale===1){
             getDate();
-
         }
+
     },[saleCA]);
 
-
+    useEffect(()=>{
+        getPrice();
+    },[history])
 
 
   return (
@@ -273,7 +309,7 @@ const ItemDetail = () => {
                  <Description description={description} author={author} category = {category} saleCA={saleCA}></Description>
             </Grid>
             <Grid item xs={7}>
-                <ItemHistory></ItemHistory>
+                <ItemHistory products={history}></ItemHistory>
             </Grid>
             <Grid item xs={8} >
             </Grid>
