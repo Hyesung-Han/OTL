@@ -109,8 +109,6 @@ const Items = () => {
 
       });
 
-      
-      console.log("0", item);
       setLoading(false);
 
   } catch (e) {
