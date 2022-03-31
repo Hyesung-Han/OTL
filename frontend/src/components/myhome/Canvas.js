@@ -22,19 +22,16 @@ const Canvas = ({items}) => {
         canvas.height = MAX_CANVAS_HEIGHT;
         setContext(canvas.getContext('2d'));
         setCanvasTag(canvas);
+
+        // console.log("items", JSON.parse(JSON.stringify(items)));
+        // console.log("items length", items.length);
     }, []);
 
     useEffect(() => {
         if(context) {
             draw();
         }
-    }, [context]);
-
-    useEffect(()=>{
-        if(context) {
-            draw();
-        }
-    },[items]);
+    }, [context, items]);
 
     const draw = () => {
         context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
@@ -62,7 +59,6 @@ const Canvas = ({items}) => {
     let dragTarget = null;
     let startX = null;
     let startY = null;
-    const canvas = canvasRef.current;
 
     const hitBox = (x, y) => {
         let isTarget = null;
