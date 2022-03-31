@@ -1,34 +1,21 @@
-import { Link as RouterLink } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { styled } from "@mui/material/styles";
 import {
   Box,
-  Button,
   Typography,
   Divider,
-  InputBase,
-  Paper,
-  Grid,
-  NativeSelect,
-  FormControl,
-  FormLabel,
-  FormHelperText,
 } from "@mui/material";
-import Page from "../components/Page";
 import Axios from "axios";
 
 import { CommonContext } from "../context/CommonContext";
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
-import Swal from "sweetalert2";
-
-import BackupIcon from "@mui/icons-material/Backup";
-import logo from "../image/logo.png";
 
 import MyItemList from "../components/myhome/MyItemList";
 import MyProfile from "../components/myhome/MyProfile";
 import MyRoom from "../components/myhome/MyRoom";
 import HorizonLine from "../components/HorizonLine";
+// web3
+import COMMON_ABI from '../common/ABI';
+import { Web3Client } from "../common/web3Client";
 
 /**
  * LJA | 2022.03.28 | ADD
@@ -41,44 +28,38 @@ function MyHome() {
 
   const { serverUrlBase } = useContext(CommonContext);
   const user = useSelector((state) => state.User.user);
-  const [items, setItems] = useState();
+  const [items, setItems] = useState([]);
+  const [myItems, setMyItems] = useState([]);
+
+  // nft contract
+  const NFT_CA = process.env.REACT_APP_NFT_CA; 
+  const nftInstance = new Web3Client.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
+    NFT_CA
+  );
 
   const getItems = async() => {
     try {
-      const {data} = await Axios.get(serverUrlBase + `/items?user_address=`+user.user_address)
-      setItems(data.data);
-      data.data.forEach((row) => {
-        if(row.category_code === 'wallpaper') {
-          row.src = "/static/furniture/wallpaper.png";
-        } else if(row.category_code === 'chair') {
-          row.src = "/static/furniture/couch.png";
-        } else if(row.category_code === 'bed') {
-          row.src = "/static/furniture/bunk-bed.png";
-        } else if(row.category_code === 'closet') {
-          row.src = "/static/furniture/cupboard.png";
-        }
+      setItems([]);
+      const {data} = await Axios.get(serverUrlBase + `/items?user_address=`+user.user_address)      
+      data.data.forEach(async (row) => {
+        const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
+        row.src = nftURL;
+        setItems(items => [...items, row]);
       });
     } catch(e) {
       console.log("나의 모든 아이템 가져오기 오류 : " + e)
     }
   }
 
-  const [myItems, setMyItems] = useState();
-
   const getMyItems = async() => {
     try {
+      setMyItems([]);
       const {data} = await Axios.get(serverUrlBase + `/home/`+user.user_address)
-      setMyItems(data.data);
-      data.data.forEach((row) => {
-        if(row.category_code === 'wallpaper') {
-          row.src = "/static/furniture/wallpaper.png";
-        } else if(row.category_code === 'chair') {
-          row.src = "/static/furniture/couch.png";
-        } else if(row.category_code === 'bed') {
-          row.src = "/static/furniture/bunk-bed.png";
-        } else if(row.category_code === 'closet') {
-          row.src = "/static/furniture/cupboard.png";
-        }
+      await data.data.forEach(async (row) => {
+        const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
+        row.src = nftURL;
+        setMyItems(myItems => [...myItems, row]);
       });
     } catch(e) {
       console.log("나의 사용중인 아이템 가져오기 오류 : " + e)
@@ -93,7 +74,8 @@ function MyHome() {
             y_index:0,
             z_index:0,
         })
-        await getItems();
+        getItems();
+        getMyItems();
       } catch(e) {
         console.log("아이템 제거하기 에러: " + e)
       }
@@ -107,7 +89,8 @@ function MyHome() {
           y_index:0,
           z_index:0,
       })
-      await getItems();
+      getItems();
+      getMyItems();
     } catch(e) {
       console.log("아이템 추가하기 에러: " + e)
     }
@@ -118,13 +101,8 @@ function MyHome() {
     getMyItems();
   }, []);
 
-  useEffect(()=>{
-    getMyItems();
-  }, [items]);
-
   const RootStyle = {
     width: "100%",
-
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -134,21 +112,6 @@ function MyHome() {
     width: 1000,
     marginBottom: "100px",
   };
-
-  const ImageStyle = styled(Button)((props) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-
-    padding: "10px",
-
-    width: "400px",
-    height: "400px",
-
-    border: "dashed #ababab",
-    borderRadius: "20px",
-  }));
 
   if(!items) return <>로딩</>;
   return (
