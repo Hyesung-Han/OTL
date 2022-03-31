@@ -197,7 +197,7 @@ const ItemDetail = () => {
             navigate("/itemdetail/"+ token_id);
             
         } catch (e) {
-            console.log('ItemSaleRegi Cancle error' +  e);
+            console.log('ItemSaleCancel error' +  e);
         }
     };
     const getNFT = async() => {
@@ -264,7 +264,13 @@ const ItemDetail = () => {
             </Grid>
             <Grid item xs={7}>
                 <Typography variant="h3"> {title} </Typography>
-                <Typography variant="subtitle2" color="text.secondary"> created by {nickname} </Typography>
+                <div style={{display:"flex"}}>
+                    <Typography variant="subtitle2" color="text.secondary" sx={{mr:1}}> created by </Typography>
+
+                    <Typography variant="subtitle2" color="text.secondary" to={`/home/${owner}` } component={RouterLink}> {nickname} </Typography>
+
+                </div>
+
                 <Card sx={{ width:"70%", mt:3 }}>
                     <CardContent>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
