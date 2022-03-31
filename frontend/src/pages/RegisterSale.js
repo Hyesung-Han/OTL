@@ -205,11 +205,12 @@ function RegisterSale() {
       NFTAddress : NFTAddress
    }
 
-   await saleSuccess(saleContractData)
+   saleSuccess(saleContractData)
       .then(async(data) => {
 
          // 반환 값에서 주소 찾기필요
-         returnAddress = data.events.NewSale.returnValues._saleContract;
+         console.log(data);
+         const returnAddress = data.events.NewSale.returnValues._saleContract;
 
          //MetaMask 서명 순차 실행
          nftInstance.methods
@@ -219,7 +220,7 @@ function RegisterSale() {
          const sendNFT = nftInstance.methods
             .transferFrom(user.user_address, returnAddress, token_id)
             .send({ from: user.user_address });
-         
+
          // transferFrom confirm 클릭시 실행
          sendNFT.on('confirmation', function(confirmationNumber, receipt){
 
@@ -273,6 +274,8 @@ async function saleSuccess(data) {
    const saleInstance =  await saleFactoryInstance.methods
       .createSale(data.token_id, 1, data.price, data.startDate, data.endDate, data.ERC20, data.NFTAddress)
       .send({ from: user.user_address });
+
+   return saleInstance;
 }
 
   const inputTextList = inputTexts.map((item, index) => (
