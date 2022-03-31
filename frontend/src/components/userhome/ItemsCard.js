@@ -1,7 +1,7 @@
+import { useState, useEffect, useRef, useContext } from "react";
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Card, Link, Typography, Stack, Chip } from '@mui/material';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/material/styles';
 
@@ -21,32 +21,20 @@ const CardStyle = styled(Card)({
   }
 });
 
-ItemsCard.propTypes = {
-  product: PropTypes.object
-};
-
-export default function ItemsCard({ product, removeItem, addItem }) {
+const ItemsCard = ({ product }) => {
   const { token_id, item_title, on_use_yn, src } = product;
 
-  const handleClick = (token_id) => {
-    addItem(token_id);
-  };
-  const deleteClick = (token_id) => {
-    removeItem(token_id);
-  };
-  
+  // useEffect(()=>{
+  //   console.log(product);
+  //   console.log(JSON.parse(JSON.stringify(product)));
+  // },[]);
+
   return (
     <CardStyle>
-      {on_use_yn === 1?(<Chip
+      {on_use_yn === 1&&(<Chip
       label="in use"
       color="error"
-      onClick={deleteClick.bind(this, token_id)}
       icon={<CheckCircleIcon />}
-    />):(<Chip
-      label="add"
-      color="default"
-      onClick={handleClick.bind(this, token_id)}
-      icon={<AddCircleIcon />}
     />)}
     
       <Link
@@ -56,7 +44,7 @@ export default function ItemsCard({ product, removeItem, addItem }) {
           component={RouterLink}
         >
         <Box sx={{ pt: '100%', position: 'relative'}}>
-          <ImgStyle src={`${src}`} />
+          <ImgStyle src={src} />
         </Box>
         <Stack spacing={2} sx={{ p: 3 }}>
             <Typography variant="subtitle1" noWrap>
@@ -68,3 +56,5 @@ export default function ItemsCard({ product, removeItem, addItem }) {
     </CardStyle>
   );
 }
+
+export default ItemsCard;
