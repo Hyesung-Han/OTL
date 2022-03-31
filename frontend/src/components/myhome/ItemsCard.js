@@ -26,7 +26,7 @@ ItemsCard.propTypes = {
 };
 
 export default function ItemsCard({ product, removeItem, addItem }) {
-  const { token_id, item_title, category_code, item_id, on_use_yn, src } = product;
+  const { token_id, item_title, on_use_yn, src } = product;
 
   const handleClick = (token_id) => {
     addItem(token_id);
@@ -34,7 +34,7 @@ export default function ItemsCard({ product, removeItem, addItem }) {
   const deleteClick = (token_id) => {
     removeItem(token_id);
   };
-
+  
   return (
     <CardStyle>
       {on_use_yn === 1?(<Chip
@@ -56,7 +56,7 @@ export default function ItemsCard({ product, removeItem, addItem }) {
           component={RouterLink}
         >
         <Box sx={{ pt: '100%', position: 'relative'}}>
-          <ImgStyle src={src} />
+          <ImgStyle src={`${src}`} />
         </Box>
         <Stack spacing={2} sx={{ p: 3 }}>
             <Typography variant="subtitle1" noWrap>
