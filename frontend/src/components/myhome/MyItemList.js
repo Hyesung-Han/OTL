@@ -1,7 +1,3 @@
-import { useState, useEffect, useRef, useContext } from "react";
-import Axios from "axios";
-import { CommonContext } from "../../context/CommonContext";
-import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import ItemsCard from "./ItemsCard";
 
