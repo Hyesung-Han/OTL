@@ -33,6 +33,7 @@ const ImgStyle = styled('img')({
  * TODO
  * 1. web3 컨트랙트에서 price, 판매날짜, 주소, 이미지url 받아오기
  */
+
 const ItemDetail = () => {
     const symbol ="SSF";
     const { serverUrlBase } = useContext(CommonContext);
@@ -58,20 +59,42 @@ const ItemDetail = () => {
         COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
         NFT_CA
     );
+    // ssafyToken contract
+    const ERC20_CA = process.env.REACT_APP_ERC20_CA;
+    const tokenInstance = new Web3Client.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.ERC_ABI, 
+    ERC20_CA
+    );
 
     const user = useSelector((state)=> state.User.user);
     const navigate = useNavigate();
+
+    const onClickBuyNow = async () => {
+        try {
+            const saleInstance = new Web3Client.eth.Contract(
+                COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+                saleCA
+              );
+            await tokenInstance.methods.approve(saleCA, price).send({from:user.user_address});
+            await saleInstance.methods.purchase().send({from:user.user_address});
+            
+            const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
+                buyer_address : user.user_address
+            });
+
+            
+            navigate("/itemdetail/"+ token_id);
+            
+        } catch (e) {
+            console.log('buy now error' +  e);
+        }
+    };
+
+
     const getItemDetail= async()=>{
         try {
             const res = await Axios.get(serverUrlBase + `/items/`+ token_id);
             const data = res.data.data;
-            const row = await Axios.get(serverUrlBase + `/sales/`,{
-                params:{token_id: token_id}
-            });
-            const timedata = row.data.data.completed_at;
-            const realEndDate = timedata.split("T");
-            const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
-            setDate(rrealEndDate);
             setTitle(data.item_title);
             setDescription(data.item_description);
             setAuthor(data.author_name);
@@ -79,12 +102,36 @@ const ItemDetail = () => {
             setNickname(data.author_name);
             setOnsale(data.on_sale_yn);
             setOwner(data.owner_address);
-
+            
             
         } catch (e) {
             console.log('getItemDetail error' +  e);
         }
     }
+    
+    
+    const getDate = async()=>{
+        try {
+            
+            const row = await Axios.get(serverUrlBase + `/sales/`,{
+                params:{token_id: token_id}
+            });
+            const timedata = row.data.data.completed_at;
+            const realEndDate = timedata.split("T");
+            const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+            const saleInstance = new Web3Client.eth.Contract(
+                COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+                saleCA
+              );     
+            const saleInfo = await saleInstance.methods.getSaleInfo().call();
+            setPrice(saleInfo[3]);
+            setDate(rrealEndDate);
+
+        } catch (e) {
+            console.log('getDate error' +  e);
+        }
+    }
+
     const getSaleId = async()=>{
         try {
             const res = await Axios.get(serverUrlBase + `/sales/`,{
@@ -92,7 +139,6 @@ const ItemDetail = () => {
             });
             const data = res.data.data;
             console.log(data);
-
             setSaleId(data.sale_id);
             setSaleCA(data.sale_contract_address);
             
@@ -105,8 +151,14 @@ const ItemDetail = () => {
         navigate("/registerSale/"+ token_id);
       };
 
-    const onClickSaleCancel = () => {
+    const onClickSaleCancel = async() => {
         try {
+            const saleInstance = new Web3Client.eth.Contract(
+                COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+                saleCA
+              );   
+            await saleInstance.methods.cancelSales().send({from: user.user_address});
+            await nftInstance.methods.setApprovalForAll(saleCA, false).send({ from: user.user_address });
             Axios.delete(serverUrlBase+ `/sales/`+saleId)
             navigate("/itemdetail/"+ token_id);
             
@@ -120,12 +172,8 @@ const ItemDetail = () => {
         
         try {
             const nftURL = await nftInstance.methods.tokenURI(token_id).call();
-            const saleInstance = new Web3Client.eth.Contract(
-              COMMON_ABI.CONTRACT_ABI.SALE_ABI,
-              saleCA
-            );      
-            const saleInfo = await saleInstance.methods.getSaleInfo().call();
-            setPrice(saleInfo[3]);
+           
+
             setImgUrl(nftURL); 
           setLoading(false);
 
@@ -137,12 +185,25 @@ const ItemDetail = () => {
       
     useEffect(()=>{
         getItemDetail();
-        getSaleId();
     }, []);
 
     useEffect(()=>{
         getNFT();
+        if(onsale===1){
+
+            getSaleId();
+
+        }
+    },[onsale]);
+
+    useEffect(()=>{
+        if(onsale===1){
+            getDate();
+
+        }
     },[saleCA]);
+
+
 
 
   return (
@@ -153,7 +214,8 @@ const ItemDetail = () => {
       alignItems="center"
       display="flex"
     >
-        <Grid sx={{my:3}} container spacing={3}>
+      
+            <Grid sx={{my:3}} container spacing={3}>
             <Grid item xs={2}>
 
             </Grid>
@@ -168,7 +230,10 @@ const ItemDetail = () => {
                 <Card sx={{ width:"70%", mt:3 }}>
                     <CardContent>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
-                            sale ends {date}
+                            sale ends
+                        </Typography>
+                        <Typography sx={{ fontSize: 15, textAlign:"right" }} color="text.secondary" variant="h4">
+                            {date}
                         </Typography>
                         <HorizonLine></HorizonLine>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
@@ -184,7 +249,18 @@ const ItemDetail = () => {
                         </div>
                     </CardContent>
                     <div style={{display :"flex", justifyContent:"center"}}>
-                        <Button color="secondary" variant="contained" size="big" style={{width:"100%"}}>Buy now</Button>
+                        {user.user_address=== owner ? ( !onsale ? (
+                            <Button color="secondary" variant="contained" size="big" style={{width:"100%"}} onClick={onClickSaleRegi} >판매등록</Button>
+                        ):
+                        (
+                            <Button color="secondary" variant="contained" size="big" style={{width:"100%"}} onClick={onClickSaleCancel}>판매취소</Button>
+                            )): <div></div>}
+                        {user.user_address !== owner ? ( !onsale ? (
+                            <Button disabled color="secondary" variant="contained" size="big" style={{width:"100%"} } > 판매중이 아닙니다. </Button>
+                        ):
+                        (
+                            <Button color="secondary" variant="contained" size="big" style={{width:"100%"}} onClick={onClickBuyNow} > Buy now </Button>
+                            )): <div></div>}    
                     </div>
 
 
@@ -201,17 +277,8 @@ const ItemDetail = () => {
             </Grid>
             <Grid item xs={8} >
             </Grid>
-            <Grid item xs={2}>
-                <div style={{display :"flex", justifyContent:"center"}}>
-                    {user.user_address=== owner ? ( !onsale ? (
-                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleRegi} >판매등록</Button>
-                    ):
-                    (
-                        <Button color="secondary" variant="outlined" size="big" style={{width:"100%"}} onClick={onClickSaleCancel}>판매취소</Button>
-                    )):<div/>}
-                </div>
-            </Grid>
         </Grid>
+
 
     </Page>
   );
