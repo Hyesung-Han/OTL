@@ -50,7 +50,7 @@ export default function ItemsCard({ product, removeItem, addItem }) {
     />)}
     
       <Link
-          to={`/items/detail/${token_id}`}
+          to={`/itemdetail/${token_id}`}
           color="inherit"
           underline='hover'
           component={RouterLink}
