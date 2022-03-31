@@ -25,7 +25,7 @@ class SalesRepository {
 		const sql = `
 			SELECT sale_id, sale_contract_address, sale_yn, token_id, seller_address, buyer_address, created_at, completed_at
 			FROM sales_t
-			WHERE token_id = ?
+			WHERE token_id = ? and sale_yn = '1'
 		`;
 		console.debug(sql);
 
@@ -36,6 +36,22 @@ class SalesRepository {
 				throw e;
 			});
 	}
+
+	async getSalesHistory(token_id) {
+		const sql = `
+			SELECT sale_id, sale_contract_address, sale_yn, token_id, seller_address, buyer_address, created_at, completed_at
+			FROM sales_t
+			WHERE token_id = ? and sale_yn = '0'
+		`;
+		console.debug(sql);
+
+		return await connection.query(sql, token_id)
+			.then(data => data[0])
+			.catch((e) => {
+				console.error(e);
+				throw e;
+			});
+	}	
 
 	async deleteSales(sale_id) {
 		const sql = `
