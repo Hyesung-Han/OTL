@@ -26,6 +26,7 @@ const Items = () => {
   const [category, setCategory] = useState([]);
   const {category_code} = useParams();
   const [saleId,setSaleId] = useState([]);
+  const [itemarr, setItemarr]= useState([]);
 
 
   // nft contract
@@ -106,7 +107,7 @@ const Items = () => {
         const saleInfo = await saleInstance.methods.getSaleInfo().call();
         row.img_src = nftURL;
         row.price = saleInfo[3];
-
+        setItemarr(itemarr=>[...itemarr,row]);
       });
 
       setLoading(false);

@@ -31,6 +31,8 @@ const SearchResult = () => {
   const [profile, setProfile] = useState([]);
   const {search_value} = useParams();
   const [saleId,setSaleId] = useState([]);
+  const [itemarr, setItemarr]= useState([]);
+
     // nft contract
     const NFT_CA = process.env.REACT_APP_NFT_CA;
     const nftInstance = new Web3Client.eth.Contract(
@@ -57,6 +59,7 @@ const SearchResult = () => {
   useEffect(()=>{
     getNFT();
   },[saleId]);
+
 
 
    const getProfile = async () => {
@@ -88,6 +91,7 @@ const SearchResult = () => {
         });
         const data = res.data.data;
         row.saleCA = data.sale_contract_address;
+
         testArray.push(data.sale_contract_address);
       });
       setSaleId(testArray);
@@ -110,7 +114,7 @@ const SearchResult = () => {
         const saleInfo = await saleInstance.methods.getSaleInfo().call();
         row.img_src = nftURL;
         row.price = saleInfo[3];
-
+        setItemarr(itemarr=>[...itemarr,row]);
       });
 
       

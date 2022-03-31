@@ -28,7 +28,7 @@ export default function ProfileCard({ product }) {
   return (
     <Container>
       <Link
-          to={`/#`}
+          to={`/home/${user_address}`}
           color="inherit"
           underline='hover'
           component={RouterLink}
