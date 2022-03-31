@@ -27,16 +27,17 @@ import { useEffect, useState, useContext } from "react";
 };
 
 const columns = [
-  { id: 'UnitPrice', label: 'UnitPrice', minWidth: 100 },
-  { id: 'Quantity', label: 'Quantity', minWidth: 100 },
+  { id: 'no', label: 'no', minWidth: 20 },
+  { id: 'Unit', label: 'Unit', minWidth: 70 },
+  { id: 'Price', label: 'Price', minWidth: 100 },
   { id: 'From', label: 'From', minWidth: 100 },
   { id: 'To', label: 'To', minWidth: 100 },
   { id: 'Date', label: 'Date', minWidth: 120 },
 ];
 
-function createData( UnitPrice, Quantity, From, To, Date) {
+function createData( no,Unit, Price, From, To, Date) {
 
-  return {  UnitPrice, Quantity, From, To, Date };
+  return {  no,Unit, Price, From, To, Date };
 }
 
 
@@ -45,23 +46,21 @@ function createData( UnitPrice, Quantity, From, To, Date) {
 export default function ColumnGroupingTable({products}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+  let idx=1;
 
   const rows=[];
-  console.log(products);
 
-  products.map(async(row)=>{
+
+  products.map((row)=>{
+
     const timedata = row.completed_at;
     const realEndDate = timedata.split("T");
     const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
 
-    // const res = Axios.get()
-
-
-    rows.push(createData("SSF", row.price, row.seller_address, row.buyer_address, rrealEndDate));
+    rows.push(createData(idx,"SSF", row.price, row.seller_address, row.buyer_address, rrealEndDate));
+    idx++;
   });
 
-  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -101,7 +100,7 @@ export default function ColumnGroupingTable({products}) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.Date}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
