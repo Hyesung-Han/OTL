@@ -53,6 +53,7 @@ const ItemDetail = () => {
     const [imgUrl, setImgUrl]= useState('');
     const [date, setDate] = useState('');
     const [history, setHistory] = useState([]);
+    const [historyarr, setHistoryArr] = useState([]);
       // nft contract
     const NFT_CA = process.env.REACT_APP_NFT_CA;
       const nftInstance = new Web3Client.eth.Contract(
@@ -173,6 +174,7 @@ const ItemDetail = () => {
                   );  
                 const saleInfo = await saleInstance.methods.getSaleInfo().call();
                 row.price = saleInfo[3];
+                setHistoryArr(historyarr=>[...historyarr,row]);
             });
         } catch (e) {
             console.log('getPrice error' +  e);
