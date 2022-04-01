@@ -85,6 +85,7 @@ const ItemDetail = () => {
                 .on('confirmation', async function(confirmationNumber, receipt){
 
                 const now = new Date();
+                // now.setHours(now.getHours()+6);
                 const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
                     buyer_address : user.user_address,
                     completed_at : now
@@ -129,7 +130,10 @@ const ItemDetail = () => {
                 params:{token_id: token_id}
             });
             const timedata = row.data.data.completed_at;
-            const realEndDate = timedata.split("T");
+            let newDate = new Date(timedata);
+            newDate.setHours(newDate.getHours()+9);
+            console.log(newDate);
+            const realEndDate = newDate.toISOString().split("T");
             const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
             const saleInstance = new Web3Client.eth.Contract(
                 COMMON_ABI.CONTRACT_ABI.SALE_ABI,
