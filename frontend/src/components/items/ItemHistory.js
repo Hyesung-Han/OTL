@@ -29,9 +29,9 @@ import { useEffect, useState, useContext } from "react";
 const columns = [
   { id: 'no', label: 'no', minWidth: 20 },
   { id: 'Unit', label: 'Unit', minWidth: 70 },
-  { id: 'Price', label: 'Price', minWidth: 100 },
-  { id: 'From', label: 'From', minWidth: 100 },
-  { id: 'To', label: 'To', minWidth: 100 },
+  { id: 'Price', label: 'Price', minWidth: 70 },
+  { id: 'From', label: 'From', minWidth: 90 },
+  { id: 'To', label: 'To', minWidth: 90 },
   { id: 'Date', label: 'Date', minWidth: 120 },
 ];
 
@@ -54,7 +54,9 @@ export default function ColumnGroupingTable({products}) {
   products.map((row)=>{
 
     const timedata = row.completed_at;
-    const realEndDate = timedata.split("T");
+    let newDate = new Date(timedata);
+    newDate.setHours(newDate.getHours()+9);
+    const realEndDate = newDate.toISOString().split("T");
     const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
 
     rows.push(createData(idx,"SSF", row.price, row.seller_address, row.buyer_address, rrealEndDate));
@@ -78,7 +80,7 @@ export default function ColumnGroupingTable({products}) {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align="left" colSpan={4}>
+              <TableCell align="left" colSpan={6}>
                 History
               </TableCell>
 
@@ -101,16 +103,34 @@ export default function ColumnGroupingTable({products}) {
               .map((row) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
-                    {columns.map((column) => {
+                    {/* {columns.map((column) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={column.id} align={column.align} style={{ textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"hidden", maxWidth:"200px"}}>
                           {column.format && typeof value === 'number'
                             ? column.format(value)
                             : value}
                         </TableCell>
                       );
-                    })}
+                    })} */}
+                        <TableCell key={columns[0].id} align={columns[0].align} style={{ textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"hidden", maxWidth:"80px"}}>
+                          {row[columns[0].id]}
+                        </TableCell>
+                        <TableCell key={columns[1].id} align={columns[1].align} style={{ textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"hidden", maxWidth:"80px"}}>
+                          {row[columns[1].id]}
+                        </TableCell>    
+                        <TableCell key={columns[2].id} align={columns[2].align} style={{ textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"hidden", maxWidth:"50px"}}>
+                          {row[columns[2].id]}
+                        </TableCell>    
+                        <TableCell key={columns[3].id} align={columns[3].align} style={{ textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"hidden", maxWidth:"90px"}}>
+                          {row[columns[3].id]}
+                        </TableCell>    
+                        <TableCell key={columns[4].id} align={columns[4].align} style={{ textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"hidden", maxWidth:"90px"}}>
+                          {row[columns[4].id]}
+                        </TableCell>    
+                        <TableCell key={columns[5].id} align={columns[5].align} style={{ textOverflow:"ellipsis", whiteSpace:"nowrap",overflow:"hidden", maxWidth:"200px"}}>
+                          {row[columns[5].id]}
+                        </TableCell>        
                   </TableRow>
                 );
               })}
