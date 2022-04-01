@@ -6,10 +6,11 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const BoxStyle = styled(Box)({
   borderRadius : 8,
-  width:150,
+  width:120,
   height:50,
   justifyContent:'center',
   alignItems:'center',
+  border:'0.5px solid rgba(232, 234, 235, 0.93)',
   "&:hover":{
     boxShadow: '2px 5px 5px 2px rgba(225, 223, 214, 1)',
     border:'0.5px solid black',
@@ -35,7 +36,7 @@ export default function Category({products}) {
 
     return (
         
-    <Grid container spacing={6} sx={{my:'auto'}} >
+    <Grid container spacing={6} sx={{my:'auto',display: "flex", justifyContent:"space-around"}} >
       {products.map((product) => (
         <Link
         to={`/items/${product.category_code}`}
