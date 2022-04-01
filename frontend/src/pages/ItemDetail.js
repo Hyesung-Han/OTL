@@ -85,7 +85,6 @@ const ItemDetail = () => {
                 .on('confirmation', async function(confirmationNumber, receipt){
 
                 const now = new Date();
-                // now.setHours(now.getHours()+6);
                 const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
                     buyer_address : user.user_address,
                     completed_at : now

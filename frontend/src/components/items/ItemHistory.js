@@ -54,7 +54,9 @@ export default function ColumnGroupingTable({products}) {
   products.map((row)=>{
 
     const timedata = row.completed_at;
-    const realEndDate = timedata.split("T");
+    let newDate = new Date(timedata);
+    newDate.setHours(newDate.getHours()+9);
+    const realEndDate = newDate.toISOString().split("T");
     const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
 
     rows.push(createData(idx,"SSF", row.price, row.seller_address, row.buyer_address, rrealEndDate));
