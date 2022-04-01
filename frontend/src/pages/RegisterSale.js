@@ -191,7 +191,8 @@ function RegisterSale() {
 
   const onClickCreate = async () => {
 
-   const date = new Date(endDate);
+   var date = new Date(endDate);
+   console.log(date);
    const endSeconds = Math.floor(date.getTime() / 1000);
    const ERC20 = process.env.REACT_APP_ERC20_CA;
    const NFTAddress = process.env.REACT_APP_NFT_CA;
@@ -228,9 +229,14 @@ function RegisterSale() {
             sendNFT.off('confirmation');
             throw new Error("ConfirmCompletedException");
          }
+         
+         // 한국시간 맞춤
+         let insertDate = new Date(endDate);
+         insertDate.setHours(insertDate.getHours()+9);
 
-         const realEndDate = endDate.toISOString().split("T");
+         const realEndDate = insertDate.toISOString().split("T");
          const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+         
    
          Axios.post(serverUrlBase + `/sales`, {
             token_id: token_id,
