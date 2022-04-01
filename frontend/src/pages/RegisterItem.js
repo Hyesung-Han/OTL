@@ -21,14 +21,13 @@ import { CommonContext } from "../context/CommonContext";
 import { useState, useRef, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import Web3 from "web3";
 import COMMON_ABI from "../common/ABI";
 import { Web3Client } from "../common/web3Client";
-import COMMON_HEADER from "../common/HeaderType";
-import sendTransaction from "../utils/TxSender";
 import BackupIcon from "@mui/icons-material/Backup";
-import logo from "../image/logo.png";
 
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Backdrop from "@mui/material/Backdrop";
 /**
  * HSH | 2022.03.30 | v2.0
  * @name RegisterItem
@@ -100,6 +99,8 @@ function RegisterItem() {
   const [titleError, setTitleError] = useState(true);
   const [desError, setDesError] = useState(true);
   const [disabled, setDisabled] = useState(true);
+
+  const [open, setOpen] = useState(false);
 
   const onChangeAutor = (e) => {
     const value = e.target.value;
@@ -228,35 +229,54 @@ function RegisterItem() {
     formData.append("item_description", description);
     formData.append("category_code", category);
     console.log(formData);
+
     await Axios.post(serverUrlBase + `/items`, formData)
       .then(async (data) => {
-        console.log(data.data.data.item_id);
         if (data.status === 201) {
           await Swal.fire({
             icon: "success",
-            title: "작품 등록은 성공적",
+            title: "작품등록 성공",
           });
+
+          setOpen(true);
           const item_id = await data.data.data.item_id;
 
           const nftMint = await nftInstance.methods
             .create(user.user_address, data.data.data.item_image)
-            .send({ from: user.user_address });
-          const token = await nftMint.events.Transfer.returnValues.tokenId;
-          console.log(token);
-          // const nftURL = await nftInstance.methods.tokenURI(token).call();
-          // console.log(nftURL);
+            .send({ from: user.user_address })
+            .then(async (data) => {
+              const token = await data.events.Transfer.returnValues.tokenId;
+              console.log(token);
+              setOpen(false);
 
-          await Axios.patch(serverUrlBase + `/items/` + item_id, {
-            token_id: token,
-            owner_address: user.user_address,
-          });
+              await Axios.patch(serverUrlBase + `/items/` + item_id, {
+                token_id: token,
+                owner_address: user.user_address,
+              })
+                .then(async () => {
+                  await Swal.fire({
+                    icon: "success",
+                    title: "NFT등록 성공",
+                  });
+                  await navigate("/myhome");
+                })
+                .catch(function (error) {
+                  console.log("NFT등록 오류 : " + error);
+                  Swal.fire({
+                    icon: "error",
+                    title: "NFT등록 오류",
+                  });
+                });
+            })
+            .catch(async function (error) {
+              await setOpen(false);
+              console.log("NFT등록 오류 : " + error);
 
-          await Swal.fire({
-            icon: "success",
-            title: "NFT 등록도 성공적",
-          });
-
-          await navigate("/main");
+              await Swal.fire({
+                icon: "error",
+                title: "NFT등록 오류",
+              });
+            });
         } else if (data.status === 200) {
           Swal.fire({
             icon: "warning",
@@ -265,16 +285,16 @@ function RegisterItem() {
         } else {
           Swal.fire({
             icon: "error",
-            title: "작품/NFT 등록 실패?",
+            title: "작품등록 실패",
           });
         }
       })
       .catch(function (error) {
-        console.log("작품/NFT 등록 오류 : " + error);
+        console.log("작품등록 오류 : " + error);
 
         Swal.fire({
           icon: "error",
-          title: "작품/NFT 등록 오류",
+          title: "작품등록 오류",
         });
       });
   };
@@ -384,6 +404,18 @@ function RegisterItem() {
               <ButtonStyle disabled={disabled} onClick={onClickCreate}>
                 CREATE
               </ButtonStyle>
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={open}
+              >
+                <Alert severity="info">
+                  <AlertTitle>1 / 1</AlertTitle>
+                  NFT Registering... — <strong>Please wait!</strong>
+                </Alert>
+              </Backdrop>
               <ButtonStyle to="/main" component={RouterLink}>
                 CANCEL
               </ButtonStyle>
