@@ -9,13 +9,9 @@ import {
   InputBase,
   Paper,
   Grid,
-  NativeSelect,
   FormControl,
-  FormLabel,
-  FormHelperText,
   TextField,
 } from "@mui/material";
-import Page from "../components/Page";
 import Axios from "axios";
 
 import InputAdornment from "@mui/material/InputAdornment";
@@ -25,11 +21,13 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 
 import Swal from "sweetalert2";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Backdrop from "@mui/material/Backdrop";
 
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
-import DateRangeIcon from "@mui/icons-material/DateRange";
 
 import COMMON_ABI from "../common/ABI";
 import { Web3Client } from "../common/web3Client";
@@ -67,6 +65,10 @@ function RegisterSale() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [open3, setOpen3] = useState(false);
 
   const getItemDetail = async () => {
     await Axios.get(serverUrlBase + "/items/" + token_id)
@@ -190,99 +192,122 @@ function RegisterSale() {
   }, []);
 
   const onClickCreate = async () => {
+    const date = new Date(endDate);
+    const endSeconds = Math.floor(date.getTime() / 1000);
+    const ERC20 = process.env.REACT_APP_ERC20_CA;
+    const NFTAddress = process.env.REACT_APP_NFT_CA;
 
-   var date = new Date(endDate);
-   console.log(date);
-   const endSeconds = Math.floor(date.getTime() / 1000);
-   const ERC20 = process.env.REACT_APP_ERC20_CA;
-   const NFTAddress = process.env.REACT_APP_NFT_CA;
-
-   const saleContractData = {
-      token_id : token_id,
-      price : price,
+    const saleContractData = {
+      token_id: token_id,
+      price: price,
       startDate: Math.floor(Date.now() / 1000),
       endDate: endSeconds,
-      ERC20 : ERC20,
-      NFTAddress : NFTAddress
-   }
+      ERC20: ERC20,
+      NFTAddress: NFTAddress,
+    };
+    setOpen1(true);
+    saleSuccess(saleContractData)
+      .then(async (data) => {
+        // 반환 값에서 주소 찾기필요
+        console.log(data);
+        const returnAddress = data.events.NewSale.returnValues._saleContract;
 
-   saleSuccess(saleContractData)
-      .then(async(data) => {
+        setOpen1(false);
+        setOpen2(true);
 
-         // 반환 값에서 주소 찾기필요
-         console.log(data);
-         const returnAddress = data.events.NewSale.returnValues._saleContract;
+        //MetaMask 서명 순차 실행
+        nftInstance.methods
+          .setApprovalForAll(returnAddress, true)
+          .send({ from: user.user_address })
+          .then(async () => {
+            setOpen2(false);
+            setOpen3(true);
 
-         //MetaMask 서명 순차 실행
-         nftInstance.methods
-            .setApprovalForAll(returnAddress, true)
-            .send({ from: user.user_address });
+            // transferFrom confirm 클릭시 실행
+            nftInstance.methods
+              .transferFrom(user.user_address, returnAddress, token_id)
+              .send({ from: user.user_address })
+              .on("confirmation", function (confirmationNumber, receipt) {
+                if (confirmationNumber > 0) {
+                  this.off("confirmation");
+                  throw new Error("ConfirmCompletedException");
+                }
+              })
+              .then(async () => {
+                // 한국시간 맞춤
+                let insertDate = new Date(endDate);
+                insertDate.setHours(insertDate.getHours()+9);
 
-         const sendNFT = nftInstance.methods
-            .transferFrom(user.user_address, returnAddress, token_id)
-            .send({ from: user.user_address });
+                const realEndDate = insertDate.toISOString().split("T");
+                const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
 
-         // transferFrom confirm 클릭시 실행
-         sendNFT.on('confirmation', function(confirmationNumber, receipt){
+                Axios.post(serverUrlBase + `/sales`, {
+                  token_id: token_id,
+                  seller_address: user.user_address,
+                  completed_at: rrealEndDate,
+                  sale_contract_address: returnAddress,
+                })
+                  .then(async (data) => {
+                    console.log(data);
+                    if (data.status === 201) {
+                      // 소유자가 sale contract에게 권한 부여 및 소유권 변경
+                      setOpen3(false);
+                      await alert("판매등록 완료", "success");
+                      await navigate("/main");
+                    } else {
+                      setOpen3(false);
+                      alert("판매등록 실패", "error");
+                    }
+                  })
+                  .catch(function (error) {
+                    setOpen3(false);
+                    console.log("판매등록 오류 : " + error);
+                    alert("판매등록 오류", "error");
+                  });
+              })
+              .catch(function (error) {
+                setOpen3(false);
+                console.log("NFT판매 오류3 : " + error);
+                alert("NFT판매 오류3", "error");
+              });
+          })
+          .catch(function (error) {
+            setOpen2(false);
+            console.log("NFT판매 오류2 : " + error);
+            alert("NFT판매 오류2", "error");
+          });
+      })
+      .catch(function (error) {
+        console.log("NFT판매 오류1 : " + error);
+        setOpen1(false);
+        alert("NFT판매 오류1", "error");
 
-         if (confirmationNumber > 0) {
-            sendNFT.off('confirmation');
-            throw new Error("ConfirmCompletedException");
-         }
-         
-         // 한국시간 맞춤
-         let insertDate = new Date(endDate);
-         insertDate.setHours(insertDate.getHours()+9);
-
-         const realEndDate = insertDate.toISOString().split("T");
-         const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
-         
-   
-         Axios.post(serverUrlBase + `/sales`, {
-            token_id: token_id,
-            seller_address: user.user_address,
-            completed_at: rrealEndDate,
-            sale_contract_address: returnAddress,
-         })
-         .then(async (data) => {
-            console.log(data);
-            if (data.status === 201) {
-            
-               // 소유자가 sale contract에게 권한 부여 및 소유권 변경
-               await Swal.fire({
-               icon: "success",
-               title: "판매 등록 완료",
-               });
-      
-               await navigate("/main");
-   
-            } else {
-               Swal.fire({
-               icon: "error",
-               title: "판매 등록 실패",
-               });
-            }
-         })
-         .catch(function (error) {
-            console.log("판매 등록 오류 : " + error);
-   
-            Swal.fire({
-               icon: "error",
-               title: "판매 등록 오류",
-            });
-         });
       });
-   });
-};
+  };
 
-// saleContract 생성 부분
-async function saleSuccess(data) {
-   const saleInstance =  await saleFactoryInstance.methods
-      .createSale(data.token_id, 1, data.price, data.startDate, data.endDate, data.ERC20, data.NFTAddress)
+  // saleContract 생성 부분
+  async function saleSuccess(data) {
+    const saleInstance = await saleFactoryInstance.methods
+      .createSale(
+        data.token_id,
+        1,
+        data.price,
+        data.startDate,
+        data.endDate,
+        data.ERC20,
+        data.NFTAddress
+      )
       .send({ from: user.user_address });
 
-   return saleInstance;
-}
+    return saleInstance;
+  }
+
+  async function alert(msg, icon) {
+    await Swal.fire({
+      icon: icon,
+      title: msg,
+    });
+  }
 
   const inputTextList = inputTexts.map((item, index) => (
     <FormControl
@@ -393,6 +418,42 @@ async function saleSuccess(data) {
               <ButtonStyle disabled={disabled} onClick={onClickCreate}>
                 CREATE
               </ButtonStyle>
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={open1}
+              >
+                <Alert severity="info">
+                  <AlertTitle>1 / 3</AlertTitle>
+                  NFT 판매등록1... — <strong>Please wait!</strong>
+                </Alert>
+              </Backdrop>
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={open2}
+              >
+                <Alert severity="info">
+                  <AlertTitle>2 / 3</AlertTitle>
+                  NFT 판매등록2... — <strong>Please wait!</strong>
+                </Alert>
+              </Backdrop>
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={open3}
+              >
+                <Alert severity="info">
+                  <AlertTitle>3 / 3</AlertTitle>
+                  NFT 판매등록3... — <strong>Please wait!</strong>
+                </Alert>
+              </Backdrop>
               <ButtonStyle to="/main" component={RouterLink}>
                 CANCEL
               </ButtonStyle>

@@ -116,8 +116,9 @@ const SearchNavbar = () => {
     if (active) {
       deactivate();
     }
-    await dispatch(setInit());
-    await setAnchorEl(null);
+    dispatch(setInit());
+    setAnchorEl(null);
+    navigate("/main");
   };
 
   const handleClick = (event) => {
