@@ -405,28 +405,10 @@ function MyHome() {
                   defaultValue={profileData.bio}
                 ></TextField>
               </Grid>
-              <Grid item sx={{textAlign:"center"}}>
-                <Button
-                  disabled={disabled}
-                  variant="contained"
-                  sx={{ py: 1, mx: 2, mb: 3 }}
-                  onClick={onUpdateHandler}
-                >
-                  Create
-                </Button>
-                <Button
-                  to="/main"
-                  component={RouterLink}
-                  variant="contained"
-                  sx={{ py: 1, mx: 2, mb: 3 }}
-                >
-                  Cancel
-                </Button>
-              </Grid>
           </DialogContent>
           <DialogActions>
+            <Button onClick={onUpdateHandler}>Update</Button>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Subscribe</Button>
           </DialogActions>
         </Dialog>
       </div>
