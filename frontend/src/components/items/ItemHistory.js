@@ -78,7 +78,7 @@ export default function ColumnGroupingTable({products}) {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align="left" colSpan={4}>
+              <TableCell align="left" colSpan={6}>
                 History
               </TableCell>
 
