@@ -129,7 +129,7 @@ router.post("/profile", upload.single('profile'), async function (req, res) {
  * @api {patch} /user/profile
  * @des 프로필 수정에 필요한 데이터(이미지 제외)를 입력받아 수정한다.
  */
-router.patch("/profile", upload.single('profile'), async function (req, res) {
+router.patch("/profile", async function (req, res) {
 	if(!req.body) {
 		res.status(403).send({result:"fail", msg:"잘못된 파라미터입니다."});
 		return;
@@ -179,7 +179,9 @@ router.patch("/profileImg", upload.single('profile'), async function (req, res) 
 	const user_image_url = `${process.env.AWS_S3_PATH}/${req.file.key}`;	
 	try {
 		const {statusCode, responseBody} = await userService.updateProfileImage(user_address, user_image_url);
-
+		if (statusCode === 201) {
+			responseBody['user_image_url'] = user_image_url;
+		}
 		res.statusCode = statusCode;
 		res.send(responseBody);
 
