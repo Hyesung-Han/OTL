@@ -1,4 +1,4 @@
-import { alpha, styled, makeStyles } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import { Box, Stack, Button, AppBar, Toolbar, Divider } from "@mui/material";
 import {
   Tooltip,
@@ -15,7 +15,6 @@ import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
-import { nominalTypeHack } from "prop-types";
 
 // Web3
 import Web3 from "web3";
@@ -67,12 +66,6 @@ const SearchNavbar = () => {
     navigate("/search/" + inputValue);
   };
 
-  const KeyPressSearch = e => {
-    if(e.key === 'Enter') {
-      navigate("/search/" + inputValue);
-    }
-  }
-
   useEffect(() => {
     if (user.user_address) {
       setDisabled(false);
@@ -99,8 +92,8 @@ const SearchNavbar = () => {
   }));
 
   const LogoStyle = styled(Box)(() => ({
-    color: "#111111",
-
+    color: "#FFFFFF",
+    textShadow: "3px 2px 2px gray",
     font: '1.8em "Fira Sans", sans-serif',
     fontWeight: 600,
     textDecoration: "none",
@@ -111,7 +104,7 @@ const SearchNavbar = () => {
   }));
 
   const ButtonStyle = styled(Button)(() => ({
-    color: "#111111",
+    color: "#FFFFFF",
 
     "&:hover": {
       background: "none",
@@ -122,9 +115,8 @@ const SearchNavbar = () => {
     if (active) {
       deactivate();
     }
-    dispatch(setInit());
-    setAnchorEl(null);
-    navigate("/main");
+    await dispatch(setInit());
+    await setAnchorEl(null);
   };
 
   const handleClick = (event) => {
@@ -156,7 +148,7 @@ const SearchNavbar = () => {
   };
 
   const UserNickNameStyle = styled(Typography)(() => ({
-    color: "#111111",
+    color: "#FFFFFF",
     fontSize: 17,
     padding: "0 5px",
   }));
@@ -177,7 +169,7 @@ const SearchNavbar = () => {
             alignItems: "center",
           }}
         >
-          <HomeIcon sx={{ fontSize: 30, color: "#111111", margin: "0 10px" }} />
+          <HomeIcon sx={{ fontSize: 30, color: "#FFFFFF", margin: "0 10px"}} />
           <LogoStyle to="/main" component={RouterLink}>
             OTL
           </LogoStyle>
@@ -207,7 +199,6 @@ const SearchNavbar = () => {
             <InputBase
               value={inputValue}
               onChange={onChangeSerchValue}
-              onKeyPress={KeyPressSearch}
               sx={{ ml: 1, flex: 1 }}
               placeholder="Search Item"
             />
