@@ -23,12 +23,12 @@ ProfileCard.propTypes = {
  * @des ProfileCard 컴포넌트
  */
 export default function ProfileCard({ product }) {
-  const { image, nickname } = product;
+  const { image, nickname,address } = product;
 
   return (
     <Container>
       <Link
-          to={`/#`}
+          to={`/home/${address}`}
           color="inherit"
           underline='hover'
           component={RouterLink}

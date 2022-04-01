@@ -22,7 +22,6 @@ export default function App() {
   return (
     <CommonContext.Provider
       value={{
-
         serverUrlBase,
       }}
     >
@@ -30,9 +29,6 @@ export default function App() {
         <GlobalStyles />
         <Router />
       </ThemeConfig>
-
     </CommonContext.Provider>
-
-
   );
 }
