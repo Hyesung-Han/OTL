@@ -8,13 +8,10 @@ import {
   Divider,
   InputBase,
   Paper,
-  Grid,
   NativeSelect,
   FormControl,
   FormLabel,
-  FormHelperText,
 } from "@mui/material";
-import Page from "../components/Page";
 import Axios from "axios";
 
 import { CommonContext } from "../context/CommonContext";
@@ -268,11 +265,11 @@ function RegisterItem() {
                   });
                 });
             })
-            .catch(async function (error) {
-              await setOpen(false);
+            .catch(function (error) {
+              setOpen(false);
               console.log("NFT등록 오류 : " + error);
 
-              await Swal.fire({
+              Swal.fire({
                 icon: "error",
                 title: "NFT등록 오류",
               });
