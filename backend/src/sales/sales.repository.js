@@ -73,7 +73,7 @@ class SalesRepository {
 		const sql = `
 			UPDATE sales_t
 			SET sale_yn = '0', buyer_address = ?
-			WHERE (SELECT sale_id FROM sales_t WHERE token_id = ? ORDER BY sale_id DESC LIMIT 1)
+			WHERE sale_id = (SELECT sale_id FROM sales_t WHERE token_id = ? ORDER BY sale_id DESC LIMIT 1)
 		`;
 		console.debug(sql);
 
