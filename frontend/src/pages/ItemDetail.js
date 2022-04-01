@@ -54,6 +54,7 @@ const ItemDetail = () => {
   const [imgUrl, setImgUrl] = useState("");
   const [date, setDate] = useState("");
   const [history, setHistory] = useState([]);
+  const [historyarr, setHistoryArr] = useState([]);
 
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -206,6 +207,7 @@ const ItemDetail = () => {
         );
         const saleInfo = await saleInstance.methods.getSaleInfo().call();
         row.price = saleInfo[3];
+        setHistoryArr(historyarr=>[...historyarr,row]);
       });
     } catch (e) {
       console.log("getPrice error" + e);
