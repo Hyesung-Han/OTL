@@ -1,5 +1,6 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import MainLayout from "./layouts";
+import FullPageLayout from "./fullpageLayouts";
 import Main from "./pages/Main";
 import ConnectWallet from "./pages/ConnectWallet";
 import CreateProfile from "./pages/CreateProfile";
@@ -18,12 +19,13 @@ import AboutUs from"./pages/AboutUs";
 import Policy from"./pages/Policy";
 import UserHome from "./pages/UserHome";
 
+
 // 순서대로 (메인, MM연동, 프로필생성, 판매리스트, 검색리스트, 아이템상세, 작품등록, 판매등록, 밑에 주석 아닌 2개는 잔챙이임)
 export default function Router() {
   return useRoutes([
     {
       path: "/main",
-      element: <MainLayout />,
+      element: <FullPageLayout />,
       children: [
         { element: <Navigate to="/main" replace /> },
         { path: "", element: <Main /> },
@@ -140,6 +142,7 @@ export default function Router() {
         { path: ":user_address", element: <UserHome /> },
       ],
     },
+
     // {
     //   path: "/whosart",
     //   element: <MainLayout />,
