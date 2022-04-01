@@ -1,5 +1,6 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import MainLayout from "./layouts";
+import FullPageLayout from "./fullpageLayouts";
 import Main from "./pages/Main";
 import ConnectWallet from "./pages/ConnectWallet";
 import CreateProfile from "./pages/CreateProfile";
@@ -24,7 +25,7 @@ export default function Router() {
   return useRoutes([
     {
       path: "/main",
-      element: <MainLayout />,
+      element: <FullPageLayout />,
       children: [
         { element: <Navigate to="/main" replace /> },
         { path: "", element: <Main /> },
