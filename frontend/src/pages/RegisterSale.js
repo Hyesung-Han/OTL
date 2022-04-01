@@ -234,9 +234,12 @@ function RegisterSale() {
                 }
               })
               .then(async () => {
-                const realEndDate = endDate.toISOString().split("T");
-                const rrealEndDate =
-                  realEndDate[0] + " " + realEndDate[1].split(".")[0];
+                // 한국시간 맞춤
+                let insertDate = new Date(endDate);
+                insertDate.setHours(insertDate.getHours()+9);
+
+                const realEndDate = insertDate.toISOString().split("T");
+                const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
 
                 Axios.post(serverUrlBase + `/sales`, {
                   token_id: token_id,
@@ -278,6 +281,7 @@ function RegisterSale() {
         console.log("NFT판매 오류1 : " + error);
         setOpen1(false);
         alert("NFT판매 오류1", "error");
+
       });
   };
 
