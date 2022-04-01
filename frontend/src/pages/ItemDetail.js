@@ -75,17 +75,30 @@ const ItemDetail = () => {
             const saleInstance = new Web3Client.eth.Contract(
                 COMMON_ABI.CONTRACT_ABI.SALE_ABI,
                 saleCA
-              );
-            await tokenInstance.methods.approve(saleCA, price).send({from:user.user_address});
-            await saleInstance.methods.purchase().send({from:user.user_address});
-            const now = new Date();
-            const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
-                buyer_address : user.user_address,
-                completed_at : now
+            );
+
+            tokenInstance.methods.approve(saleCA, price)
+                .send({from:user.user_address});
+
+            const pay = saleInstance.methods.purchase()
+                .send({from:user.user_address});
+
+            pay.on('confirmation', async function(confirmationNumber, receipt){
+
+                const now = new Date();
+                const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
+                    buyer_address : user.user_address,
+                    completed_at : now
+                });
+                
+                navigate("/itemdetail/"+ token_id);
+
+                if (confirmationNumber > 0) {
+                    pay.off('confirmation');
+                }
             });
 
             
-            navigate("/itemdetail/"+ token_id);
             
         } catch (e) {
             console.log('buy now error' +  e);
@@ -191,11 +204,19 @@ const ItemDetail = () => {
                 COMMON_ABI.CONTRACT_ABI.SALE_ABI,
                 saleCA
               );   
-            await saleInstance.methods.cancelSales().send({from: user.user_address});
-            await nftInstance.methods.setApprovalForAll(saleCA, false).send({ from: user.user_address });
-            Axios.delete(serverUrlBase+ `/sales/`+saleId)
-            navigate("/itemdetail/"+ token_id);
-            
+            const cancel = saleInstance.methods.cancelSales()
+                .send({from: user.user_address});
+
+            cancel.on('confirmation', async function(confirmationNumber, receipt){
+
+                await Axios.delete(serverUrlBase+ `/sales/`+saleId)
+                navigate("/itemdetail/"+ token_id);
+
+                if (confirmationNumber > 0) {
+                    cancel.off('confirmation');
+                }
+            });
+            // constnftInstance.methods.setApprovalForAll(saleCA, false).send({ from: user.user_address });
         } catch (e) {
             console.log('ItemSaleRegi Cancle error' +  e);
         }

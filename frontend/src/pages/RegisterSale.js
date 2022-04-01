@@ -190,75 +190,93 @@ function RegisterSale() {
   }, []);
 
   const onClickCreate = async () => {
-    console.log(price);
-    const date = new Date(endDate);
-    const endSeconds = Math.floor(date.getTime() / 1000);
-    const ERC20 = process.env.REACT_APP_ERC20_CA;
-    const NFTAddress = process.env.REACT_APP_NFT_CA;
 
-    const saleInstance = await saleFactoryInstance.methods
-      .createSale(
-        token_id,
-        1,
-        price,
-        Math.floor(Date.now() / 1000),
-        endSeconds,
-        ERC20,
-        NFTAddress
-      )
-      .send({ from: user.user_address });
-    // 반환 값에서 주소 찾기필요
-    const returnAddress =
-      saleInstance.events.NewSale.returnValues._saleContract;
-    // 반환된 주소로 deploy 필요
-    const Sale = new Web3Client.eth.Contract(
-      COMMON_ABI.CONTRACT_ABI.SALE_ABI,
-      returnAddress
-    );
+   const date = new Date(endDate);
+   const endSeconds = Math.floor(date.getTime() / 1000);
+   const ERC20 = process.env.REACT_APP_ERC20_CA;
+   const NFTAddress = process.env.REACT_APP_NFT_CA;
 
-    const realEndDate = endDate.toISOString().split("T");
-    const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+   const saleContractData = {
+      token_id : token_id,
+      price : price,
+      startDate: Math.floor(Date.now() / 1000),
+      endDate: endSeconds,
+      ERC20 : ERC20,
+      NFTAddress : NFTAddress
+   }
 
-    await Axios.post(serverUrlBase + `/sales`, {
-      token_id: token_id,
-      seller_address: user.user_address,
-      completed_at: rrealEndDate,
-      sale_contract_address: returnAddress,
-    })
-      .then(async (data) => {
-        console.log(data);
-        if (data.status === 201) {
-          // 소유자가 sale contract에게 권한 부여 및 소유권 변경
-          await nftInstance.methods
+   saleSuccess(saleContractData)
+      .then(async(data) => {
+
+         // 반환 값에서 주소 찾기필요
+         console.log(data);
+         const returnAddress = data.events.NewSale.returnValues._saleContract;
+
+         //MetaMask 서명 순차 실행
+         nftInstance.methods
             .setApprovalForAll(returnAddress, true)
             .send({ from: user.user_address });
 
-          await nftInstance.methods
+         const sendNFT = nftInstance.methods
             .transferFrom(user.user_address, returnAddress, token_id)
             .send({ from: user.user_address });
 
-          await Swal.fire({
-            icon: "success",
-            title: "판매 등록 완료",
-          });
+         // transferFrom confirm 클릭시 실행
+         sendNFT.on('confirmation', function(confirmationNumber, receipt){
 
-          await navigate("/main");
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "판매 등록 실패",
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log("판매 등록 오류 : " + error);
+         if (confirmationNumber > 0) {
+            sendNFT.off('confirmation');
+            throw new Error("ConfirmCompletedException");
+         }
 
-        Swal.fire({
-          icon: "error",
-          title: "판매 등록 오류",
-        });
+         const realEndDate = endDate.toISOString().split("T");
+         const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+   
+         Axios.post(serverUrlBase + `/sales`, {
+            token_id: token_id,
+            seller_address: user.user_address,
+            completed_at: rrealEndDate,
+            sale_contract_address: returnAddress,
+         })
+         .then(async (data) => {
+            console.log(data);
+            if (data.status === 201) {
+            
+               // 소유자가 sale contract에게 권한 부여 및 소유권 변경
+               await Swal.fire({
+               icon: "success",
+               title: "판매 등록 완료",
+               });
+      
+               await navigate("/main");
+   
+            } else {
+               Swal.fire({
+               icon: "error",
+               title: "판매 등록 실패",
+               });
+            }
+         })
+         .catch(function (error) {
+            console.log("판매 등록 오류 : " + error);
+   
+            Swal.fire({
+               icon: "error",
+               title: "판매 등록 오류",
+            });
+         });
       });
-  };
+   });
+};
+
+// saleContract 생성 부분
+async function saleSuccess(data) {
+   const saleInstance =  await saleFactoryInstance.methods
+      .createSale(data.token_id, 1, data.price, data.startDate, data.endDate, data.ERC20, data.NFTAddress)
+      .send({ from: user.user_address });
+
+   return saleInstance;
+}
 
   const inputTextList = inputTexts.map((item, index) => (
     <FormControl
