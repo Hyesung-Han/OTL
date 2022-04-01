@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Grid } from '@mui/material';
 import ProfileCard from './ProfileCard';
 
-ProfileCard.propTypes = {
+ProfileList.propTypes = {
   products: PropTypes.array
 };
 
@@ -17,7 +17,7 @@ export default function ProfileList({ products, ...other }) {
 
     <Grid container spacing={6} {...other}>
       {products.map((product) => (
-        <Grid sx={{ mb: 6 }} key={product.nickname} item xs={12} sm={6} md={2.4}>
+        <Grid sx={{ mb: 6 }} key={product.address} item xs={12} sm={6} md={2.4}>
           <ProfileCard product={product} />
         </Grid>
       ))}
