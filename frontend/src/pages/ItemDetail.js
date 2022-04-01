@@ -77,13 +77,12 @@ const ItemDetail = () => {
                 saleCA
             );
 
-            tokenInstance.methods.approve(saleCA, price)
+            await tokenInstance.methods.approve(saleCA, price)
                 .send({from:user.user_address});
 
-            const pay = saleInstance.methods.purchase()
-                .send({from:user.user_address});
-
-            pay.on('confirmation', async function(confirmationNumber, receipt){
+            const pay = await saleInstance.methods.purchase()
+                .send({from:user.user_address})
+                .on('confirmation', async function(confirmationNumber, receipt){
 
                 const now = new Date();
                 const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
@@ -94,12 +93,10 @@ const ItemDetail = () => {
                 navigate("/itemdetail/"+ token_id);
 
                 if (confirmationNumber > 0) {
-                    pay.off('confirmation');
+                    this.off('confirmation');
                 }
             });
 
-            
-            
         } catch (e) {
             console.log('buy now error' +  e);
         }
