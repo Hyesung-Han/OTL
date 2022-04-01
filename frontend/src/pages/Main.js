@@ -40,6 +40,10 @@ import Buy from "../image/buy.png";
 import Homepage from "../image/homepage.png";
 import Nft from "../image/nft.png";
 
+//react-slick
+import Test from "../components/Test";
+
+
 /**
  * HSH | 2022.03.29 | v2.0.0
  * @name Main
@@ -62,30 +66,14 @@ const Main = () => {
     alignItems:"center",
   }));
 
-  const MainBackground=emoStyled.div`
-    background: url(${Nft});
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: bottom ;
 
-    width:1200px;
-    height:600px;
-
-    display: flex,
-    flex-direction: column,
-    justify-content: center,
-    align-items:center,
-
-  `
 
   const MainTopStyle = styled(Grid)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
-
-    width:"1000px",
+    width:"100%",
     // height: windowHeight-100,
-
-    padding:"30px",
+    padding:"inherit",
   }));
 
   const CategoryStyle = styled(Grid)(({ theme }) => ({
@@ -439,19 +427,9 @@ const Main = () => {
 
   return (
     <RootStyle>
-      <MainBackground>
       <MainTopStyle>
-        <Grid display="flex" flexDirection="row">
-          <TypograpyStr str="One can" />
-        </Grid>
-        <Grid display="flex" flexDirection="row">
-          <TypograpyStr str="Take" />
-        </Grid>
-        <Grid display="flex" flexDirection="row">
-          <TypograpyStr str="Limited item" />
-        </Grid>
+        <Test></Test>
       </MainTopStyle>
-      </MainBackground>
       <Divider sx={{width:"1200px"}}/>
       <HowToUseStyle>
         <Typography variant="h4">How to use</Typography>
