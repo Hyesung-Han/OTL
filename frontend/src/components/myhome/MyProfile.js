@@ -12,11 +12,11 @@ export default function MyProfile() {
   const user = useSelector((state) => state.User.user);
   
   return (
-    <Grid sx={{textAlign: '-webkit-center'}}>
+    <Grid sx={{textAlign: '-webkit-center', pb:1}}>
       <Avatar
         alt="profile image"
         src={user.user_image_url}
-        sx={{ mt:5, width: 200, height: 200}}
+        sx={{ mt:4, width: 200, height: 200}}
       />
       <Stack spacing={1} sx={{mt:1}}>
           <Typography variant="h4" textAlign="center" noWrap>
