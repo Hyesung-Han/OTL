@@ -85,6 +85,7 @@ const ItemDetail = () => {
                 .on('confirmation', async function(confirmationNumber, receipt){
 
                 const now = new Date();
+                // now.setHours(now.getHours()+6);
                 const res = await Axios.patch(serverUrlBase+`/sales/`+token_id+`/complete/`,{
                     buyer_address : user.user_address,
                     completed_at : now
@@ -107,11 +108,12 @@ const ItemDetail = () => {
         try {
             const res = await Axios.get(serverUrlBase + `/items/`+ token_id);
             const data = res.data.data;
+
             setTitle(data.item_title);
             setDescription(data.item_description);
             setAuthor(data.author_name);
             setCategory(data.category_code);
-            setNickname(data.author_name);
+            setNickname(data.owner_address);
             setOnsale(data.on_sale_yn);
             setOwner(data.owner_address);
             
@@ -129,7 +131,10 @@ const ItemDetail = () => {
                 params:{token_id: token_id}
             });
             const timedata = row.data.data.completed_at;
-            const realEndDate = timedata.split("T");
+            let newDate = new Date(timedata);
+            newDate.setHours(newDate.getHours()+9);
+            console.log(newDate);
+            const realEndDate = newDate.toISOString().split("T");
             const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
             const saleInstance = new Web3Client.eth.Contract(
                 COMMON_ABI.CONTRACT_ABI.SALE_ABI,
@@ -215,7 +220,7 @@ const ItemDetail = () => {
             });
             // constnftInstance.methods.setApprovalForAll(saleCA, false).send({ from: user.user_address });
         } catch (e) {
-            console.log('ItemSaleRegi Cancle error' +  e);
+            console.log('ItemSaleCancel error' +  e);
         }
     };
     const getNFT = async() => {
@@ -282,7 +287,13 @@ const ItemDetail = () => {
             </Grid>
             <Grid item xs={7}>
                 <Typography variant="h3"> {title} </Typography>
-                <Typography variant="subtitle2" color="text.secondary"> created by {nickname} </Typography>
+                <div style={{display:"flex"}}>
+                    <Typography variant="subtitle2" color="text.secondary" sx={{mr:1}}> Owned by </Typography>
+
+                    <Typography variant="subtitle2" color="text.secondary" to={`/home/${owner}` } component={RouterLink}> {nickname} </Typography>
+
+                </div>
+
                 <Card sx={{ width:"70%", mt:3 }}>
                     <CardContent>
                         <Typography sx={{ fontSize: 15 }} color="text.secondary" >
