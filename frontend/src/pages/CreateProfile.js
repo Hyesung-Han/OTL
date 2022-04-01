@@ -133,7 +133,7 @@ function CreateProfile() {
             profileData.nickname
         )
           .then((data) => {
-            if (data.data.result === false) {
+            if (data.data.data === false) {
               setNicknameErr(true);
               setNicknameErrMsg("It's a registered ID that already exists!");
             } else {
@@ -265,22 +265,8 @@ function CreateProfile() {
           <Grid item xs={12} sx={{ py: 1 }}>
             <TextField
               fullWidth
-              label="Enter your Twitter"
+              label="Enter your sns"
               onChange={OnChangeHandler("link")}
-            ></TextField>
-          </Grid>
-          <Grid item xs={12} sx={{ py: 1 }}>
-            <TextField
-              fullWidth
-              label="Enter your Instargram"
-              // onChange={OnChangeHandler()}
-            ></TextField>
-          </Grid>
-          <Grid item xs={12} sx={{ py: 1 }}>
-            <TextField
-              fullWidth
-              label="Enter yoursite.io"
-              // onChange={OnChangeHandler()}
             ></TextField>
           </Grid>
           <Grid item xs={12} sx={{ py: 4 }}>
