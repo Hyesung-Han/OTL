@@ -1,9 +1,9 @@
+import { useState, useEffect, useRef, useContext } from "react";
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Card, Link, Typography, Stack } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Chip } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/material/styles';
-import { convertToAccountingFormat } from '../../utils/NumberFormatter';
-
 
 // 이미지 스타일
 const ImgStyle = styled('img')({
@@ -21,24 +21,17 @@ const CardStyle = styled(Card)({
   }
 });
 
-
-ItemsCard.propTypes = {
-  product: PropTypes.object,
-};
-
-// 구매하기 카드 형태
-/**
- * CSW | 2022.03.16 | FIX
- * @name ItemsCard
- * @des ItemCard 컴포넌트
- */
-export default function ItemsCard({ product }) {
-  // 이미지, 제목, 가격, 토큰 ID, 심볼
-  const { item_title, price, token_id, img_src } = product;
-  const symbol = 'SSF';
+const ItemsCard = ({ product }) => {
+  const { token_id, item_title, on_use_yn, src } = product;
 
   return (
     <CardStyle>
+      {on_use_yn === 1&&(<Chip
+      label="in use"
+      color="error"
+      icon={<CheckCircleIcon />}
+    />)}
+    
       <Link
           to={`/itemdetail/${token_id}`}
           color="inherit"
@@ -46,18 +39,17 @@ export default function ItemsCard({ product }) {
           component={RouterLink}
         >
         <Box sx={{ pt: '100%', position: 'relative'}}>
-          <ImgStyle src={img_src} />
+          <ImgStyle src={src} />
         </Box>
         <Stack spacing={2} sx={{ p: 3 }}>
             <Typography variant="subtitle1" noWrap>
               {item_title}
             </Typography>
-          <Typography variant="subtitle1" textAlign="right" sx={{ fontSize: 15 }}>
-            {convertToAccountingFormat(price)} {symbol}
-          </Typography>
         </Stack>
 
       </Link>
     </CardStyle>
   );
 }
+
+export default ItemsCard;
