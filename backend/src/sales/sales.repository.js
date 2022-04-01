@@ -42,6 +42,7 @@ class SalesRepository {
 			SELECT sale_id, sale_contract_address, sale_yn, token_id, seller_address, buyer_address, created_at, completed_at
 			FROM sales_t
 			WHERE token_id = ? and sale_yn = '0'
+			ORDER BY sale_id DESC
 		`;
 		console.debug(sql);
 
@@ -71,8 +72,8 @@ class SalesRepository {
 	async completeSales(token_id, buyer_address) {
 		const sql = `
 			UPDATE sales_t
-			SET sale_yn = '0', buyer_address = ?, completed_at = CURRENT_TIMESTAMP
-			WHERE token_id = ?
+			SET sale_yn = '0', buyer_address = ?
+			WHERE (SELECT sale_id FROM sales_t WHERE token_id = ? ORDER BY sale_id DESC LIMIT 1)
 		`;
 		console.debug(sql);
 
