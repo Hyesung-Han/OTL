@@ -1,19 +1,22 @@
 import { Box, Button, Container, Link, Stack, Typography } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import Alert from "@mui/material/Alert";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState, useContext } from "react";
 import { CommonContext } from "../context/CommonContext";
 import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import Swal from "sweetalert2";
-
 import Axios from "axios";
+
+import Page from "../components/Page";
 
 import Web3 from "web3";
 
-import Page from "../components/Page";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Backdrop from "@mui/material/Backdrop";
+
+import Swal from "sweetalert2";
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -40,28 +43,43 @@ const ConnectWallet = () => {
   const { serverUrlBase } = useContext(CommonContext);
   const dispatch = useDispatch();
 
+  const [open, setOpen] = useState(false);
+
   // Web3
   const web3 = new Web3(
     new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)
   );
 
   const handleConnect = async () => {
-    await activate(injected, (error) => {
+    setOpen(true);
+    activate(injected, (error) => {
       if ("/No Ethereum provider was found on window.ethereum/".test(error)) {
         window.open("https://metamask.io/download.html");
       }
-    });
+    })
+      .then(async () => {
+        await setOpen(false);
 
-    await Swal.fire({
-      title: "Welcome!",
-      text: "nice to see you again ^^",
-      imageUrl: "https://unsplash.it/400/200",
-      imageWidth: 400,
-      imageHeight: 200,
-      imageAlt: "Custom image",
-    });
+        await Swal.fire({
+          title: "Welcome!",
+          text: "nice to see you again ^^",
+          imageUrl: "https://unsplash.it/400/200",
+          imageWidth: 400,
+          imageHeight: 200,
+          imageAlt: "Custom image",
+        });
 
-    await navigate("/main");
+        await navigate("/main");
+      })
+      .catch(async function (error) {
+        await setOpen(false);
+        console.log("로그인 취소/오류 : " + error);
+
+        await Swal.fire({
+          icon: "error",
+          title: "로그인 취소",
+        });
+      });
   };
 
   useEffect(() => {
@@ -132,6 +150,18 @@ const ConnectWallet = () => {
               <Typography variant="h6">MetaMask</Typography>
               <Typography>Only</Typography>
             </Button>
+            <Backdrop
+              sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+              }}
+              open={open}
+            >
+              <Alert severity="info">
+                <AlertTitle>1 / 1</AlertTitle>
+                Connecting to MetaMask... — <strong>Please wait!</strong>
+              </Alert>
+            </Backdrop>
           </Box>
         </Stack>
       </Container>

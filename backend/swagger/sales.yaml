@@ -75,6 +75,26 @@ paths:
         default:
           description: "successful operation"
 
+  /sales/history:
+    get:
+      tags:
+        - "sales"
+      summary: "history sale info"
+      description: "history sale info"
+      operationId: "history sale info"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token_id"
+          in: "query"
+          description: "token_id"
+          required: true
+          type: "integer"
+      responses:
+        default:
+          description: "successful operation"
+
   /sales/{token_id}/complete:
     patch:
       tags:

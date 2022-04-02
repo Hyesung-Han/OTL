@@ -67,6 +67,12 @@ const SearchNavbar = () => {
     navigate("/search/" + inputValue);
   };
 
+  const KeyPressSearch = e => {
+    if(e.key === 'Enter') {
+      navigate("/search/" + inputValue);
+    }
+  }
+
   useEffect(() => {
     if (user.user_address) {
       setDisabled(false);
@@ -116,8 +122,9 @@ const SearchNavbar = () => {
     if (active) {
       deactivate();
     }
-    await dispatch(setInit());
-    await setAnchorEl(null);
+    dispatch(setInit());
+    setAnchorEl(null);
+    navigate("/main");
   };
 
   const handleClick = (event) => {
@@ -200,6 +207,7 @@ const SearchNavbar = () => {
             <InputBase
               value={inputValue}
               onChange={onChangeSerchValue}
+              onKeyPress={KeyPressSearch}
               sx={{ ml: 1, flex: 1 }}
               placeholder="Search Item"
             />

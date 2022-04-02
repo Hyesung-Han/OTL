@@ -13,6 +13,7 @@ import GlobalStyles from "./theme/globalStyles";
 // hook
 import { CommonContext } from "./context/CommonContext";
 
+//const HOST = "localhost:3000/api";
 const HOST = "j6a405.p.ssafy.io/api";
 const serverUrlBase = `https://${HOST}`;
 
