@@ -38,19 +38,23 @@ export default function ItemsCard({ product, removeItem, addItem }) {
   return (
     <CardStyle>
       {on_use_yn === 1?(<Chip
+      sx={{ml:1, mt:1}}
       label="in use"
+      size="small"
       color="error"
       onClick={deleteClick.bind(this, token_id)}
       icon={<CheckCircleIcon />}
     />):(<Chip
+      sx={{ml:1, mt:1}}
       label="add"
+      size="small"
       color="default"
       onClick={handleClick.bind(this, token_id)}
       icon={<AddCircleIcon />}
     />)}
     
       <Link
-          to={`/items/detail/${token_id}`}
+          to={`/itemdetail/${token_id}`}
           color="inherit"
           underline='hover'
           component={RouterLink}

@@ -24,11 +24,6 @@ const CardStyle = styled(Card)({
 const ItemsCard = ({ product }) => {
   const { token_id, item_title, on_use_yn, src } = product;
 
-  // useEffect(()=>{
-  //   console.log(product);
-  //   console.log(JSON.parse(JSON.stringify(product)));
-  // },[]);
-
   return (
     <CardStyle>
       {on_use_yn === 1&&(<Chip
@@ -38,7 +33,7 @@ const ItemsCard = ({ product }) => {
     />)}
     
       <Link
-          to={`/items/detail/${token_id}`}
+          to={`/itemdetail/${token_id}`}
           color="inherit"
           underline='hover'
           component={RouterLink}
