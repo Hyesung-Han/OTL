@@ -52,7 +52,7 @@ const Main = () => {
                     <span>a</span>
                     <span>k</span>
                     <span>e</span>
-                    <span>&nbsp;</span>
+                    <br/>
                     <span>l</span>
                     <span>i</span>
                     <span>m</span>
