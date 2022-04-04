@@ -48,8 +48,14 @@ const Canvas = ({items}) => {
             const image = new Image();
             image.src = item.src;
             if(item.category_code != 'wallpaper') {
-                image.onload = () => {
-                    context.drawImage(image, item.x_index, item.y_index, 100, 100);
+                if(item.category_code == 'etc' || item.category_code == 'character' || item.category_code == 'chair') {
+                    image.onload = () => {
+                        context.drawImage(image, item.x_index, item.y_index, 100, 100);
+                    }
+                } else {
+                    image.onload = () => {
+                        context.drawImage(image, item.x_index, item.y_index, 200, 200);
+                    }
                 }
             }
         });
