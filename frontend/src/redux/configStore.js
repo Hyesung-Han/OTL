@@ -8,8 +8,7 @@
 import { persistReducer } from "redux-persist";
 import { createStore, combineReducers } from "redux";
 import { UserReducer } from "./reducers/UserReducer";
-import { FarmReducer } from "./reducers/FarmReducer";
-import { SearchReducer } from './reducers/SearchReducer';
+import { SearchReducer } from "./reducers/SearchReducer";
 
 // sessionStorage 사용
 import sessionStorage from "redux-persist/lib/storage/session";
@@ -23,7 +22,6 @@ const persistConfig = {
 
 const allReducers = combineReducers({
   User: UserReducer,
-  Farm: FarmReducer,
   Search: SearchReducer,
 });
 
