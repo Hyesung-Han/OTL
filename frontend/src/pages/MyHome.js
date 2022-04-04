@@ -326,11 +326,19 @@ function MyHome() {
           </Box>
           <Box
             sx={{
-              width: 700,
-              height: 450,
+              width: 680,
+              height: 380,
+              mt:3,
             }}
           >
-          <MyRoom sx={{ mt: 1 }} myItems={myItems}/>
+            <Card sx={{width:'100%', height:'100%'}}>
+              {myItems.length==0?
+                <Grid sx={{textAlign:'center', pt:'160px', color:'rgba(131, 139, 151, 0.5)', fontSize:'21px'}}>
+                  <span>decorate your own unique room</span>
+                </Grid>
+              :
+                <MyRoom myItems={myItems}/>} 
+            </Card>
           </Box>
         </Box>
         <Box display="flex" flexDirection="row">

@@ -12,7 +12,6 @@ const MyRoom = ({myItems}) => {
   if(!myItems) return <>로딩</>;
   return (
     <Grid>
-      <h2>마이룸</h2>
       <Canvas items={myItems}></Canvas>
     </Grid>
   );
