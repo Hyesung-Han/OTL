@@ -1,26 +1,20 @@
 import { Navigate, useRoutes } from "react-router-dom";
-import MainLayout from "./layouts";
 import FullPageLayout from "./fullpageLayouts";
+import MainLayout from "./layouts";
 import Main from "./pages/Main";
 import ConnectWallet from "./pages/ConnectWallet";
 import CreateProfile from "./pages/CreateProfile";
 import Items from "./pages/Items";
-import ItemPurchase from "./pages/ItemPurchase";
 import SearchResult from "./pages/SearchResult";
 import ItemDetail from "./pages/ItemDetail";
 import RegisterItem from "./pages/RegisterItem";
 import RegisterSale from "./pages/RegisterSale";
-import NotFound from "./pages/Page404";
-import WhosArt from "./pages/WhosArt";
-import ItemRegistration from "./pages/ItemRegistration";
-import SaleRegistration from "./pages/SaleRegistration";
 import MyHome from "./pages/MyHome";
-import AboutUs from"./pages/AboutUs";
-import Policy from"./pages/Policy";
 import UserHome from "./pages/UserHome";
+import AboutUs from "./pages/AboutUs";
+import Policy from "./pages/Policy";
+import NotFound from "./pages/Page404";
 
-
-// 순서대로 (메인, MM연동, 프로필생성, 판매리스트, 검색리스트, 아이템상세, 작품등록, 판매등록, 밑에 주석 아닌 2개는 잔챙이임)
 export default function Router() {
   return useRoutes([
     {
@@ -99,20 +93,11 @@ export default function Router() {
     },
 
     {
-      path: "/",
-      element: <MainLayout />,
-      children: [
-        { path: "404", element: <NotFound /> },
-        { path: "/", element: <Navigate to="/main" /> },
-        { path: "*", element: <Navigate to="/404" /> },
-      ],
-    },
-    {
       path: "/AboutUs",
       element: <MainLayout />,
       children: [
         { element: <Navigate to="/AboutUs" replace /> },
-        { path: "", element: <AboutUs/> },
+        { path: "", element: <AboutUs /> },
       ],
     },
     {
@@ -120,11 +105,10 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         { element: <Navigate to="/Policy" replace /> },
-        { path: "", element: <Policy/> },
+        { path: "", element: <Policy /> },
       ],
     },
 
-    { path: "*", element: <Navigate to="/404" replace /> },
     {
       path: "/myhome",
       element: <MainLayout />,
@@ -143,24 +127,16 @@ export default function Router() {
       ],
     },
 
-    // {
-    //   path: "/whosart",
-    //   element: <MainLayout />,
-    //   children: [
-    //     { element: <Navigate to="/whosart" replace /> },
-    //     { path: "", element: <WhosArt /> },
-    //     { path: ":address", element: <WhosArt /> },
-    //   ],
-    // },
+    {
+      path: "/",
+      element: <MainLayout />,
+      children: [
+        { path: "404", element: <NotFound /> },
+        { path: "/", element: <Navigate to="/main" /> },
+        { path: "*", element: <Navigate to="/404" /> },
+      ],
+    },
 
-    // {
-    //   path: "/register",
-    //   element: <MainLayout />,
-    //   children: [
-    //     { element: <Navigate to="/register" replace /> },
-    //     { path: "", element: <ItemRegistration /> },
-    //     { path: "sale/:tokenId", element: <SaleRegistration /> },
-    //   ],
-    // },
+    { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }
