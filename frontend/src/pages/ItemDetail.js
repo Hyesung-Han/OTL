@@ -14,12 +14,10 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import COMMON_ABI from "../common/ABI";
 import { Web3Client } from "../common/web3Client";
-
 import Swal from "sweetalert2";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Backdrop from "@mui/material/Backdrop";
-import { set } from "lodash";
 
 const ImgStyle = styled("img")({
   top: 0,
@@ -55,18 +53,15 @@ const ItemDetail = () => {
   const [date, setDate] = useState("");
   const [history, setHistory] = useState([]);
   const [historyarr, setHistoryArr] = useState([]);
-
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [open3, setOpen3] = useState(false);
 
-  // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
-  // ssafyToken contract
   const ERC20_CA = process.env.REACT_APP_ERC20_CA;
   const tokenInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.ERC_ABI,
@@ -104,7 +99,6 @@ const ItemDetail = () => {
               completed_at: now,
             })
               .then(async (data) => {
-                console.log(data);
                 if (data.status === 201) {
                   setOpen3(false);
                   await alert("구매 완료", "success");
@@ -158,7 +152,6 @@ const ItemDetail = () => {
       const timedata = row.data.data.completed_at;
       let newDate = new Date(timedata);
       newDate.setHours(newDate.getHours() + 9);
-      console.log(newDate);
       const realEndDate = newDate.toISOString().split("T");
       const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
       const saleInstance = new Web3Client.eth.Contract(
@@ -207,7 +200,7 @@ const ItemDetail = () => {
         );
         const saleInfo = await saleInstance.methods.getSaleInfo().call();
         row.price = saleInfo[3];
-        setHistoryArr(historyarr=>[...historyarr,row]);
+        setHistoryArr((historyarr) => [...historyarr, row]);
       });
     } catch (e) {
       console.log("getPrice error" + e);
@@ -453,7 +446,7 @@ const ItemDetail = () => {
       >
         <Alert severity="info">
           <AlertTitle>1 / 1</AlertTitle>
-          NFT 판매취소... — <strong>Please wait!</strong>
+          NFT Sale Cancellation... — <strong>Please wait!</strong>
         </Alert>
       </Backdrop>
       <Backdrop
@@ -465,7 +458,7 @@ const ItemDetail = () => {
       >
         <Alert severity="info">
           <AlertTitle>1 / 2</AlertTitle>
-          NFT 구매중1... — <strong>Please wait!</strong>
+          NFT Buying... — <strong>Please wait!</strong>
         </Alert>
       </Backdrop>
       <Backdrop
@@ -477,7 +470,7 @@ const ItemDetail = () => {
       >
         <Alert severity="info">
           <AlertTitle>2 / 2</AlertTitle>
-          NFT 구매중2... — <strong>Please wait!</strong>
+          NFT Buying.. — <strong>Please wait!</strong>
         </Alert>
       </Backdrop>
     </Page>

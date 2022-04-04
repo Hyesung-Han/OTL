@@ -1,31 +1,23 @@
 import { Box, Button, Container, Link, Stack, Typography } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { styled } from "@mui/material/styles";
 import { useEffect, useState, useContext } from "react";
 import { CommonContext } from "../context/CommonContext";
-import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import Axios from "axios";
-
 import Page from "../components/Page";
-
 import Web3 from "web3";
 
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Backdrop from "@mui/material/Backdrop";
-
 import Swal from "sweetalert2";
 
-// Redux
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/reducers/UserReducer";
 
-// web3-react [220317]
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../lib/Connectors";
-// End
 
 /**
  * LDJ | 2022.03.22 | v1.0
@@ -37,7 +29,7 @@ import { injected } from "../lib/Connectors";
  */
 
 const ConnectWallet = () => {
-  const { chainId, account, active, activate, deactivate } = useWeb3React();
+  const { account, active, activate } = useWeb3React();
 
   const navigate = useNavigate();
   const { serverUrlBase } = useContext(CommonContext);
@@ -45,7 +37,6 @@ const ConnectWallet = () => {
 
   const [open, setOpen] = useState(false);
 
-  // Web3
   const web3 = new Web3(
     new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)
   );
@@ -58,7 +49,7 @@ const ConnectWallet = () => {
       }
     })
       .then(async () => {
-        await setOpen(false);
+        setOpen(false);
 
         await Swal.fire({
           title: "Welcome!",
@@ -72,7 +63,7 @@ const ConnectWallet = () => {
         await navigate("/main");
       })
       .catch(async function (error) {
-        await setOpen(false);
+        setOpen(false);
         console.log("로그인 취소/오류 : " + error);
 
         await Swal.fire({
@@ -93,8 +84,6 @@ const ConnectWallet = () => {
         .then((data) => {
           const connect_user = data.data.data;
           dispatch(setUser(connect_user));
-
-          console.log(connect_user);
         })
         .catch(function (error) {
           console.log("로그인 오류 발생 : " + error);
@@ -170,5 +159,3 @@ const ConnectWallet = () => {
 };
 
 export default ConnectWallet;
-
-// End ConnectWallet
