@@ -44,15 +44,12 @@ const SearchNavbar = () => {
 
   const { active, deactivate } = useWeb3React();
 
-  const APPBAR_MOBILE = 64;
-  const APPBAR_DESKTOP = 92;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.User.user);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const open = Boolean(anchorEl);
-  const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
   const navigate = useNavigate();
 
@@ -79,23 +76,6 @@ const SearchNavbar = () => {
       setDisabled(true);
     }
   }, [disabled, inputValue, anchorEl]);
-
-  const RootStyle = styled(AppBar)(({ theme }) => ({
-    boxShadow: "none",
-    backdropFilter: "blur(6px)",
-    WebkitBackdropFilter: "blur(6px)",
-    backgroundColor: alpha(theme.palette.background.default, 0.72),
-
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-  }));
-
-  const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
-    minHeight: APPBAR_MOBILE,
-    maxWidth: 1400,
-    minWidth: 1400,
-  }));
 
   const LogoStyle = styled(Box)(() => ({
     color: "#FFFFFF",
