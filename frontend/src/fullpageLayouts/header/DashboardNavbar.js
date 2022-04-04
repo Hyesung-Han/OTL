@@ -234,7 +234,7 @@ const SearchNavbar = () => {
             LIST
           </ButtonStyle>
           <ButtonStyle
-            disabled={disabled}
+            disabled={(!user.user_address?true:false)}
             size="large"
             sx={{ fontSize: 17 }}
             to="/RegisterItem"
