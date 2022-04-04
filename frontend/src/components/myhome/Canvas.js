@@ -46,9 +46,19 @@ const Canvas = ({ items }) => {
       const image = new Image();
       image.src = item.src;
       if (item.category_code != "wallpaper") {
-        image.onload = () => {
-          context.drawImage(image, item.x_index, item.y_index, 100, 100);
-        };
+        if (
+          item.category_code == "etc" ||
+          item.category_code == "character" ||
+          item.category_code == "chair"
+        ) {
+          image.onload = () => {
+            context.drawImage(image, item.x_index, item.y_index, 100, 100);
+          };
+        } else {
+          image.onload = () => {
+            context.drawImage(image, item.x_index, item.y_index, 200, 200);
+          };
+        }
       }
     });
   };
@@ -63,14 +73,31 @@ const Canvas = ({ items }) => {
     for (let i = 0; i < items.length; i++) {
       const box = items[i];
       if (
-        x >= box.x_index &&
-        x <= box.x_index + 100 &&
-        y >= box.y_index &&
-        y <= box.y_index + 100
+        box.category_code == "etc" ||
+        box.category_code == "character" ||
+        box.category_code == "chair"
       ) {
-        dragTarget = box;
-        isTarget = true;
-        break;
+        if (
+          x >= box.x_index &&
+          x <= box.x_index + 100 &&
+          y >= box.y_index &&
+          y <= box.y_index + 100
+        ) {
+          dragTarget = box;
+          isTarget = true;
+          break;
+        }
+      } else {
+        if (
+          x >= box.x_index &&
+          x <= box.x_index + 200 &&
+          y >= box.y_index &&
+          y <= box.y_index + 200
+        ) {
+          dragTarget = box;
+          isTarget = true;
+          break;
+        }
       }
     }
     return isTarget;
