@@ -4,6 +4,8 @@ import {
   Button,
   Typography,
   Divider,
+  Card,
+  Grid
 } from "@mui/material";
 import Axios from "axios";
 
@@ -119,18 +121,30 @@ function UserHome() {
             sx={{
               width: 300,
               height: 450,
+              mr:3,
+              mt:3
             }}
           >
-          <UserProfile user={user}/>
+            <Card>
+              <UserProfile user={user}/>
+            </Card>
           </Box>
           {(user && !!userItems) && (
           <Box
             sx={{
-              width: 700,
-              height: 450,
+              width: 680,
+              height: 380,
+              mt:3,
             }}
           >
-            <UserRoom myItems={userItems}/>
+            <Card sx={{width:'100%', height:'100%'}}>
+              {userItems.length==0?
+                (<Grid sx={{textAlign:'center', pt:'160px', color:'rgba(131, 139, 151, 0.5)', fontSize:'21px'}}>
+                    <span>{user.user_nickname}'s room</span>
+                </Grid>)
+              :
+                (<UserRoom myItems={userItems}/>)}
+            </Card>
           </Box>)}
         </Box>
         {(user && !!items) && (
