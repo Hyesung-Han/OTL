@@ -195,7 +195,6 @@ function RegisterItem() {
     }
   }, [imgError, authorError, titleError, desError]);
 
-  // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
@@ -216,8 +215,6 @@ function RegisterItem() {
   };
 
   const onClickCreate = async () => {
-    console.log(category);
-
     const formData = new FormData();
     formData.append("items", uploadImg);
     formData.append("user_address", user.user_address);
@@ -225,7 +222,6 @@ function RegisterItem() {
     formData.append("item_title", title);
     formData.append("item_description", description);
     formData.append("category_code", category);
-    console.log(formData);
 
     await Axios.post(serverUrlBase + `/items`, formData)
       .then(async (data) => {
@@ -243,7 +239,6 @@ function RegisterItem() {
             .send({ from: user.user_address })
             .then(async (data) => {
               const token = await data.events.Transfer.returnValues.tokenId;
-              console.log(token);
               setOpen(false);
 
               await Axios.patch(serverUrlBase + `/items/` + item_id, {

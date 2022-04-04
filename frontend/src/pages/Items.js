@@ -1,4 +1,4 @@
-import { Box, Container, tableRowClasses, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import React, { useEffect, useState, useContext } from "react";
 import { MotionContainer, varBounceIn } from "../components/animate";
@@ -10,31 +10,23 @@ import { CommonContext } from "../context/CommonContext";
 import COMMON_ABI from "../common/ABI";
 import { Web3Client } from "../common/web3Client";
 import { useParams } from "react-router-dom";
-/**
- * [구매하기] 화면
- */
+
 const Items = () => {
-  // [변수] 아이템, 컬렉션 유무, 로딩
   const { serverUrlBase } = useContext(CommonContext);
   const [item, setItem] = useState([]);
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState([]);
-  const { category_code } = useParams();
   const [saleId, setSaleId] = useState([]);
   const [itemarr, setItemarr] = useState([]);
+  const { category_code } = useParams();
 
-  // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
 
-  /**
-   * [초기 데이터 설정]
-   * 화면 첫 렌더링시 판매중인 작품을 조회하는 함수를 호출합니다.
-   */
   useEffect(() => {
     getItem();
     getCategory();

@@ -10,13 +10,10 @@ import { createStore, combineReducers } from "redux";
 import { UserReducer } from "./reducers/UserReducer";
 import { SearchReducer } from "./reducers/SearchReducer";
 
-// sessionStorage 사용
 import sessionStorage from "redux-persist/lib/storage/session";
 
 const persistConfig = {
   key: "root",
-
-  //sessionStorage에 저장
   storage: sessionStorage,
 };
 

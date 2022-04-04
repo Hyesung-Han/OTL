@@ -10,13 +10,10 @@ import GlobalStyles from "./theme/globalStyles";
  * @des Host(현재는 Swagger 주소), Provider를 넣어서 value를 속성으로 받아주게 설정
  */
 
-// hook
 import { CommonContext } from "./context/CommonContext";
 
-//const HOST = "localhost:3000/api";
 const HOST = "j6a405.p.ssafy.io/api";
 const serverUrlBase = `https://${HOST}`;
-
 
 export default function App() {
   return (
