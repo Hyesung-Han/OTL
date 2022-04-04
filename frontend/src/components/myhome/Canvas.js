@@ -70,11 +70,19 @@ const Canvas = ({items}) => {
         let isTarget = null;
         for (let i = 0; i < items.length; i++) {
           const box = items[i];
-          if (x >= box.x_index && x <= box.x_index + 100 && y >= box.y_index && y <= box.y_index + 100) {
-            dragTarget = box;
-            isTarget = true;
-            break;
-          }
+          if(box.category_code == 'etc' || box.category_code == 'character' || box.category_code == 'chair') {
+            if (x >= box.x_index && x <= box.x_index + 100 && y >= box.y_index && y <= box.y_index + 100) {
+                dragTarget = box;
+                isTarget = true;
+                break;
+            }
+         } else {
+            if (x >= box.x_index && x <= box.x_index + 200 && y >= box.y_index && y <= box.y_index + 200) {
+                dragTarget = box;
+                isTarget = true;
+                break;
+            }
+         }
         }
         return isTarget;
       }
