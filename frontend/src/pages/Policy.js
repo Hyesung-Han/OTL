@@ -21,8 +21,10 @@ const Policy = () => {
   return (
     <Wrapper>
       <Body>
-        <Grid display="flex" flexDirection="column" >
-          <Typography m={2} variant="h2">Privacy Policy</Typography>
+        <Grid display="flex" flexDirection="column">
+          <Typography m={2} variant="h2">
+            Privacy Policy
+          </Typography>
           <Grid container spacing={3}>
             <Grid item>
               <h2>1. Acceptance of Terms of Use Agreement.</h2>
