@@ -19,33 +19,27 @@ import { Web3Client } from "../common/web3Client";
  * @des SearchResult P
  * @api {get} /search/:search_value
  */
+
 const SearchResult = () => {
-  // [변수] 아이템, 컬렉션 유무, 로딩
   const { serverUrlBase } = useContext(CommonContext);
   const [item, setItem] = useState([]);
   const [isCollection, setIsCollection] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
-  const { search_value } = useParams();
   const [saleId, setSaleId] = useState([]);
   const [itemarr, setItemarr] = useState([]);
+  const { search_value } = useParams();
 
-  // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
 
-  // Web3
   const web3 = new Web3(
     new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)
   );
 
-  /**
-   * [초기 데이터 설정]
-   * 화면 첫 렌더링시 판매중인 작품을 조회하는 함수를 호출합니다.
-   */
   useEffect(() => {
     getProfile();
     getItem();
@@ -67,7 +61,6 @@ const SearchResult = () => {
         params: { user_nickname: search_value },
       });
       const data = res.data.data;
-
       setProfile(data);
       setLoading(false);
       setIsCollection(true);
@@ -84,7 +77,6 @@ const SearchResult = () => {
         });
         const data = res.data.data;
         row.saleCA = data.sale_contract_address;
-
         testArray.push(data.sale_contract_address);
       });
       setSaleId(testArray);
@@ -107,8 +99,6 @@ const SearchResult = () => {
         row.price = saleInfo[3];
         setItemarr((itemarr) => [...itemarr, row]);
       });
-
-      console.log("0", item);
       setLoading(false);
     } catch (e) {
       console.log("getNFT error" + e);
@@ -123,7 +113,6 @@ const SearchResult = () => {
       });
       const data = res.data.data;
 
-      console.log(data);
       setItem(data);
       setLoading(false);
       setIsCollection(true);
@@ -132,7 +121,6 @@ const SearchResult = () => {
     }
   };
 
-  // 카드 화면 생성을 위한 데이터 전달
   const productsprofile = [...Array(profile.length)].map((_, index) => {
     return {
       address: profile[index].user_address,

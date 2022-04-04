@@ -17,7 +17,7 @@ import Axios from "axios";
 import InputAdornment from "@mui/material/InputAdornment";
 
 import { CommonContext } from "../context/CommonContext";
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 
 import Swal from "sweetalert2";
@@ -39,18 +39,15 @@ import { Web3Client } from "../common/web3Client";
  * @des 클릭 : 해당 NFT에 대한 Smart Contract 생성 -> 관련 정보 DB 저장(api) -> 성공 후, 계약 권한 부여 및 소유권 변경
  */
 
-// 가격 유효성 검사 (숫자만, 100자까지)
 const regPr = /^[0-9]{1,100}$/;
 
 function RegisterSale() {
-  // nft contract
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
 
-  // saleFactory contract
   const SALE_FACTORY_CA = process.env.REACT_APP_SALE_FACTORY_CA;
   const saleFactoryInstance = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.SALE_FACTORY_ABI,
@@ -74,10 +71,7 @@ function RegisterSale() {
     await Axios.get(serverUrlBase + "/items/" + token_id)
       .then(async (data) => {
         if (data.data.result === "success") {
-          console.log(data.data.data);
-
           const nftURL = await nftInstance.methods.tokenURI(token_id).call();
-          console.log(nftURL);
           setImgURL(nftURL);
 
           const res = data.data.data;
@@ -86,7 +80,7 @@ function RegisterSale() {
           setDescription(res.item_description);
           setCategory(res.category_code);
         } else {
-          console.log("불러오기 실패");
+          console.log("아이템 불러오기 실패");
         }
       })
       .catch(function (error) {
@@ -157,6 +151,7 @@ function RegisterSale() {
   ];
 
   const curDate = new Date();
+  curDate.setDate(curDate.getDate() + 1);
   const [price, setPrice] = useState("");
   const [endDate, setendDate] = useState(curDate);
   const [priceError, setPriceError] = useState(false);
@@ -188,7 +183,6 @@ function RegisterSale() {
 
   useEffect(() => {
     getItemDetail();
-    console.log(endDate);
   }, []);
 
   const onClickCreate = async () => {
@@ -208,14 +202,11 @@ function RegisterSale() {
     setOpen1(true);
     saleSuccess(saleContractData)
       .then(async (data) => {
-        // 반환 값에서 주소 찾기필요
-        console.log(data);
         const returnAddress = data.events.NewSale.returnValues._saleContract;
 
         setOpen1(false);
         setOpen2(true);
 
-        //MetaMask 서명 순차 실행
         nftInstance.methods
           .setApprovalForAll(returnAddress, true)
           .send({ from: user.user_address })
@@ -223,7 +214,6 @@ function RegisterSale() {
             setOpen2(false);
             setOpen3(true);
 
-            // transferFrom confirm 클릭시 실행
             nftInstance.methods
               .transferFrom(user.user_address, returnAddress, token_id)
               .send({ from: user.user_address })
@@ -234,12 +224,12 @@ function RegisterSale() {
                 }
               })
               .then(async () => {
-                // 한국시간 맞춤
                 let insertDate = new Date(endDate);
-                insertDate.setHours(insertDate.getHours()+9);
+                insertDate.setHours(insertDate.getHours() + 9);
 
                 const realEndDate = insertDate.toISOString().split("T");
-                const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+                const rrealEndDate =
+                  realEndDate[0] + " " + realEndDate[1].split(".")[0];
 
                 Axios.post(serverUrlBase + `/sales`, {
                   token_id: token_id,
@@ -248,9 +238,7 @@ function RegisterSale() {
                   sale_contract_address: returnAddress,
                 })
                   .then(async (data) => {
-                    console.log(data);
                     if (data.status === 201) {
-                      // 소유자가 sale contract에게 권한 부여 및 소유권 변경
                       setOpen3(false);
                       await alert("판매등록 완료", "success");
                       await navigate("/main");
@@ -281,11 +269,9 @@ function RegisterSale() {
         console.log("NFT판매 오류1 : " + error);
         setOpen1(false);
         alert("NFT판매 오류1", "error");
-
       });
   };
 
-  // saleContract 생성 부분
   async function saleSuccess(data) {
     const saleInstance = await saleFactoryInstance.methods
       .createSale(
@@ -427,7 +413,7 @@ function RegisterSale() {
               >
                 <Alert severity="info">
                   <AlertTitle>1 / 3</AlertTitle>
-                  NFT 판매등록1... — <strong>Please wait!</strong>
+                  NFT Sale Registering... — <strong>Please wait!</strong>
                 </Alert>
               </Backdrop>
               <Backdrop
@@ -439,7 +425,7 @@ function RegisterSale() {
               >
                 <Alert severity="info">
                   <AlertTitle>2 / 3</AlertTitle>
-                  NFT 판매등록2... — <strong>Please wait!</strong>
+                  NFT Sale Registering... — <strong>Please wait!</strong>
                 </Alert>
               </Backdrop>
               <Backdrop
@@ -451,7 +437,7 @@ function RegisterSale() {
               >
                 <Alert severity="info">
                   <AlertTitle>3 / 3</AlertTitle>
-                  NFT 판매등록3... — <strong>Please wait!</strong>
+                  NFT Sale Registering... — <strong>Please wait!</strong>
                 </Alert>
               </Backdrop>
               <ButtonStyle to="/main" component={RouterLink}>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { useState, useEffect, useContext, useRef } from "react";
 import {
   Box,
@@ -13,12 +13,12 @@ import {
   DialogTitle,
   Grid,
   TextField,
-  Avatar
+  Avatar,
 } from "@mui/material";
 import Axios from "axios";
 
 import { CommonContext } from "../context/CommonContext";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import MyItemList from "../components/myhome/MyItemList";
 import MyProfile from "../components/myhome/MyProfile";
@@ -26,11 +26,9 @@ import MyRoom from "../components/myhome/MyRoom";
 import HorizonLine from "../components/HorizonLine";
 import Swal from "sweetalert2";
 
-// web3
-import COMMON_ABI from '../common/ABI';
+import COMMON_ABI from "../common/ABI";
 import { Web3Client } from "../common/web3Client";
 
-// Redux
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../redux/reducers/UserReducer";
 
@@ -41,6 +39,7 @@ import { setUser } from "../redux/reducers/UserReducer";
  * MyHome 페이지의 최상위 컴포넌트로 프로필, 마이룸, 마이 아이템 컴포넌트가 포함되어있음
  * 마이룸, 마이 아이템에 사용되는 데이터를 호출
  */
+
 function MyHome() {
   const navigate = useNavigate();
   const { serverUrlBase } = useContext(CommonContext);
@@ -48,78 +47,79 @@ function MyHome() {
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const [myItems, setMyItems] = useState([]);
-
-  // nft contract
-  const NFT_CA = process.env.REACT_APP_NFT_CA; 
+  const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
-    COMMON_ABI.CONTRACT_ABI.NFT_ABI, 
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
 
-  const getItems = async() => {
+  const getItems = async () => {
     try {
       setItems([]);
-      const {data} = await Axios.get(serverUrlBase + `/items?user_address=`+user.user_address)      
+      const { data } = await Axios.get(
+        serverUrlBase + `/items?user_address=` + user.user_address
+      );
       data.data.forEach(async (row) => {
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
         row.src = nftURL;
-        setItems(items => [...items, row]);
+        setItems((items) => [...items, row]);
       });
-    } catch(e) {
-      console.log("나의 모든 아이템 가져오기 오류 : " + e)
+    } catch (e) {
+      console.log("나의 모든 아이템 가져오기 오류 : " + e);
     }
-  }
+  };
 
-  const getMyItems = async() => {
+  const getMyItems = async () => {
     try {
       setMyItems([]);
-      const {data} = await Axios.get(serverUrlBase + `/home/`+user.user_address)
+      const { data } = await Axios.get(
+        serverUrlBase + `/home/` + user.user_address
+      );
       await data.data.forEach(async (row) => {
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
         row.src = nftURL;
-        setMyItems(myItems => [...myItems, row]);
+        setMyItems((myItems) => [...myItems, row]);
       });
-    } catch(e) {
-      console.log("나의 사용중인 아이템 가져오기 오류 : " + e)
+    } catch (e) {
+      console.log("나의 사용중인 아이템 가져오기 오류 : " + e);
     }
-  }
+  };
 
-  const removeItem = async(token_id) => {
-      try {
-        const {data} = await Axios.patch(serverUrlBase + `/home/`+token_id, {
-            on_use_yn: 0,
-            x_index:0,
-            y_index:0,
-            z_index:0,
-        })
-        getItems();
-        getMyItems();
-      } catch(e) {
-        console.log("아이템 제거하기 에러: " + e)
-      }
-    }
-    
-  const addItem = async(token_id) => {
+  const removeItem = async (token_id) => {
     try {
-      const {data} = await Axios.patch(serverUrlBase + `/home/`+token_id, {
-          on_use_yn: 1,
-          x_index:0,
-          y_index:0,
-          z_index:0,
-      })
+      const { data } = await Axios.patch(serverUrlBase + `/home/` + token_id, {
+        on_use_yn: 0,
+        x_index: 0,
+        y_index: 0,
+        z_index: 0,
+      });
       getItems();
       getMyItems();
-    } catch(e) {
-      console.log("아이템 추가하기 에러: " + e)
+    } catch (e) {
+      console.log("아이템 제거하기 에러: " + e);
     }
-  }
+  };
 
-  useEffect(()=>{
+  const addItem = async (token_id) => {
+    try {
+      const { data } = await Axios.patch(serverUrlBase + `/home/` + token_id, {
+        on_use_yn: 1,
+        x_index: 0,
+        y_index: 0,
+        z_index: 0,
+      });
+      getItems();
+      getMyItems();
+    } catch (e) {
+      console.log("아이템 추가하기 에러: " + e);
+    }
+  };
+
+  useEffect(() => {
     getItems();
     getMyItems();
   }, []);
 
-  // dialog
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -145,12 +145,9 @@ function MyHome() {
     setUploadImgURL(URL.createObjectURL(event.target.files[0]));
   };
 
-  // 닉네임 유효성 검사 (영소문자+숫자, 4자이상)
   const regNm = /^[a-z0-9]{4,}$/;
-
-  // 이메일 유효성 검사 (대소문자 구분 X, 문자/숫자연속가능)
   const regEma =
-  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
   const [disabled, setDisabled] = useState(true);
   const [profileData, setProfileData] = useState({
@@ -171,33 +168,33 @@ function MyHome() {
     formData.append("user_address", user.user_address);
     formData.append("profile", uploadImg);
     formData.append("user_image_url", user.user_image_url);
-    
-    if(uploadImg) {
+
+    if (uploadImg) {
       await Axios.patch(serverUrlBase + `/user/profileImg`, formData)
-      .then(async (data) => {
-        const create_result = data.data.result;
-        if (create_result == "success") {
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: '프로필 수정에 실패하였ㅅ브니다',
-            text: 'Something went wrong!',
-          })
-          navigate("/myhome");
-          return;
-        }
-      })
-      .catch(function (error) {
-        console.log("프로필 생성 오류 : " + error);
-      });
+        .then(async (data) => {
+          const create_result = data.data.result;
+          if (create_result == "success") {
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "프로필 수정에 실패하였ㅅ브니다",
+              text: "Something went wrong!",
+            });
+            navigate("/myhome");
+            return;
+          }
+        })
+        .catch(function (error) {
+          console.log("프로필 생성 오류 : " + error);
+        });
     }
 
     await Axios.patch(serverUrlBase + `/user/profile`, {
       user_address: user.user_address,
       user_nickname: nickname,
-      user_email:email,
-      user_link:link,
-      user_bio:bio,
+      user_email: email,
+      user_link: link,
+      user_bio: bio,
     })
       .then(async (data) => {
         const create_result = data.data.result;
@@ -227,7 +224,6 @@ function MyHome() {
   const [emailErr, setEmailErr] = useState(false);
   const [emailErrMsg, setEmailErrMsg] = useState();
 
-
   useEffect(() => {
     if (profileData.nickname.length === 0) {
       setNicknameErr(false);
@@ -245,7 +241,10 @@ function MyHome() {
             profileData.nickname
         )
           .then((data) => {
-            if (user.user_nickname!=profileData.nickname && data.data.data === false) {
+            if (
+              user.user_nickname != profileData.nickname &&
+              data.data.data === false
+            ) {
               setNicknameErr(true);
               setNicknameErrMsg("It's a registered ID that already exists!");
             } else {
@@ -303,7 +302,7 @@ function MyHome() {
     marginBottom: "100px",
   };
 
-  if(!items) return <>로딩</>;
+  if (!items) return <>로딩</>;
   return (
     <div style={RootStyle}>
       <div style={BodyStyle}>
@@ -314,105 +313,115 @@ function MyHome() {
             sx={{
               width: 300,
               height: 450,
-              mr:3,
-              mt:3,
+              mr: 3,
+              mt: 3,
             }}
           >
-          <Card>
-            <CardActionArea onClick={handleClickOpen}>
-              <MyProfile/>
-            </CardActionArea>
-          </Card>
+            <Card>
+              <CardActionArea onClick={handleClickOpen}>
+                <MyProfile />
+              </CardActionArea>
+            </Card>
           </Box>
           <Box
             sx={{
               width: 680,
               height: 380,
-              mt:3,
+              mt: 3,
             }}
           >
-            <Card sx={{width:'100%', height:'100%'}}>
-              {myItems.length==0?
-                <Grid sx={{textAlign:'center', pt:'160px', color:'rgba(131, 139, 151, 0.5)', fontSize:'21px'}}>
+            <Card sx={{ width: "100%", height: "100%" }}>
+              {myItems.length == 0 ? (
+                <Grid
+                  sx={{
+                    textAlign: "center",
+                    pt: "160px",
+                    color: "rgba(131, 139, 151, 0.5)",
+                    fontSize: "21px",
+                  }}
+                >
                   <span>decorate your own unique room</span>
                 </Grid>
-              :
-                <MyRoom myItems={myItems}/>} 
+              ) : (
+                <MyRoom myItems={myItems} />
+              )}
             </Card>
           </Box>
         </Box>
         <Box display="flex" flexDirection="row">
           <Box
             sx={{
-              width: '100%',
+              width: "100%",
               height: 300,
             }}
           >
             <HorizonLine text="my items" />
-            <MyItemList sx={{ mt: 1 }}
+            <MyItemList
+              sx={{ mt: 1 }}
               products={items}
               removeItem={removeItem}
-              addItem={addItem} />
+              addItem={addItem}
+            />
           </Box>
         </Box>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Edit Profile</DialogTitle>
-          <DialogContent sx={{width:480}}>
-              <Grid sx={{textAlign: '-webkit-center'}}>
-                <Avatar
-                  alt="Avatar"
-                  src={uploadImgURL}
-                  sx={{ width: 200, height: 200, mr:5, ml:5, mb:2 }}
-                  onClick={onClickImg}
-                ></Avatar>
-                <input
-                  ref={imgRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={onChangeImg}
-                  hidden
-                ></input>
-              </Grid>
-              <Grid item sx={{ py: 1 }}>
-                <TextField
-                  required
-                  error={nincknameErr}
-                  helperText={nincknameErrMsg}
-                  defaultValue={profileData.nickname}
-                  fullWidth
-                  label="Enter nickname"
-                  onChange={OnChangeHandler("nickname")}
-                ></TextField>
-              </Grid>
-              <Grid item sx={{ py: 1 }}>
-                <TextField
-                  required
-                  error={emailErr}
-                  helperText={emailErrMsg}
-                  defaultValue={profileData.email}
-                  fullWidth
-                  label="Enter email"
-                  onChange={OnChangeHandler("email")}
-                ></TextField>
-              </Grid>
-              <Grid item>
-                <TextField
-                  fullWidth
-                  label="Enter your sns"
-                  onChange={OnChangeHandler("link")}
-                  defaultValue={profileData.link}
-                ></TextField>
-              </Grid>
-              <Grid item sx={{ py: 2 }}>
-                <TextField
-                  multiline
-                  rows={3}
-                  fullWidth
-                  label="Tell the world your story!"
-                  onChange={OnChangeHandler("bio")}
-                  defaultValue={profileData.bio}
-                ></TextField>
-              </Grid>
+          <DialogContent sx={{ width: 480 }}>
+            <Grid sx={{ textAlign: "-webkit-center" }}>
+              <Avatar
+                alt="Avatar"
+                src={uploadImgURL}
+                sx={{ width: 200, height: 200, mr: 5, ml: 5, mb: 2 }}
+                onClick={onClickImg}
+              ></Avatar>
+              <input
+                ref={imgRef}
+                type="file"
+                accept="image/*"
+                onChange={onChangeImg}
+                hidden
+              ></input>
+            </Grid>
+            <Grid item sx={{ py: 1 }}>
+              <TextField
+                required
+                error={nincknameErr}
+                helperText={nincknameErrMsg}
+                defaultValue={profileData.nickname}
+                fullWidth
+                label="Enter nickname"
+                onChange={OnChangeHandler("nickname")}
+              ></TextField>
+            </Grid>
+            <Grid item sx={{ py: 1 }}>
+              <TextField
+                required
+                error={emailErr}
+                helperText={emailErrMsg}
+                defaultValue={profileData.email}
+                fullWidth
+                label="Enter email"
+                onChange={OnChangeHandler("email")}
+              ></TextField>
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                label="Enter your sns"
+                onChange={OnChangeHandler("link")}
+                defaultValue={profileData.link}
+              ></TextField>
+            </Grid>
+            <Grid item sx={{ py: 2 }}>
+              <TextField
+                multiline
+                rows={3}
+                fullWidth
+                label="Tell the world your story!"
+                onChange={OnChangeHandler("bio")}
+                defaultValue={profileData.bio}
+              ></TextField>
+            </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={onUpdateHandler}>Update</Button>

@@ -93,11 +93,5 @@ export const UserReducer = (state = UserInitialState, action) => {
 
     default:
       return state;
-
-    // case SET_TOKEN:
-    //   return {
-    //     state,
-    //     user: action.token,
-    //   };
   }
 };

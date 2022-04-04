@@ -16,15 +16,12 @@ import { useNavigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 
-// Web3
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 
-// Redux
 import { useDispatch, useSelector } from "react-redux";
 import { setInit } from "../../redux/reducers/UserReducer";
 
-// Icons
 import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
@@ -63,11 +60,11 @@ const SearchNavbar = () => {
     navigate("/search/" + inputValue);
   };
 
-  const KeyPressSearch = e => {
-    if(e.key === 'Enter') {
+  const KeyPressSearch = (e) => {
+    if (e.key === "Enter") {
       navigate("/search/" + inputValue);
     }
-  }
+  };
 
   useEffect(() => {
     if (user.user_address) {
@@ -155,7 +152,7 @@ const SearchNavbar = () => {
             alignItems: "center",
           }}
         >
-          <HomeIcon sx={{ fontSize: 30, color: "#FFFFFF", margin: "0 10px"}} />
+          <HomeIcon sx={{ fontSize: 30, color: "#FFFFFF", margin: "0 10px" }} />
           <LogoStyle to="/main" component={RouterLink}>
             OTL
           </LogoStyle>
@@ -214,7 +211,7 @@ const SearchNavbar = () => {
             LIST
           </ButtonStyle>
           <ButtonStyle
-            disabled={(!user.user_address?true:false)}
+            disabled={!user.user_address ? true : false}
             size="large"
             sx={{ fontSize: 17 }}
             to="/RegisterItem"
