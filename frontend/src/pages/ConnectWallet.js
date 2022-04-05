@@ -43,38 +43,34 @@ const ConnectWallet = () => {
 
   const handleConnect = async () => {
     setOpen(true);
-    activate(injected, (error) => {
-      if ("/No Ethereum provider was found on window.ethereum/".test(error)) {
-        window.open("https://metamask.io/download.html");
-      }
-    })
-      .then(async () => {
+    activate(injected, async (error) => {
+      if (!window.ethereum) {
         setOpen(false);
-
-        await Swal.fire({
-          title: "Welcome!",
-          text: "nice to see you again ^^",
-          imageUrl: "https://unsplash.it/400/200",
-          imageWidth: 400,
-          imageHeight: 200,
-          imageAlt: "Custom image",
-        });
-
-        await navigate("/main");
-      })
-      .catch(async function (error) {
+        console.log("Please install MetaMask first!");
+        navigate("/connectwallet");
+        window.open("https://metamask.io/download.html");
+      } else if (error) {
         setOpen(false);
         console.log("로그인 취소/오류 : " + error);
-
-        await Swal.fire({
+        Swal.fire({
           icon: "error",
           title: "로그인 취소",
         });
-      });
+      }
+    });
   };
 
   useEffect(() => {
     if (active) {
+      setOpen(false);
+      Swal.fire({
+        title: "Welcome!",
+        text: "nice to see you again ^^",
+        imageUrl: "https://unsplash.it/510/500",
+        imageWidth: 510,
+        imageHeight: 500,
+        imageAlt: "Custom image",
+      });
       navigate("/main");
     }
     if (account) {
