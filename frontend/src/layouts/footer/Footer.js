@@ -67,7 +67,7 @@ const Footer = () => {
           </Link>{" "}
           &nbsp;| &nbsp;
           <Link href="/AboutUs" underline="hover">
-            Team Of Us
+            Team of Us
           </Link>
         </LinkStyle>
       </FooterStyle>
