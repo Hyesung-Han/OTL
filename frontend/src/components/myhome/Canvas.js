@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import Axios from "axios";
 import { CommonContext } from "../../context/CommonContext";
+import { render } from "react-dom";
+import { WindowRounded } from "@mui/icons-material";
 
 /**
  * LJA | 2022.03.29 | ADD
@@ -25,43 +27,64 @@ const Canvas = ({ items }) => {
     setCanvasTag(canvas);
   }, []);
 
-  useEffect(() => {
+  useEffect(async() => {
     if (context) {
-      draw();
+      await draw();
     }
   }, [context, items]);
 
-  const draw = () => {
-    context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
-    items.forEach((item) => {
+  const draw = async() => {
+    let arr = [];
+    let hasWall = false;
+    await items.forEach((item)=> {
+      if(item.category_code=='wallpaper') {
+        arr.push(item);
+        hasWall = true;
+      }
+    });
+    await items.forEach((item)=> {
+      if(item.category_code!='wallpaper') {
+        arr.push(item);
+      }
+    });
+    
+    if(!hasWall) {
+      context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
+    }
+
+    arr.forEach(async(item) => {
       const image = new Image();
       image.src = item.src;
       if (item.category_code == "wallpaper") {
-        image.onload = () => {
-          context.drawImage(image, 0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
-        };
-      }
-    });
-    items.forEach((item) => {
-      const image = new Image();
-      image.src = item.src;
-      if (item.category_code != "wallpaper") {
+        return new Promise(function(resolve) {
+          image.onload = () => {
+            context.drawImage(image, 0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
+            resolve();
+          };
+        });
+      } else {
         if (
           item.category_code == "etc" ||
           item.category_code == "character" ||
           item.category_code == "chair"
         ) {
-          image.onload = () => {
-            context.drawImage(image, item.x_index, item.y_index, 100, 100);
-          };
+          return new Promise(function(resolve) {
+            image.onload = () => {
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 100, 100)}, 100);
+              resolve();
+            };
+          });
         } else {
-          image.onload = () => {
-            context.drawImage(image, item.x_index, item.y_index, 200, 200);
-          };
+          return new Promise(function(resolve) {
+            image.onload = () => {
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 200, 200)}, 100);
+              resolve();
+            };
+          });
         }
       }
     });
-  };
+  }
 
   let isDown = false;
   let dragTarget = null;
@@ -120,7 +143,7 @@ const Canvas = ({ items }) => {
     startY = mouseY;
     dragTarget.x_index += dx;
     dragTarget.y_index += dy;
-    draw(dragTarget);
+    draw();
   };
 
   const handleMouseUp = (e) => {

@@ -64,8 +64,8 @@ const Items = () => {
         const res = await Axios.get(serverUrlBase + `/sales/`, {
           params: { token_id: row.token_id },
         });
-        const data = res.data.data;
-        row.saleCA = data.sale_contract_address;
+        const data = await res.data.data;
+        row.saleCA = await data.sale_contract_address;
         testArray.push(data.sale_contract_address);
       });
       setSaleId(testArray);
@@ -78,15 +78,25 @@ const Items = () => {
 
     try {
       item.map(async (row) => {
-        const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
-        const saleInstance = new Web3Client.eth.Contract(
-          COMMON_ABI.CONTRACT_ABI.SALE_ABI,
-          row.saleCA
-        );
-        const saleInfo = await saleInstance.methods.getSaleInfo().call();
-        row.img_src = nftURL;
-        row.price = saleInfo[3];
-        setItemarr((itemarr) => [...itemarr, row]);
+        const nftURL = await nftInstance.methods.tokenURI(row.token_id).call()
+        .then( async (data) => {
+
+          const saleInstance = new Web3Client.eth.Contract(
+            COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+            row.saleCA
+          );
+
+          const saleInfo = await saleInstance.methods.getSaleInfo().call()
+          .then((data) =>{
+            // row.price = saleInfo[3];
+            row.price = data[3];
+          });
+
+          console.log(data);
+          row.img_src = data;
+          // row.img_src = nftURL;
+          setItemarr((itemarr) => [...itemarr, row]);
+        });
       });
 
       setLoading(false);
