@@ -64,8 +64,8 @@ const Items = () => {
         const res = await Axios.get(serverUrlBase + `/sales/`, {
           params: { token_id: row.token_id },
         });
-        const data = res.data.data;
-        row.saleCA = data.sale_contract_address;
+        const data = await res.data.data;
+        row.saleCA = await data.sale_contract_address;
         testArray.push(data.sale_contract_address);
       });
       setSaleId(testArray);
