@@ -33,7 +33,7 @@ const Canvas = ({ items }) => {
     }
   }, [context, items]);
 
-  const draw = async(dragTarget) => {
+  const draw = async() => {
     let arr = [];
     let hasWall = false;
     await items.forEach((item)=> {
