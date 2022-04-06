@@ -122,6 +122,7 @@ const SearchResult = () => {
   };
 
   const productsprofile = [...Array(profile.length)].map((_, index) => {
+
     return {
       address: profile[index].user_address,
       image: profile[index].user_image_url,
