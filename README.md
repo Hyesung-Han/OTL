@@ -137,9 +137,9 @@ npm start
 
 ## 8. 트리 구조
 
-- [`Front-End`](outputs/File Tree/Front-End.md)
-- [`Back-End`](outputs/File Tree/Back-End.md)
-- [`Smart-Contracts`](outputs/File Tree/Smart-Contracts.md)
+- [`Front-End`](https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22A405/-/blob/dev/outputs/File%20Tree/Front-End.md)
+- [`Back-End`](https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22A405/-/blob/dev/outputs/File%20Tree/Back-End.md)
+- [`Smart-Contracts`](https://lab.ssafy.com/s06-blockchain-nft-sub2/S06P22A405/-/blob/dev/outputs/File%20Tree/Smart-Contracts.md)
 
 ---
 

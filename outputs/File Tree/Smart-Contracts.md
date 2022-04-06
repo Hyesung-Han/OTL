@@ -1,3 +1,4 @@
+```tex
 │  .gitignore
 │  package-lock.json
 │  package.json
@@ -72,3 +73,5 @@
 └─test
         NftContractTest.js
         SaleContractTest.js
+```
+
