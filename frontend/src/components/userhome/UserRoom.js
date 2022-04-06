@@ -52,12 +52,25 @@ const MyRoom = ({ myItems }) => {
           };
         });
       } else {
-        return new Promise(function(resolve) {
-          image.onload = () => {
-            setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 100, 100)}, 200);
-            resolve();
-          };
-        });
+        if (
+          item.category_code == "etc" ||
+          item.category_code == "character" ||
+          item.category_code == "chair"
+        ) {
+          return new Promise(function(resolve) {
+            image.onload = () => {
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 100, 100)}, 100);
+              resolve();
+            };
+          });
+        } else {
+          return new Promise(function(resolve) {
+            image.onload = () => {
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 200, 200)}, 100);
+              resolve();
+            };
+          });
+        }
       }
     });
   }
