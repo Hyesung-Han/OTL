@@ -28,37 +28,52 @@ const MyRoom = ({ myItems }) => {
     }
   }, [context, myItems]);
 
-  const draw = () => {
-    context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
-    myItems.forEach((item) => {
+  const draw = async() => {
+    let arr = [];
+    await myItems.forEach((item)=> {
+      if(item.category_code=='wallpaper') {
+        arr.push(item);
+      }
+    });
+    await myItems.forEach((item)=> {
+      if(item.category_code!='wallpaper') {
+        arr.push(item);
+      }
+    });
+
+    arr.forEach(async(item) => {
       const image = new Image();
       image.src = item.src;
       if (item.category_code == "wallpaper") {
-        image.onload = () => {
-          context.drawImage(image, 0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
-        };
-      }
-    });
-    myItems.forEach((item) => {
-      const image = new Image();
-      image.src = item.src;
-      if (item.category_code != "wallpaper") {
+        return new Promise(function(resolve) {
+          image.onload = () => {
+            context.drawImage(image, 0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
+            resolve();
+          };
+        });
+      } else {
         if (
           item.category_code == "etc" ||
           item.category_code == "character" ||
           item.category_code == "chair"
         ) {
-          image.onload = () => {
-            context.drawImage(image, item.x_index, item.y_index, 100, 100);
-          };
+          return new Promise(function(resolve) {
+            image.onload = () => {
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 100, 100)}, 100);
+              resolve();
+            };
+          });
         } else {
-          image.onload = () => {
-            context.drawImage(image, item.x_index, item.y_index, 200, 200);
-          };
+          return new Promise(function(resolve) {
+            image.onload = () => {
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 200, 200)}, 100);
+              resolve();
+            };
+          });
         }
       }
     });
-  };
+  }
 
   if (!myItems) return <>로딩</>;
   return (
