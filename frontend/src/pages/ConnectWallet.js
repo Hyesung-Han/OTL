@@ -66,9 +66,9 @@ const ConnectWallet = () => {
       Swal.fire({
         title: "Welcome!",
         text: "nice to see you again ^^",
-        imageUrl: "https://unsplash.it/510/500",
+        imageUrl: "https://unsplash.it/510/300",
         imageWidth: 510,
-        imageHeight: 500,
+        imageHeight: 300,
         imageAlt: "Custom image",
       });
       navigate("/main");
