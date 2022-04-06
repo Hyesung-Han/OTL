@@ -1,3 +1,4 @@
+```tex
 │  .dockerignore
 │  .env
 │  .gitignore
@@ -40,3 +41,5 @@
         items.yaml
         sales.yaml
         user.yaml
+```
+
