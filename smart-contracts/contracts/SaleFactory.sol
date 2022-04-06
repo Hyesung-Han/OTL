@@ -227,10 +227,10 @@ contract Sale {
      * HHS | 2022.03.24 | v1.0
      * @dev 판매중인 NFT에 대하여 판매를 등록한 자 혹은 모든 권한이 있는 admin이 판매를 취소하는 경우
      */
-    function cancelSales() public payable onlyAfterStart endcheck{
+    function cancelSales() public payable onlyAfterStart{
 
-        //판매 종료 시간보다 더 이전인 경우만 취소 가능
-        require(block.timestamp < saleEndTime, "You cannot cancel");
+        // //판매 종료 시간보다 더 이전인 경우만 취소 가능
+        // require(block.timestamp < saleEndTime, "You cannot cancel");
 
         //판매자 혹은 모든 권한을 가진 사람(admin)이 이 판매를 철회하는게 맞는지 확인
         require(msg.sender == admin || msg.sender == seller, "You dont have any permission");
