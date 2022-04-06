@@ -33,11 +33,13 @@ const Canvas = ({ items }) => {
     }
   }, [context, items]);
 
-  const draw = async() => {
+  const draw = async(dragTarget) => {
     let arr = [];
+    let hasWall = false;
     await items.forEach((item)=> {
       if(item.category_code=='wallpaper') {
         arr.push(item);
+        hasWall = true;
       }
     });
     await items.forEach((item)=> {
@@ -45,13 +47,15 @@ const Canvas = ({ items }) => {
         arr.push(item);
       }
     });
+    
+    if(!hasWall) {
+      context.clearRect(0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
+    }
 
     arr.forEach(async(item) => {
       const image = new Image();
       image.src = item.src;
-      console.log(item.src);
       if (item.category_code == "wallpaper") {
-        console.log("벽");
         return new Promise(function(resolve) {
           image.onload = () => {
             context.drawImage(image, 0, 0, MAX_CANVAS_WIDTH, MAX_CANVAS_HEIGHT);
@@ -66,90 +70,19 @@ const Canvas = ({ items }) => {
         ) {
           return new Promise(function(resolve) {
             image.onload = () => {
-              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 100, 100)}, 200);
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 100, 100)}, 100);
               resolve();
             };
           });
         } else {
           return new Promise(function(resolve) {
             image.onload = () => {
-              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 200, 200)}, 200);
+              setTimeout(() => {context.drawImage(image, item.x_index, item.y_index, 200, 200)}, 100);
               resolve();
             };
           });
         }
       }
-    });
-
-    arr.forEach(async (row) => {
-      /*
-      loadedImages[row.src] = img;
-      img.src = row.src;
-
-      let width = 0;
-      let height = 0;
-      let x = 0;
-      let y = 0;
-      if (row.category_code == "wallpaper") {
-        console.log("벽지");
-        x = 0; y = 0;
-        width = MAX_CANVAS_WIDTH;
-        height = MAX_CANVAS_HEIGHT;
-      } else {
-        console.log("기타");
-        x = row.x_index; y = row.y_index;
-        if (
-          row.category_code == "etc" ||
-          row.category_code == "character" ||
-          row.category_code == "chair"
-        ) {
-          width = 100;
-          height = 100;
-        } else {
-          width = 200;
-          height = 200;
-        }
-      }
-      context.drawImage(img, x, y, width, height);
-      setTimeout(100);
-      */
-      // await loadImage(row.src).then((image)=>{
-      //   console.log(row.category_code+" 차례");
-      //   console.log(image);
-      // });
-      /*
-      const image = new Image();
-      image.src = row.src;
-
-      image.onload = async() => {
-        console.log("지금은 " +row.category_code);
-        let width = 0;
-        let height = 0;
-        let x = 0;
-        let y = 0;
-        if (row.category_code == "wallpaper") {
-          console.log("벽지");
-          x = 0; y = 0;
-          width = MAX_CANVAS_WIDTH;
-          height = MAX_CANVAS_HEIGHT;
-        } else {
-          console.log("기타");
-          x = row.x_index; y = row.y_index;
-          if (
-            row.category_code == "etc" ||
-            row.category_code == "character" ||
-            row.category_code == "chair"
-          ) {
-            width = 100;
-            height = 100;
-          } else {
-            width = 200;
-            height = 200;
-          }
-        }
-        context.drawImage(image, x, y, width, height);
-      };
-      */
     });
   }
 
@@ -210,7 +143,7 @@ const Canvas = ({ items }) => {
     startY = mouseY;
     dragTarget.x_index += dx;
     dragTarget.y_index += dy;
-    draw(dragTarget);
+    draw();
   };
 
   const handleMouseUp = (e) => {
