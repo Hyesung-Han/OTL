@@ -75,27 +75,29 @@ const Items = () => {
   };
   const getNFT = () => {
     setLoading(true);
-
     try {
       item.map(async (row) => {
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call()
         .then( async (data) => {
+          if(row.saleCA) {
+            const saleInstance = new Web3Client.eth.Contract(
+              COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+              row.saleCA
+            );
 
-          const saleInstance = new Web3Client.eth.Contract(
-            COMMON_ABI.CONTRACT_ABI.SALE_ABI,
-            row.saleCA
-          );
-
-          const saleInfo = await saleInstance.methods.getSaleInfo().call()
-          .then((data) =>{
-            // row.price = saleInfo[3];
-            row.price = data[3];
-          });
-
-          console.log(data);
-          row.img_src = data;
-          // row.img_src = nftURL;
-          setItemarr((itemarr) => [...itemarr, row]);
+            if(saleInstance) {
+              await saleInstance.methods.getSaleInfo().call()
+              .then((data) =>{
+                // row.price = saleInfo[3];
+                row.price = data[3];
+              });
+              row.img_src = data;
+              // row.img_src = nftURL;
+              setItemarr((itemarr) => [...itemarr, row]);
+            }
+          } else {
+            getNFT();
+          }
         });
       });
 
