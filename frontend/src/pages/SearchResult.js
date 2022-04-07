@@ -11,7 +11,7 @@ import HorizonLine from "../components/HorizonLine";
 import { CommonContext } from "../context/CommonContext";
 import { useParams } from "react-router-dom";
 import COMMON_ABI from "../common/ABI";
-import { Web3Client } from "../common/web3Client";
+import { Web3Limit } from "../common/web3Client";
 
 /**
  * CSW | 2022.03.30 | UPDATE
@@ -31,7 +31,7 @@ const SearchResult = () => {
   const { search_value } = useParams();
 
   const NFT_CA = process.env.REACT_APP_NFT_CA;
-  const nftInstance = new Web3Client.eth.Contract(
+  const nftInstance = new Web3Limit.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
@@ -90,14 +90,19 @@ const SearchResult = () => {
     try {
       item.map(async (row) => {
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
-        const saleInstance = new Web3Client.eth.Contract(
-          COMMON_ABI.CONTRACT_ABI.SALE_ABI,
-          row.saleCA
-        );
-        const saleInfo = await saleInstance.methods.getSaleInfo().call();
-        row.img_src = nftURL;
-        row.price = saleInfo[3];
-        setItemarr((itemarr) => [...itemarr, row]);
+        
+        if(row.saleCA) {
+          const saleInstance = new Web3Limit.eth.Contract(
+            COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+            row.saleCA
+          );
+          const saleInfo = await saleInstance.methods.getSaleInfo().call();
+          row.img_src = nftURL;
+          row.price = saleInfo[3];
+          setItemarr((itemarr) => [...itemarr, row]);
+        } else {
+          getNFT();
+        }
       });
       setLoading(false);
     } catch (e) {
