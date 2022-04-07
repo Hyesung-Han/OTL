@@ -27,7 +27,7 @@ import HorizonLine from "../components/HorizonLine";
 import Swal from "sweetalert2";
 
 import COMMON_ABI from "../common/ABI";
-import { Web3Client } from "../common/web3Client";
+import { Web3Limit } from "../common/web3Client";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../redux/reducers/UserReducer";
@@ -48,7 +48,7 @@ function MyHome() {
   const [items, setItems] = useState([]);
   const [myItems, setMyItems] = useState([]);
   const NFT_CA = process.env.REACT_APP_NFT_CA;
-  const nftInstance = new Web3Client.eth.Contract(
+  const nftInstance = new Web3Limit.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
