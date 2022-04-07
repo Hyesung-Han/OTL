@@ -6,5 +6,5 @@ export const Web3Client = new Web3(
 );  
 
 export const Web3Limit = new Web3(
-  new Web3.providers.HttpProvider(HTTP_PROVIDER) || Web3.givenProvider
+  new Web3.providers.HttpProvider(HTTPS_PROVIDER) || Web3.givenProvider
 );  
