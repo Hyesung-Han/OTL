@@ -19,7 +19,7 @@
 - 주제 : 미니홈피 기능을 결합한 **블록체인 기반 탈중앙형 NFT 거래 플랫폼** 서비스
 - 팀명 : 👖 청바지! (**청**춘은 **바**로 **지**금)
 
-![팀원소개](README.assets/팀원소개.png)
+![팀원소개](outputs/README.assets/팀원소개.png)
 
 ---
 
@@ -37,9 +37,9 @@
 
 ### OTL 기획 배경 / 타겟
 
-![기획배경](README.assets/기획배경.png)
+![기획배경](outputs/README.assets/기획배경.png)
 
-![타겟](README.assets/타겟.png)
+![타겟](C:\Users\SSAFY\Desktop\S06P22A405\README.assets\타겟.png)
 
 ---
 
@@ -47,7 +47,7 @@
 
 ## 3. 기술 스택
 
-![기술스택](README.assets/기술스택.png)
+![기술스택](C:\Users\SSAFY\Desktop\S06P22A405\README.assets\기술스택.png)
 
 ---
 
@@ -57,15 +57,15 @@
 
 ### [`Notion`](https://truth-octave-117.notion.site/TL-8fc2391a556b447d9ca4a70cf1fd194a)
 
-![노션1](README.assets/노션1.png)
+![노션1](outputs/README.assets/노션1.png)
 
-![노션2](README.assets/노션2.png)
+![노션2](outputs/README.assets/노션2.png)
 
 
 
 ### [`Jira`](https://truth-octave-117.notion.site/JIRA-07fb44a9c7684e3093b750a0a4133fed) / [`Task`](https://truth-octave-117.notion.site/21b074b0bf7d438f979f64389a248401?v=72ac930430d0454383d61eb962116cf5)
 
-![지라](README.assets/지라.png)
+![지라](outputs/README.assets/지라.png)
 
 ---
 
@@ -75,31 +75,31 @@
 
 ### 주기능 1-1. Minting [NFT 생성]
 
-![NFT생성](README.assets/NFT생성.png)
+![NFT생성](outputs/README.assets/NFT생성.png)
 
 
 
 ### 주기능 1-2. List [판매중인 NFT 목록]
 
-![NFT목록](README.assets/NFT목록.png)
+![NFT목록](outputs/README.assets/NFT목록.png)
 
 
 
 ### 주기능 1-3. Sale [NFT 판매]
 
-![image-20220407114847007](README.assets/NFT판매.png)
+![image-20220407114847007](outputs/README.assets/NFT판매.png)
 
 
 
 ### 주기능 1-4. Sale [NFT 구매]
 
-![image-20220407114852376](README.assets/NFT구매.png)
+![image-20220407114852376](outputs/README.assets/NFT구매.png)
 
 
 
 ### 주기능 2. My Room [보유 NFT 목록 조회 / 방 꾸미기]
 
-![방꾸미기](README.assets/방꾸미기.png)
+![방꾸미기](outputs/README.assets/방꾸미기.png)
 
 ---
 
@@ -107,7 +107,7 @@
 
 ## 6. ERD [DB Modeling]
 
-![ERD](README.assets/ERD.png)
+![ERD](outputs/README.assets/ERD.png)
 
 ---
 
