@@ -30,7 +30,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 
 import COMMON_ABI from "../common/ABI";
-import { Web3Client } from "../common/web3Client";
+import { Web3Client, Web3Limit } from "../common/web3Client";
 
 /**
  * HSH | 2022.03.30 | v2.0
@@ -44,6 +44,11 @@ const regPr = /^[0-9]{1,100}$/;
 function RegisterSale() {
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI,
+    NFT_CA
+  );
+
+  const nftInstanceOnlyRead = new Web3Client.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
@@ -71,7 +76,7 @@ function RegisterSale() {
     await Axios.get(serverUrlBase + "/items/" + token_id)
       .then(async (data) => {
         if (data.data.result === "success") {
-          const nftURL = await nftInstance.methods.tokenURI(token_id).call();
+          const nftURL = await nftInstanceOnlyRead.methods.tokenURI(token_id).call();
           setImgURL(nftURL);
 
           const res = data.data.data;
@@ -241,7 +246,7 @@ function RegisterSale() {
                     if (data.status === 201) {
                       setOpen3(false);
                       await alert("판매등록 완료", "success");
-                      await navigate("/main");
+                      navigate("/itemdetail/" + token_id);
                     } else {
                       setOpen3(false);
                       alert("판매등록 실패", "error");

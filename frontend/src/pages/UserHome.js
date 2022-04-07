@@ -11,7 +11,7 @@ import UserItemList from "../components/userhome/UserItemList";
 import HorizonLine from "../components/HorizonLine";
 
 import COMMON_ABI from "../common/ABI";
-import { Web3Client } from "../common/web3Client";
+import { Web3Limit } from "../common/web3Client";
 
 /**
  * LJA | 2022.03.30 | ADD
@@ -28,7 +28,7 @@ function UserHome() {
   const [items, setItems] = useState([]);
 
   const NFT_CA = process.env.REACT_APP_NFT_CA;
-  const nftInstance = new Web3Client.eth.Contract(
+  const nftInstance = new Web3Limit.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, Card, Link, Typography, Stack, Chip } from "@mui/material";
+import { Box, Card, Link, Typography, Stack, Chip, Grid } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { styled } from "@mui/material/styles";
@@ -25,7 +25,7 @@ ItemsCard.propTypes = {
 };
 
 export default function ItemsCard({ product, removeItem, addItem }) {
-  const { token_id, item_title, on_use_yn, src } = product;
+  const { token_id, item_title, on_use_yn, on_sale_yn, src } = product;
 
   const handleClick = (token_id) => {
     addItem(token_id);
@@ -36,26 +36,37 @@ export default function ItemsCard({ product, removeItem, addItem }) {
 
   return (
     <CardStyle>
-      {on_use_yn === 1 ? (
-        <Chip
-          sx={{ ml: 1, mt: 1 }}
-          label="in use"
-          size="small"
-          color="error"
-          onClick={deleteClick.bind(this, token_id)}
-          icon={<CheckCircleIcon />}
-        />
-      ) : (
-        <Chip
-          sx={{ ml: 1, mt: 1 }}
-          label="add"
-          size="small"
-          color="default"
-          onClick={handleClick.bind(this, token_id)}
-          icon={<AddCircleIcon />}
-        />
-      )}
-
+      <Grid>
+        {on_use_yn === 1 ? (
+          <Chip
+            sx={{ ml: 1, mt: 1 }}
+            label="in use"
+            size="small"
+            color="error"
+            onClick={deleteClick.bind(this, token_id)}
+            icon={<CheckCircleIcon />}
+          />
+        ) : (
+          <Chip
+            sx={{ ml: 1, mt: 1 }}
+            label="add"
+            size="small"
+            color="default"
+            onClick={handleClick.bind(this, token_id)}
+            icon={<AddCircleIcon />}
+          />
+        )}
+        {on_sale_yn === 1 && (
+          <Chip
+            sx={{ ml: 1, mt: 1 }}
+            variant="outlined"
+            label="on sale"
+            size="small"
+            color="primary"
+          />
+        )}
+      </Grid>
+      
       <Link
         to={`/itemdetail/${token_id}`}
         color="inherit"
