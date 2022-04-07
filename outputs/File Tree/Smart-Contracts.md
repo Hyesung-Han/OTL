@@ -5,7 +5,7 @@
 │  README.md
 │  truffle-config.js
 │
-├─build
+├─build 		/*빌드시 생성되는 폴더*/
 │  └─contracts
 │          Address.json
 │          Context.json
@@ -28,17 +28,17 @@
 │          Strings.json
 │
 ├─contracts
-│  │  Migrations.sol
-│  │  SaleFactory.sol
-│  │  SsafyNFT.sol
-│  │  SsafyToken.sol
+│  │  Migrations.sol 	/* 시나리오 테스트 배포 */
+│  │  SaleFactory.sol 	/* NFT 거래 관련 API */
+│  │  SsafyNFT.sol 	/* NFT 생성 관련 API */
+│  │  SsafyToken.sol 	/* 시나리오 테스트 */
 │  │
 │  ├─access
 │  │      Ownable.sol
 │  │      README.adoc
 │  │
 │  ├─token
-│  │  ├─ERC20
+│  │  ├─ERC20 		/* Solidity 공식 코드 폴더 */
 │  │  │  │  ERC20.sol
 │  │  │  │  IERC20.sol
 │  │  │  │  README.adoc
@@ -46,7 +46,7 @@
 │  │  │  └─extensions
 │  │  │          IERC20Metadata.sol
 │  │  │
-│  │  └─ERC721
+│  │  └─ERC721  	/* NFT 기본 로직 구현 */
 │  │      │  ERC721.sol
 │  │      │  IERC721.sol
 │  │      │  IERC721Receiver.sol
@@ -67,11 +67,11 @@
 │      └─math
 │              SafeMath.sol
 │
-├─migrations
-│      1_initial_migration.js
+├─migrations 
+│      1_initial_migration.js 	/* 시나리오 테스트 deploy */
 │
-└─test
+└─test 			/* 시나리오 테스트 구현 */
         NftContractTest.js
-        SaleContractTest.js
+        SaleContractTest.js 	
 ```
 
