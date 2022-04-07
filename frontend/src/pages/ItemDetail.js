@@ -13,7 +13,7 @@ import { CommonContext } from "../context/CommonContext";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import COMMON_ABI from "../common/ABI";
-import { Web3Client } from "../common/web3Client";
+import { Web3Client, Web3Limit } from "../common/web3Client";
 import Swal from "sweetalert2";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -58,7 +58,7 @@ const ItemDetail = () => {
   const [open3, setOpen3] = useState(false);
 
   const NFT_CA = process.env.REACT_APP_NFT_CA;
-  const nftInstance = new Web3Client.eth.Contract(
+  const nftInstance = new Web3Limit.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
@@ -154,7 +154,7 @@ const ItemDetail = () => {
       newDate.setHours(newDate.getHours() + 9);
       const realEndDate = newDate.toISOString().split("T");
       const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
-      const saleInstance = new Web3Client.eth.Contract(
+      const saleInstance = new Web3Limit.eth.Contract(
         COMMON_ABI.CONTRACT_ABI.SALE_ABI,
         saleCA
       );
@@ -194,7 +194,7 @@ const ItemDetail = () => {
   const getPrice = () => {
     try {
       history.map(async (row) => {
-        const saleInstance = new Web3Client.eth.Contract(
+        const saleInstance = new Web3Limit.eth.Contract(
           COMMON_ABI.CONTRACT_ABI.SALE_ABI,
           row.sale_contract_address
         );

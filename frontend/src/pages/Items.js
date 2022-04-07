@@ -8,7 +8,7 @@ import ItemsList from "../components/items/ItemsList";
 import Category from "../components/category/Category";
 import { CommonContext } from "../context/CommonContext";
 import COMMON_ABI from "../common/ABI";
-import { Web3Client } from "../common/web3Client";
+import { Web3Limit } from "../common/web3Client";
 import { useParams } from "react-router-dom";
 
 const Items = () => {
@@ -22,7 +22,7 @@ const Items = () => {
   const { category_code } = useParams();
 
   const NFT_CA = process.env.REACT_APP_NFT_CA;
-  const nftInstance = new Web3Client.eth.Contract(
+  const nftInstance = new Web3Limit.eth.Contract(
     COMMON_ABI.CONTRACT_ABI.NFT_ABI,
     NFT_CA
   );
@@ -80,7 +80,7 @@ const Items = () => {
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call()
         .then( async (data) => {
           if(row.saleCA) {
-            const saleInstance = new Web3Client.eth.Contract(
+            const saleInstance = new Web3Limit.eth.Contract(
               COMMON_ABI.CONTRACT_ABI.SALE_ABI,
               row.saleCA
             );
