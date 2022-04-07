@@ -26,8 +26,8 @@
     │      web3Client.js
     │
     ├─components
-    │  │  HorizonLine.js
-    │  │  Page.js
+    │  │  HorizonLine.js    # divider
+    │  │  Page.js           # page 구성
     │  │
     │  ├─@material-extend
     │  │      index.js
