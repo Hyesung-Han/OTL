@@ -39,7 +39,7 @@
 
 ![기획배경](outputs/README.assets/기획배경.png)
 
-![타겟](C:\Users\SSAFY\Desktop\S06P22A405\README.assets\타겟.png)
+![타겟](outputs/README.assets\타겟.png)
 
 ---
 
@@ -47,7 +47,7 @@
 
 ## 3. 기술 스택
 
-![기술스택](C:\Users\SSAFY\Desktop\S06P22A405\README.assets\기술스택.png)
+![기술스택](outputs/README.assets\기술스택.png)
 
 ---
 
