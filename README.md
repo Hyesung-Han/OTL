@@ -79,13 +79,21 @@
 
 
 
-### 주기능 1-2. Buy [NFT 구매]
-
-
-
-### 주기능 1-3. List [판매중인 NFT 목록]
+### 주기능 1-2. List [판매중인 NFT 목록]
 
 ![NFT목록](README.assets/NFT목록.png)
+
+
+
+### 주기능 1-3. Sale [NFT 판매]
+
+![image-20220407114847007](README.assets/NFT판매.png)
+
+
+
+### 주기능 1-4. Sale [NFT 구매]
+
+![image-20220407114852376](README.assets/NFT구매.png)
 
 
 
