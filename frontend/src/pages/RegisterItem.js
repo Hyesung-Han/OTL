@@ -19,7 +19,7 @@ import { useState, useRef, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import COMMON_ABI from "../common/ABI";
-import { Web3Client } from "../common/web3Client";
+import { Web3Client, Web3Limit } from "../common/web3Client";
 import BackupIcon from "@mui/icons-material/Backup";
 
 import Alert from "@mui/material/Alert";
@@ -96,6 +96,7 @@ function RegisterItem() {
   const [titleError, setTitleError] = useState(true);
   const [desError, setDesError] = useState(true);
   const [disabled, setDisabled] = useState(true);
+  const [networkError, setNetworkError] = useState(true);
 
   const [open, setOpen] = useState(false);
 
@@ -130,6 +131,16 @@ function RegisterItem() {
     } else {
       setDesError(false);
     }
+  };
+
+  const onChkNetwork = async () => {
+    const meta = await Web3Client.eth.net.getId().then( id=> {return id});
+    const local = await Web3Limit.eth.net.getId().then( id=> {return id});
+
+    console.log(meta+" "+local);
+
+    if(meta == local) setNetworkError(false);
+    else setNetworkError(true);
   };
 
   const onChangeCategory = (e) => {
@@ -185,15 +196,17 @@ function RegisterItem() {
 
   useEffect(() => {
     getCategoryList();
+    onChkNetwork();
   }, []);
 
   useEffect(() => {
-    if (!imgError && !authorError && !titleError && !desError) {
+
+    if (!imgError && !authorError && !titleError && !desError && !networkError) {
       setDisabled(false);
     } else {
       setDisabled(true);
     }
-  }, [imgError, authorError, titleError, desError]);
+  }, [imgError, authorError, titleError, desError, networkError]);
 
   const NFT_CA = process.env.REACT_APP_NFT_CA;
   const nftInstance = new Web3Client.eth.Contract(
