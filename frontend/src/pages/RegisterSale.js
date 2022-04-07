@@ -246,7 +246,7 @@ function RegisterSale() {
                     if (data.status === 201) {
                       setOpen3(false);
                       await alert("판매등록 완료", "success");
-                      await navigate("/main");
+                      navigate("/itemdetail/" + token_id);
                     } else {
                       setOpen3(false);
                       alert("판매등록 실패", "error");
