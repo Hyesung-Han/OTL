@@ -21,7 +21,7 @@
     │  index.js
     │  routes.js
     │
-    ├─common
+    ├─common    # Web3 설정
     │      ABI.js
     │      web3Client.js
     │
