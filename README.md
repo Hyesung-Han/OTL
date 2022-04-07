@@ -87,7 +87,7 @@
 
 ### 주기능 1-3. Sale [NFT 판매]
 
-![image-20220407114847007](outputs/README.assets/NFT판매.png)
+![image-20220407185457355](outputs/README.assets/NFT판매.png)
 
 
 
