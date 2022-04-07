@@ -90,14 +90,19 @@ const SearchResult = () => {
     try {
       item.map(async (row) => {
         const nftURL = await nftInstance.methods.tokenURI(row.token_id).call();
-        const saleInstance = new Web3Limit.eth.Contract(
-          COMMON_ABI.CONTRACT_ABI.SALE_ABI,
-          row.saleCA
-        );
-        const saleInfo = await saleInstance.methods.getSaleInfo().call();
-        row.img_src = nftURL;
-        row.price = saleInfo[3];
-        setItemarr((itemarr) => [...itemarr, row]);
+        
+        if(row.saleCA) {
+          const saleInstance = new Web3Limit.eth.Contract(
+            COMMON_ABI.CONTRACT_ABI.SALE_ABI,
+            row.saleCA
+          );
+          const saleInfo = await saleInstance.methods.getSaleInfo().call();
+          row.img_src = nftURL;
+          row.price = saleInfo[3];
+          setItemarr((itemarr) => [...itemarr, row]);
+        } else {
+          getNFT();
+        }
       });
       setLoading(false);
     } catch (e) {
