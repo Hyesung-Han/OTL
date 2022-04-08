@@ -8,276 +8,34 @@ import {
   Divider,
   InputBase,
   Paper,
-  Grid,
   NativeSelect,
   FormControl,
   FormLabel,
-  FormHelperText,
 } from "@mui/material";
-import Page from "../components/Page";
 import Axios from "axios";
 
 import { CommonContext } from "../context/CommonContext";
 import { useState, useRef, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-
+import COMMON_ABI from "../common/ABI";
+import { Web3Client, Web3Limit } from "../common/web3Client";
 import BackupIcon from "@mui/icons-material/Backup";
-import logo from "../image/logo.png";
 
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import Backdrop from "@mui/material/Backdrop";
 /**
- * HSH | 2022.03.24 | ADD
+ * HSH | 2022.03.30 | v2.0
  * @name RegisterItem
- * @api {post} /items
- * @api {patch} /items/:item_id
- * @des 아이템 저장하기
+ * @api {post} HOST/items : 작품 등록(DB)
+ * @web3 {token_id 반환} : Web3[MetaMaks]를 통한 NFT 등록
+ * @api {patch} HOST/items/:item_id : NFT 등록(DB)
+ * @des 작품 등록 -> DB저장 -> NFT 등록 -> DB저장
  */
 function RegisterItem() {
-  const user = useSelector((state) => state.User.user);
-  const { serverUrlBase } = useContext(CommonContext);
-
-  const [img, setImg] = useState("");
-  const [uploadImg, setUploadImg] = useState("");
-  const imgRef = useRef();
-  let navigate = useNavigate();
-
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("0");
-
-  const [imgError, setImgError] = useState(true);
-  const [authorError, setauthorError] = useState(true);
-  const [titleError, setTitleError] = useState(true);
-  const [descriptionError, setDescriptionError] = useState(true);
-
-  const [isValid, setIsValid] = useState(false);
-
-  useEffect(() => {
-    if (!imgError && !authorError && !titleError && !descriptionError) {
-      setIsValid(true);
-    } else {
-      setIsValid(false);
-    }
-  }, [imgError, authorError, titleError, descriptionError]);
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onChangeAutor
-   * @des author 변경 시 실행
-   */
-  const onChangeAutor = (e) => {
-    const value = e.target.value;
-    setAuthor(e.target.value);
-
-    if (!value) {
-      setauthorError(true);
-    } else {
-      setauthorError(false);
-    }
-  };
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onChangeTitle
-   * @des title 변경 시 실행
-   */
-  const onChangeTitle = (e) => {
-    const value = e.target.value;
-    setTitle(e.target.value);
-
-    if (!value) {
-      setTitleError(true);
-    } else {
-      setTitleError(false);
-    }
-  };
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onChangedescription
-   * @des description 변경 시 실행
-   */
-  const onChangedescription = (e) => {
-    const value = e.target.value;
-    setDescription(e.target.value);
-
-    if (!value) {
-      setDescriptionError(true);
-    } else {
-      setDescriptionError(false);
-    }
-  };
-
-  const onChangeCategory = (e) => {
-    setCategory(e.target.value);
-  };
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name inputTexts
-   * @des author, title, description에 관한 정보 저장
-   */
-  const inputTexts = [
-    {
-      name: "Author",
-      data: author,
-      set: onChangeAutor,
-      rows: 1,
-      placeholder: "Name",
-      multiline: false,
-      error: authorError,
-    },
-    {
-      name: "Title",
-      data: title,
-      set: onChangeTitle,
-      rows: 1,
-      placeholder: "item title",
-      multiline: false,
-      error: titleError,
-    },
-    {
-      name: "description",
-      data: description,
-      set: onChangedescription,
-      rows: 4,
-      placeholder: "item description",
-      multiline: true,
-      error: descriptionError,
-    },
-  ];
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name categoryList
-   * @des 카테고리 리스트
-   * HACK
-   * 카테고리 db에서 받아오기전까지는 임시로 사용하도록 만들어 놓음
-   */
-  const categoryList = [
-    {
-      id: "0",
-      name: "chair",
-    },
-    {
-      id: "1",
-      name: "table",
-    },
-    {
-      id: "2",
-      name: "wallpaper",
-    },
-    {
-      id: "3",
-      name: "floor",
-    },
-    {
-      id: "4",
-      name: "wall hanging",
-    },
-    {
-      id: "5",
-      name: "prop",
-    },
-  ];
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickImg
-   * @des 이미지 클릭 시 실행되는 함수
-   */
-  const onClickImg = () => {
-    imgRef.current.click();
-  };
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickCreate
-   * @des create 버튼 클릭 시 실행
-   */
-  const onClickCreate = () => {
-    console.log(category);
-
-    const formData = new FormData();
-    formData.append("items", img);
-    /**
-     * HACK
-     * 로그인 되면 이후에 해보기
-     */
-    formData.append("user_address", "1234");
-    formData.append("author_name", author);
-    formData.append("item_title", title);
-    formData.append("item_description", description);
-    /**
-     * HACK
-     * 카테고리 연결 되면 이후에 추가
-     */
-    formData.append("category_code", "bed");
-
-    Axios.post(serverUrlBase + `/items`, formData)
-      .then((data) => {
-        console.log(data);
-        if (data.status === 201) {
-          /**
-           * TODO
-           * NFT 생성하기
-           */
-          Swal.fire({
-            icon: "success",
-            title: "글이 성공적으로 등록되었습니다.",
-          });
-          navigate("/main");
-        } else if (data.status === 200) {
-            Swal.fire({
-              icon: "warning",
-              title: data.data.msg,
-            });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "아이템이 정상적으로 등록되지 않았습니다",
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log("Item register error:" + error);
-
-        Swal.fire({
-          icon: "error",
-          title: "아이템이 정상적으로 등록되지 않았습니다",
-        });
-      });
-
-    console.log("onClickCreate");
-  };
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onClickCancel
-   * @des cancel 버튼 클릭 시 실행
-   */
-  const onClickCancel = () => {
-    console.log("onClickCancel");
-    navigate("/main");
-  };
-
-  /**
-   * HSH | 2022.03.21 | v1.0
-   * @name onImgChange
-   * @des 파일 선택장에서 파일 선택 시 실행
-   */
-  const onImgChange = async (event) => {
-    if (!event.target.files[0]) return;
-
-    setImg(event.target.files[0]);
-    setUploadImg(URL.createObjectURL(event.target.files[0]));
-
-    setImgError(false);
-  };
-
   const RootStyle = {
     width: "100%",
-
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -291,7 +49,6 @@ function RegisterItem() {
     display: "flex",
     alignItems: "left",
     flexDirection: "column",
-
     padding: "0 50px",
   };
 
@@ -300,41 +57,278 @@ function RegisterItem() {
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
-
     padding: "10px",
-
     width: "400px",
     height: "400px",
-
     border: "dashed #ababab",
     borderRadius: "20px",
   }));
 
+  const ButtonStyle = styled(Button)((theme) => ({
+    margin: "10px 10px",
+    width: "100px",
+    font: "1em Fira Sans",
+    fontWeight: "bold",
+    border: "2px solid #ababab",
+    borderRadius: "10px",
+    color: "#404040",
+    "&:hover": {
+      color: "#00AB55",
+    },
+  }));
+
+  const navigate = useNavigate();
+  const { serverUrlBase } = useContext(CommonContext);
+  const user = useSelector((state) => state.User.user);
+
+  const [uploadImg, setUploadImg] = useState("");
+  const [uploadImgURL, setUploadImgURL] = useState("");
+  const imgRef = useRef();
+
+  const [author, setAuthor] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
+
+  const [imgError, setImgError] = useState(true);
+  const [authorError, setauthorError] = useState(true);
+  const [titleError, setTitleError] = useState(true);
+  const [desError, setDesError] = useState(true);
+  const [disabled, setDisabled] = useState(true);
+  const [networkError, setNetworkError] = useState(true);
+
+  const [open, setOpen] = useState(false);
+
+  const onChangeAutor = (e) => {
+    const value = e.target.value;
+    setAuthor(e.target.value);
+
+    if (!value) {
+      setauthorError(true);
+    } else {
+      setauthorError(false);
+    }
+  };
+
+  const onChangeTitle = (e) => {
+    const value = e.target.value;
+    setTitle(e.target.value);
+
+    if (!value) {
+      setTitleError(true);
+    } else {
+      setTitleError(false);
+    }
+  };
+
+  const onChangedes = (e) => {
+    const value = e.target.value;
+    setDescription(e.target.value);
+
+    if (!value) {
+      setDesError(true);
+    } else {
+      setDesError(false);
+    }
+  };
+
+  const onChkNetwork = async () => {
+    const meta = await Web3Client.eth.net.getId().then( id=> {return id});
+    const local = await Web3Limit.eth.net.getId().then( id=> {return id});
+
+    console.log(meta+" "+local);
+
+    if(meta == local) setNetworkError(false);
+    else setNetworkError(true);
+  };
+
+  const onChangeCategory = (e) => {
+    setCategory(e.target.value);
+  };
+
+  const inputTexts = [
+    {
+      name: "Author",
+      data: author,
+      set: onChangeAutor,
+      rows: 1,
+      placeholder: "Please enter the author's name",
+      multiline: false,
+      error: authorError,
+    },
+    {
+      name: "Title",
+      data: title,
+      set: onChangeTitle,
+      rows: 1,
+      placeholder: "Please enter the item's name",
+      multiline: false,
+      error: titleError,
+    },
+    {
+      name: "Description",
+      data: description,
+      set: onChangedes,
+      rows: 4,
+      placeholder: "Write down the description of the item",
+      multiline: true,
+      error: desError,
+    },
+  ];
+
+  function getCategoryList() {
+    Axios.get(serverUrlBase + `/items/category`)
+      .then((data) => {
+        setCategory(data.data.data[0].category_code);
+        setCategoryList(data.data.data);
+      })
+      .catch(function (error) {
+        console.log("get category error:" + error);
+
+        Swal.fire({
+          icon: "error",
+          title: "서버와 연동이 끊겼습니다. 다시 시도해주세요",
+        });
+        navigate("/main");
+      });
+  }
+
+  useEffect(() => {
+    getCategoryList();
+    onChkNetwork();
+  }, []);
+
+  useEffect(() => {
+
+    if (!imgError && !authorError && !titleError && !desError && !networkError) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [imgError, authorError, titleError, desError, networkError]);
+
+  const NFT_CA = process.env.REACT_APP_NFT_CA;
+  const nftInstance = new Web3Client.eth.Contract(
+    COMMON_ABI.CONTRACT_ABI.NFT_ABI,
+    NFT_CA
+  );
+
+  const onClickImg = () => {
+    imgRef.current.click();
+  };
+
+  const onChangeImg = async (event) => {
+    if (!event.target.files[0]) return;
+
+    setUploadImg(event.target.files[0]);
+    setUploadImgURL(URL.createObjectURL(event.target.files[0]));
+
+    setImgError(false);
+  };
+
+  const onClickCreate = async () => {
+    const formData = new FormData();
+    formData.append("items", uploadImg);
+    formData.append("user_address", user.user_address);
+    formData.append("author_name", author);
+    formData.append("item_title", title);
+    formData.append("item_description", description);
+    formData.append("category_code", category);
+
+    await Axios.post(serverUrlBase + `/items`, formData)
+      .then(async (data) => {
+        if (data.status === 201) {
+          await Swal.fire({
+            icon: "success",
+            title: "작품등록 성공",
+          });
+
+          setOpen(true);
+          const item_id = await data.data.data.item_id;
+
+          const nftMint = await nftInstance.methods
+            .create(user.user_address, data.data.data.item_image)
+            .send({ from: user.user_address })
+            .then(async (data) => {
+              const token = await data.events.Transfer.returnValues.tokenId;
+              setOpen(false);
+
+              await Axios.patch(serverUrlBase + `/items/` + item_id, {
+                token_id: token,
+                owner_address: user.user_address,
+              })
+                .then(async () => {
+                  await Swal.fire({
+                    icon: "success",
+                    title: "NFT등록 성공",
+                  });
+                  await navigate("/myhome");
+                })
+                .catch(function (error) {
+                  console.log("NFT등록 오류 : " + error);
+                  Swal.fire({
+                    icon: "error",
+                    title: "NFT등록 오류",
+                  });
+                });
+            })
+            .catch(function (error) {
+              setOpen(false);
+              console.log("NFT등록 오류 : " + error);
+
+              Swal.fire({
+                icon: "error",
+                title: "NFT등록 오류",
+              });
+            });
+        } else if (data.status === 200) {
+          Swal.fire({
+            icon: "warning",
+            title: data.data.msg,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "작품등록 실패",
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log("작품등록 오류 : " + error);
+
+        Swal.fire({
+          icon: "error",
+          title: "작품등록 오류",
+        });
+      });
+  };
+
   const inputTextList = inputTexts.map((item, index) => (
     <FormControl
       key={index}
-      sx={{ mb: 3 }}
+      sx={{ mb: 2 }}
       required
       error={item.error}
       component="fieldset"
       variant="standard"
     >
       <Box sx={{ display: "flex", flexDirection: "row" }}>
-        <Typography variant="h5">{item.name}</Typography>
+        <Typography variant="h5" sx={{ mb: 1 }}>
+          {item.name}
+        </Typography>
         <FormLabel component="legend"></FormLabel>
       </Box>
       <Paper
         sx={{
           display: "flex",
           justifyContent: "center",
-
           p: "2px 4px",
           width: 500,
           border: "2px solid #cbcbcb",
         }}
       >
         <InputBase
-          required
           onChange={item.set}
           value={item.data}
           multiline={item.multiline}
@@ -343,49 +337,37 @@ function RegisterItem() {
           placeholder={item.placeholder}
         />
       </Paper>
-      <Box ml={1}>
-        {item.error && <FormHelperText>This is a required item</FormHelperText>}
-        {!item.error && <FormHelperText>Valid</FormHelperText>}
-      </Box>
     </FormControl>
   ));
-
-  const ButtonStyle = styled(Button)((theme) => ({
-    margin: "10px 10px",
-    width: "100px",
-    font: "1em Fira Sans",
-    // fontWeight:'bold',
-
-    border: "2px solid #ababab",
-    borderRadius: "10px",
-    color: "#404040",
-
-    "&:hover": {
-      /**
-       * HACK
-       * 테마 적용하고 싶은데 에러나서 그냥 테마 값 가져다 씀
-       */
-      color: "#00AB55",
-    },
-  }));
 
   return (
     <div style={RootStyle}>
       <div style={BodyStyle}>
-        <Typography variant="h4">Create New Item</Typography>
+        <Typography variant="h4" sx={{ mb: 1 }}>
+          Create New Item
+        </Typography>
         <Divider />
         <Box m={5} display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">
+            {uploadImgURL && (
+              <Typography color="primary" sx={{ mb: 1 }}>
+                *required
+              </Typography>
+            )}
+            {!uploadImgURL && (
+              <Typography color="#ff0000" sx={{ mb: 1 }}>
+                *required
+              </Typography>
+            )}
             <ImageStyle onClick={onClickImg}>
-              {uploadImg && (
+              {uploadImgURL && (
                 <Box
                   component="img"
-                  src={uploadImg}
+                  src={uploadImgURL}
                   sx={{ maxWidth: "400px", maxHeight: "400px" }}
                 />
               )}
-
-              {!uploadImg && (
+              {!uploadImgURL && (
                 <div>
                   <BackupIcon sx={{ fontSize: "50px", color: "#ababab" }} />
                   <Typography
@@ -395,20 +377,16 @@ function RegisterItem() {
                       fontWeight: "bold",
                     }}
                   >
-                    Uproad Img
+                    Upload Img
                   </Typography>
                 </div>
               )}
             </ImageStyle>
-            {!uploadImg && (
-              <Typography color="#ff0000"> * required Image </Typography>
-            )}
             <input
               ref={imgRef}
               type="file"
-              id="file_input"
               accept="image/*"
-              onChange={onImgChange}
+              onChange={onChangeImg}
               hidden
             />
           </Box>
@@ -419,27 +397,33 @@ function RegisterItem() {
             </Box>
             <Box m={0.5}>
               <FormControl fullWidth>
-                <NativeSelect
-                  defaultValue={category}
-                  inputProps={{
-                    name: "category",
-                    id: "uncontrolled-native",
-                  }}
-                  onChange={onChangeCategory}
-                >
-                  {categoryList.map((item, index) => (
-                    <option key={index} value={index}>
-                      {item.name}
-                    </option>
-                  ))}
+                <NativeSelect onChange={onChangeCategory}>
+                  {categoryList &&
+                    categoryList.map((item, index) => (
+                      <option key={index}>{item.category_code}</option>
+                    ))}
                 </NativeSelect>
               </FormControl>
             </Box>
             <Box mt={3} display="flex" justifyContent="right">
-              <ButtonStyle disabled={!isValid} onClick={onClickCreate}>
+              <ButtonStyle disabled={disabled} onClick={onClickCreate}>
                 CREATE
               </ButtonStyle>
-              <ButtonStyle onClick={onClickCancel}>CANCEL</ButtonStyle>
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={open}
+              >
+                <Alert severity="info">
+                  <AlertTitle>1 / 1</AlertTitle>
+                  NFT Registering... — <strong>Please wait!</strong>
+                </Alert>
+              </Backdrop>
+              <ButtonStyle to="/main" component={RouterLink}>
+                CANCEL
+              </ButtonStyle>
             </Box>
           </div>
         </Box>
@@ -447,5 +431,4 @@ function RegisterItem() {
     </div>
   );
 }
-
 export default RegisterItem;

@@ -4,12 +4,10 @@ import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
 
-// web3-react [220317]
 import { StrictMode } from "react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 
-// store와 날라가지 않고 session에 저장하기 위한 persist 설정 [220322]
 import store from "./redux/configStore";
 import { Provider } from "react-redux";
 import persistStore from "redux-persist/es/persistStore";
@@ -28,7 +26,6 @@ function getLibrary(provider) {
   const library = new Web3Provider(provider, "any");
   return library;
 }
-// End getLibrary(provider)
 
 /**
  * LDJ | 2022.03.17 | v1.0
@@ -37,6 +34,7 @@ function getLibrary(provider) {
  * @des 설치한 @web3-react/core에서 제공하는 Web3ReactProvider 를 App root의 provider로 제공하고
  * web3 객체를 인스턴스화 하는 getLibrary 함수를 정의하여 prop로 전달
  */
+
 ReactDOM.render(
   <StrictMode>
     <Web3ReactProvider getLibrary={getLibrary}>
@@ -53,4 +51,3 @@ ReactDOM.render(
   </StrictMode>,
   document.getElementById("root")
 );
-// End ReactDOM.render

@@ -1,63 +1,66 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-
+import * as React from "react";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import PropTypes from "prop-types";
+import { useState } from "react";
 
 /**
- * CSW | 2022.03.21 | UPDATE
+ * CSW | 2022.03.30 | UPDATE
  * @name ItemHistory
  * @des itemDetail ItemHistory 컴포넌트
  * HACK 위치잡기위해서 임시로 넣어둔 표
  * TODO 표 정보 연결
  */
 
+ColumnGroupingTable.propTypes = {
+  products: PropTypes.array,
+};
 
 const columns = [
-  { id: 'Event', label: 'Event', minWidth: 100 },
-  { id: 'UnitPrice', label: 'UnitPrice', minWidth: 100 },
-  {
-    id: 'Quantity',
-    label: 'Quantity',
-    minWidth: 100,
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  { id: 'From', label: 'From', minWidth: 100 },
-  { id: 'To', label: 'To', minWidth: 100 },
-  { id: 'Date', label: 'Date', minWidth: 120 },
+  { id: "no", label: "no", minWidth: 20 },
+  { id: "Unit", label: "Unit", minWidth: 70 },
+  { id: "Price", label: "Price", minWidth: 70 },
+  { id: "From", label: "From", minWidth: 90 },
+  { id: "To", label: "To", minWidth: 90 },
+  { id: "Date", label: "Date", minWidth: 120 },
 ];
 
-function createData(Event, UnitPrice, Quantity, From, To, Date) {
-
-  return { Event, UnitPrice, Quantity, From, To, Date };
+function createData(no, Unit, Price, From, To, Date) {
+  return { no, Unit, Price, From, To, Date };
 }
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-];
+export default function ColumnGroupingTable({ products }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  let idx = 1;
 
-export default function ColumnGroupingTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const rows = [];
+
+  products.map((row) => {
+    const timedata = row.completed_at;
+    let newDate = new Date(timedata);
+    newDate.setHours(newDate.getHours() + 9);
+    const realEndDate = newDate.toISOString().split("T");
+    const rrealEndDate = realEndDate[0] + " " + realEndDate[1].split(".")[0];
+
+    rows.push(
+      createData(
+        idx,
+        "SSF",
+        row.price,
+        row.seller_address,
+        row.buyer_address,
+        rrealEndDate
+      )
+    );
+    idx++;
+  });
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -69,15 +72,20 @@ export default function ColumnGroupingTable() {
   };
 
   return (
-    <Paper sx={{ width: '70%', border:'1px solid rgba(0, 0, 0, 0.1)', boxShadow: '0 0 10px rgba(225, 223, 214, 1)' }}>
+    <Paper
+      sx={{
+        width: "70%",
+        border: "1px solid rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 0 10px rgba(225, 223, 214, 1)",
+      }}
+    >
       <TableContainer sx={{ maxHeight: 300 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align="left" colSpan={4}>
+              <TableCell align="left" colSpan={6}>
                 History
               </TableCell>
-
             </TableRow>
             <TableRow>
               {columns.map((column) => (
@@ -96,17 +104,79 @@ export default function ColumnGroupingTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.Event}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.no}>
+                    <TableCell
+                      key={columns[0].id}
+                      align={columns[0].align}
+                      style={{
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        maxWidth: "80px",
+                      }}
+                    >
+                      {row[columns[0].id]}
+                    </TableCell>
+                    <TableCell
+                      key={columns[1].id}
+                      align={columns[1].align}
+                      style={{
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        maxWidth: "80px",
+                      }}
+                    >
+                      {row[columns[1].id]}
+                    </TableCell>
+                    <TableCell
+                      key={columns[2].id}
+                      align={columns[2].align}
+                      style={{
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        maxWidth: "50px",
+                      }}
+                    >
+                      {row[columns[2].id]}
+                    </TableCell>
+                    <TableCell
+                      key={columns[3].id}
+                      align={columns[3].align}
+                      style={{
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        maxWidth: "90px",
+                      }}
+                    >
+                      {row[columns[3].id]}
+                    </TableCell>
+                    <TableCell
+                      key={columns[4].id}
+                      align={columns[4].align}
+                      style={{
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        maxWidth: "90px",
+                      }}
+                    >
+                      {row[columns[4].id]}
+                    </TableCell>
+                    <TableCell
+                      key={columns[5].id}
+                      align={columns[5].align}
+                      style={{
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        maxWidth: "200px",
+                      }}
+                    >
+                      {row[columns[5].id]}
+                    </TableCell>
                   </TableRow>
                 );
               })}

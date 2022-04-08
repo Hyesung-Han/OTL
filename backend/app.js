@@ -13,7 +13,6 @@ const homeRouter = require('./src/home/home.controller');
 const { swaggerUi, specs } = require("./swagger");
 const app = express();
 const router = express.Router();
-app.use(helmet());
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
@@ -27,6 +26,7 @@ router.use('/home', homeRouter);
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use("/api", router);
+app.use(helmet()); // swagger ui path 보다 아래로 놓아야 서버에서 스웨거 보기 가능
 // catch 404 and forward to error handler
 app.use(function(req, res) {
   res.status(404);
