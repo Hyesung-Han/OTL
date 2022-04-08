@@ -17,30 +17,38 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { nominalTypeHack } from "prop-types";
 
-// Redux
+import Web3 from "web3";
+import { useWeb3React } from "@web3-react/core";
+
 import { useDispatch, useSelector } from "react-redux";
 import { setInit } from "../../redux/reducers/UserReducer";
 
-// Icons
 import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
 
 /**
- * LDJ, HSH | 2022.03.22 | Update
+ * LDJ, HSH | 2022.03.28 | v2.0
  * @name SearchNavbar
  * @api -
  * @des 상단 헤더 메뉴바, CSS[소현]
- * @des Redux를 통한 로그인 유무 확인 / 우상단 로그인/프로필 아이콘 전환 [동준]
+ * @des Redux를 통한 로그인 유무 확인 / 우상단 로그인/프로필 아이콘 전환 / 연동시에만 Create 버튼 활성화 [동준]
  */
 
 const SearchNavbar = () => {
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider(process.env.REACT_APP_ETHEREUM_RPC_URL)
+  );
+
+  const { active, deactivate } = useWeb3React();
+
   const APPBAR_MOBILE = 64;
   const APPBAR_DESKTOP = 92;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.User.user);
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [disabled, setDisabled] = useState(true);
   const open = Boolean(anchorEl);
   const [isOpenUserMenu, setIsOpenUserMenu] = useState(false);
 
@@ -53,12 +61,22 @@ const SearchNavbar = () => {
   };
 
   const onClickSearch = () => {
-    navigate("/search/"+inputValue);
+    navigate("/search/" + inputValue);
+  };
+
+  const KeyPressSearch = (e) => {
+    if (e.key === "Enter") {
+      navigate("/search/" + inputValue);
+    }
   };
 
   useEffect(() => {
-    
-  }, [inputValue]);
+    if (user.user_address) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [disabled, inputValue, anchorEl]);
 
   const RootStyle = styled(AppBar)(({ theme }) => ({
     boxShadow: "none",
@@ -97,9 +115,13 @@ const SearchNavbar = () => {
     },
   }));
 
-  const onClickLogOut = () => {
+  const onClickLogOut = async () => {
+    if (active) {
+      deactivate();
+    }
     dispatch(setInit());
     setAnchorEl(null);
+    navigate("/main");
   };
 
   const handleClick = (event) => {
@@ -182,6 +204,7 @@ const SearchNavbar = () => {
             <InputBase
               value={inputValue}
               onChange={onChangeSerchValue}
+              onKeyPress={KeyPressSearch}
               sx={{ ml: 1, flex: 1 }}
               placeholder="Search Item"
             />
@@ -210,9 +233,10 @@ const SearchNavbar = () => {
             LIST
           </ButtonStyle>
           <ButtonStyle
-            to="/RegisterItem"
+            disabled={disabled}
             size="large"
             sx={{ fontSize: 17 }}
+            to="/RegisterItem"
             component={RouterLink}
           >
             CREATE
@@ -260,7 +284,7 @@ const SearchNavbar = () => {
                   </MenuItem>
                 )}
                 {user.user_nickname && (
-                  <MenuItem to="/main" component={RouterLink}>
+                  <MenuItem to="/myhome" component={RouterLink}>
                     <ListItemIcon>
                       <HomeIcon fontSize="small" />
                     </ListItemIcon>
